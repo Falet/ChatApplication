@@ -1,2 +1,2 @@
-CreatDBForLocalDB
+CreatDBForLocalDB:
 (localdb)\MSSQLLocalDB

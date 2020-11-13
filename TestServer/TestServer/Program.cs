@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
+using System.ComponentModel.DataAnnotations;
 
 namespace TestServer
 {
@@ -11,14 +12,12 @@ namespace TestServer
     {
         static void Main(string[] args)
         {
-            using (var db = new BloggingContext1())
+            using (var db = new DBChat())
             {
-                // Create and save a new Blog
                 Console.Write("Enter a name for a new Blog: ");
                 var name = Console.ReadLine();
-
-                var blog = new GeneralChat { Name = name };
-                db.GenChat.Add(blog);
+                var blog = new Rooms { Type = name };
+                db.PoolRoom.Add(blog);
                 db.SaveChanges();
 
 
@@ -26,9 +25,9 @@ namespace TestServer
                 // Display all Blogs from the database
 
                 Console.WriteLine("All blogs in the database:");
-                foreach (var item in db.GenChat)
+                foreach (var item in db.PoolRoom)
                 {
-                    Console.WriteLine(item.Name);
+                    Console.WriteLine(item.Type);
                 }
 
                 Console.WriteLine("Press any key to exit...");
@@ -36,26 +35,35 @@ namespace TestServer
             }
         }
     }
-    public class GeneralChat
+    public class Rooms
     {
-        public int GeneralChatId { get; set; }
-        public string Name { get; set; }
+        [Key]
+        public int RoomID { get; set; }
+        public string Type { get; set; }
 
-        public virtual List<Post> Posts { get; set; }
+        public virtual List<Characters> ListCharacter { get; set; }
+        public virtual List<Messages> PoolMessage { get; set; }
     }
 
-    public class Post
+    public class Characters
     {
-        public int PostId { get; set; }
-        public string Title { get; set; }
-        public string Content { get; set; }
-
-        public int BlogId { get; set; }
-        public virtual GeneralChat Blog { get; set; }
+        [Key]
+        public string CharacterID { get; set; }
+        public int RoomID { get; set; }
     }
-    public class BloggingContext1 : DbContext
+    public class Messages
     {
-        public DbSet<GeneralChat> GenChat { get; set; }
-        public DbSet<Post> Posts { get; set; }
+        [Key]
+        public string MessageID { get; set; }
+        public int RoomID { get; set; }
+        public string From { get; set; }
+        public string Text { get; set; }
+        public string Time { get; set; }
+    }
+    public class DBChat : DbContext
+    {
+        public DbSet<Rooms> PoolRoom { get; set; }
+        /*public DbSet<Characters> ListCharacters { get; set; }
+        public DbSet<Messages> PoolMessages { get; set; }*/
     }
 }
