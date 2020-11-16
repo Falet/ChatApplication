@@ -39,6 +39,7 @@ namespace TestServer
     {
         [Key]
         public int RoomID { get; set; }
+
         public string Type { get; set; }
 
         public virtual List<Characters> ListCharacter { get; set; }
