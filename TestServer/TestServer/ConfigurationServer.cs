@@ -8,7 +8,7 @@ using System.Collections.Concurrent;
 
 namespace TestServer.Network
 {
-    class ConfigurationSetver
+    class ConfigurationServer
     {
         #region Fields
 
@@ -16,17 +16,17 @@ namespace TestServer.Network
 
         #region Properties
 
-        public TransportType Protocol { get; set; }
-        public int Port { get; set; }
+        public TransportType Protocol { private set; get; }
+        public int Port { private set; get; }
 
         #endregion Properties
 
         #region Constructors
-        public ConfigurationSetver(TypeGettingConfig type)
+        public ConfigurationServer(TypeGettingConfig type)
         {
 
         }
-        public ConfigurationSetver(TypeGettingConfig type, string TextForNavigation)
+        public ConfigurationServer(TypeGettingConfig type, string TextForNavigation)
         {
             switch (type)
             {
@@ -45,7 +45,7 @@ namespace TestServer.Network
         {
             try
             {
-                using (StreamReader ReadingFile = new StreamReader(TextForNavigation))
+                using (StreamReader ReadingFile = new StreamReader(pathToFile))
                 {
                     while (!ReadingFile.EndOfStream)
                     {
@@ -83,6 +83,11 @@ namespace TestServer.Network
             {
                 Console.WriteLine(e.Message);
             }
+        }
+
+        private void ReadConfigFromConsole()
+        {
+
         }
         #endregion Methods
     }

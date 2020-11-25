@@ -4,10 +4,8 @@ using System.Text;
 
 namespace TestServer
 {
-    public enum TypeGettingConfig
+    interface IConnection
     {
-        File,
-        Console,
-        Db,
+        public void Send();
     }
 }
