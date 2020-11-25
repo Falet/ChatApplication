@@ -8,7 +8,17 @@ namespace TestServer
 {
     class Connection
     {
-        WebSocketServer server = new WebSocketServer(IPAddress.Any, 65000, false);
-        server.AddWebSocketService<ChatG>("/",client =>{client.AddServer(this);});
+        WebSocketServer server;
+        public Connection()
+        {
+
+        }
+        public void Start()
+        {
+
+            server = new WebSocketServer(IPAddress.Any, 65000, false);
+            //server.AddWebSocketService<ChatG>("/", client => { client.AddServer(this); });
+            server.Start();
+        }
     }
 }

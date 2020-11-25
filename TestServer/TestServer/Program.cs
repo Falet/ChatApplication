@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Net;
 
 namespace TestServer
 {
@@ -7,8 +7,11 @@ namespace TestServer
     {
         static void Main(string[] args)
         {
-           
-            Console.WriteLine("Hello World!");
+
+            Console.WriteLine($"WebSocketServer: {IPAddress.Any}:{65000}");
+            Connection Sda = new Connection();
+            Sda.Start();
+            Console.ReadLine();
         }
     }
 }
