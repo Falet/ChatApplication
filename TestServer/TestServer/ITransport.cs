@@ -16,6 +16,8 @@ namespace TestServer.Network
 
         void FreeConnection();
 
+        public void Send();
+
         #endregion Methods
 
     }
