@@ -2,10 +2,21 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TestServer.Factory
+namespace TestServer.Network
 {
-    class FactoryTransport
+    public static class TransportFactory
     {
-
+        public static ITransport Create(TransportType type)
+        {
+            switch (type)
+            {
+                case TransportType.WebSocket:
+                    return new WsServer();
+                case TransportType.Tcp:
+                    return new TcpServer();
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
     }
 }

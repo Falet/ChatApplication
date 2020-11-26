@@ -4,17 +4,17 @@ using System.Text;
 
 namespace TestServer.Network
 {
-    interface ITransport
+    public interface ITransport
     {
         #region Methods
 
-        void Start();
+        public void Start();
 
-        void Stop();
+        public void Stop();
 
-        void AddConnection();
+        public void AddConnection();
 
-        void FreeConnection();
+        public void FreeConnection();
 
         public void Send();
 

@@ -1,6 +1,7 @@
 ﻿namespace TestServer
 {
     using TestServer.Network;
+    using System;
     class NetworkManager
     {
         public NetworkManager()
@@ -9,8 +10,9 @@
         }
         public NetworkManager(TypeGettingConfig type)
         {
-            ConfigurationServer configServer = new ConfigurationServer(type);
-
+            ConfigServer Buf = new ConfigurationServer().ReadConfigFromFile("user.json");
+            ITransport Server = TransportFactory.Create(Buf.Protocol);
+            Console.ReadLine();
         }
         public void Start()
         {

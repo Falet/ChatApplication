@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TestServer.Network
 {
-    public class WsServer: ITransport
+    public class TcpServer : ITransport
     {
         public void Start()
         {

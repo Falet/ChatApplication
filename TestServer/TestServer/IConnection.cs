@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TestServer
+﻿namespace TestServer.Network
 {
+    using System;
     interface IConnection
     {
         #region Events
 
-        event EventHandler<ConnectionStateChangedEventArgs> ConnectionStateChanged;
-        event EventHandler<MessageReceivedEventArgs> MessageReceived;
+        public event EventHandler<ConnectionStateChangedEventArgs> ConnectionStateChanged;
+        public event EventHandler<MessageReceivedEventArgs> MessageReceived;
 
         #endregion Events
+
         public void Send();
+
     }
 }
