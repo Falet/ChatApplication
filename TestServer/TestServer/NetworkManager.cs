@@ -13,7 +13,7 @@
             ConfigServer configServer = new ConfigurationServer().ReadConfigFromFile("user.json");
 
             ITransport server = TransportFactory.Create(configServer.Protocol);
-
+            server.SetDictionaryOfUsers(RequestManagerDb.GetAllNameUser());
 
             HandlerRequest handlerRequest = new HandlerRequest(server);
 

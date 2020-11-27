@@ -15,6 +15,8 @@ namespace TestServer.Network
 
         #region Fields
 
+        Dictionary<string, Connection> 
+
         #endregion Fields
 
         #region Methods
