@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TestServer.Protocols
+namespace TestServer.Network
 {
     class EventRequest
     {
+        public void Senr()
+        {
+
+        }
     }
 }
