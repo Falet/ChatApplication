@@ -8,6 +8,7 @@ namespace TestServer.Network
     {
         public event EventHandler<ConnectionStateChangedEventArgs> ConnectionStateChanged;
         public event EventHandler<MessageReceivedEventArgs> MessageReceived;
+        public event EventHandler<ConnectionToChatEventArgs> ConnectionToChat;
 
         public void Start()
         {
@@ -15,6 +16,11 @@ namespace TestServer.Network
         }
 
         public void Stop()
+        {
+
+        }
+
+        public void SetDictionaryOfUsers(List<string> listNameOfUsers)
         {
 
         }

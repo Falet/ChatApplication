@@ -11,7 +11,14 @@
         public NetworkManager(TypeGettingConfig type)
         {
             ConfigServer configServer = new ConfigurationServer().ReadConfigFromFile("user.json");
-            ITransport Server = TransportFactory.Create(configServer.Protocol);
+
+            ITransport server = TransportFactory.Create(configServer.Protocol);
+
+
+            HandlerRequest handlerRequest = new HandlerRequest(server);
+
+            ChangeDb changeDb = new ChangeDb(handlerRequest);
+
 
             Console.ReadLine();
         }

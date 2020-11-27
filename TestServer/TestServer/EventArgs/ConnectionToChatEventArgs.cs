@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TestServer.HandlerRequest
+namespace TestServer.Network
 {
-    class ChangeDb
+    public class ConnectionToChatEventArgs
     {
     }
 }

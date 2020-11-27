@@ -6,9 +6,6 @@ namespace TestServer.Network
 {
     class EventRequest
     {
-        public void Senr()
-        {
 
-        }
     }
 }
