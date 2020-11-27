@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TestServer.Network
+namespace TestServer.Protocols
 {
-    public class MessageReceivedEventArgs
+    class EventRequest
     {
-
     }
 }

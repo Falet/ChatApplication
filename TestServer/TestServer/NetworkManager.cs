@@ -10,8 +10,9 @@
         }
         public NetworkManager(TypeGettingConfig type)
         {
-            ConfigServer Buf = new ConfigurationServer().ReadConfigFromFile("user.json");
-            ITransport Server = TransportFactory.Create(Buf.Protocol);
+            ConfigServer configServer = new ConfigurationServer().ReadConfigFromFile("user.json");
+            ITransport Server = TransportFactory.Create(configServer.Protocol);
+
             Console.ReadLine();
         }
         public void Start()

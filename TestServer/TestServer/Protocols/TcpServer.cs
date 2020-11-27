@@ -6,6 +6,9 @@ namespace TestServer.Network
 {
     public class TcpServer : ITransport
     {
+        public event EventHandler<ConnectionStateChangedEventArgs> ConnectionStateChanged;
+        public event EventHandler<MessageReceivedEventArgs> MessageReceived;
+
         public void Start()
         {
 

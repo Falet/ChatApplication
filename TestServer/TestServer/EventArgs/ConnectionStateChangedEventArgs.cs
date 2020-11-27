@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TestServer.Network
 {
-    class ConnectionStateChangedEventArgs
+    public class ConnectionStateChangedEventArgs
     {
 
     }
