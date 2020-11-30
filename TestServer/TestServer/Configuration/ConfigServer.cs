@@ -2,7 +2,7 @@
 {
     using System.Text.Json.Serialization;
     using Newtonsoft.Json;
-    class ConfigServer
+    public class ConfigServer
     {
         #region Properties
         [JsonProperty]

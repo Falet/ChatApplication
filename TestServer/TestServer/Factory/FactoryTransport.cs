@@ -4,6 +4,7 @@ using System.Text;
 
 namespace TestServer.Network
 {
+    using System.Net;
     public static class TransportFactory
     {
         public static ITransport Create(TransportType type)

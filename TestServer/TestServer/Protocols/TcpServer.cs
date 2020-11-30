@@ -4,6 +4,7 @@ using System.Text;
 
 namespace TestServer.Network
 {
+    using System.Net;
     public class TcpServer : ITransport
     {
 
@@ -19,12 +20,12 @@ namespace TestServer.Network
 
         public TcpServer()
         {
-            SetDictionaryOfUsers(RequestManagerDb.GetAllNameUser());
+
         }
 
         #endregion Constructors
 
-        public void Start()
+        public void Start(IPEndPoint IPendPoint)
         {
 
         }
@@ -45,11 +46,6 @@ namespace TestServer.Network
         }
 
         public void Send()
-        {
-
-        }
-
-        public void SetDictionaryOfUsers(List<string> listNameOfUsers)
         {
 
         }

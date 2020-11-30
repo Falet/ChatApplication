@@ -33,24 +33,19 @@ namespace TestServer.Network
 
         public WsServer()
         {
-            this.SetDictionaryOfUsers(RequestManagerDb.GetAllNameUser());
+
         }
 
-        #region Constructors
+        #endregion Constructors
 
         #region Methods
 
-        public void Start()
+        public void Start(IPEndPoint IPendPoint)
         {
-
+            _server = new WebSocketServer(IPendPoint.Address, IPendPoint.Port, false);
         }
 
         public void Stop()
-        {
-
-        }
-
-        public void SetDictionaryOfUsers(List<string> listNameOfUsers)
         {
 
         }

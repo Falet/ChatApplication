@@ -6,7 +6,7 @@ namespace TestServer.Network
 {
 	public class ChangeDb
 	{
-		public ChangeDb(HandlerRequest handler)
+		public ChangeDb(HandlerRequestFromServer handler, RequestManagerDb requestManagerDb)
         {
 			handler.NewUserConnected += OnNewUser;
 			handler.NewUserConnected += OnNewMessage;

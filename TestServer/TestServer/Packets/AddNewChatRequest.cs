@@ -4,14 +4,10 @@ using System.Text;
 
 namespace TestServer.Packets
 {
-    public class ConnectToChatRequest
+    class AddNewChatRequest
     {
-        #region Properties
-
         public string Login;
 
-        public int Room;
-
-        #endregion Properties
+        public List<string> Users;
     }
 }

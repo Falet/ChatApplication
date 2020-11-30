@@ -12,27 +12,29 @@ namespace TestServer
     {
         static void Main(string[] args)
         {
-            using (var db = new DBChat())
+            using var db = new DBChat();
+            Console.Write("Enter a name for a new Blog: ");
+            var name = Console.ReadLine();
+            List<Rooms> arraytable = new List<Rooms>();
+            for (int i = 0; i < 10; i++)
             {
-                Console.Write("Enter a name for a new Blog: ");
-                var name = Console.ReadLine();
-                var blog = new Rooms { Type = name };
-                db.PoolRoom.Add(blog);
-                db.SaveChanges();
-
-
-
-                // Display all Blogs from the database
-
-                Console.WriteLine("All blogs in the database:");
-                foreach (var item in db.PoolRoom)
-                {
-                    Console.WriteLine(item.Type);
-                }
-
-                Console.WriteLine("Press any key to exit...");
-                Console.ReadKey();
+                arraytable.Add(new Rooms { Type = i.ToString() });
+                db.PoolRoom.Add(arraytable[i]);
             }
+
+            db.SaveChanges();
+
+
+            // Display all Blogs from the database
+
+            Console.WriteLine("All blogs in the database:");
+            foreach (var item in db.PoolRoom)
+            {
+                Console.WriteLine(item.Type);
+            }
+
+            Console.WriteLine("Press any key to exit...");
+            Console.ReadKey();
         }
     }
     public class Rooms
@@ -64,6 +66,7 @@ namespace TestServer
     public class DBChat : DbContext
     {
         public DbSet<Rooms> PoolRoom { get; set; }
+
         /*public DbSet<Characters> ListCharacters { get; set; }
         public DbSet<Messages> PoolMessages { get; set; }*/
     }

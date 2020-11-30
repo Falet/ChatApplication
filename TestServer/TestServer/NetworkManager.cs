@@ -1,30 +1,35 @@
 ﻿namespace TestServer
 {
-    using TestServer.Network;
-    using System;
-    class NetworkManager
-    {
-        public NetworkManager()
-        {
-            //Перебор всех методов получения методов конфига до получения результата
-        }
-        public NetworkManager(TypeGettingConfig type)
-        {
-            ConfigServer configServer = new ConfigurationServer().ReadConfigFromFile("user.json");
+	using TestServer.Network;
+	using System;
+	using System.Net;
+	class NetworkManager
+	{
 
-            ITransport server = TransportFactory.Create(configServer.Protocol);
+		ITransport _server;
 
-            //server.SetDictionaryOfUsers(RequestManagerDb.GetAllNameUser());//перенести в конструктор сервера, если получиться оставить класс RequestManagerDb статичным
+		ConfigServer _ConfigServer;
 
-            HandlerRequest handlerRequest = new HandlerRequest(server);
-            
-            ChangeDb changeDb = new ChangeDb(handlerRequest);
+		public NetworkManager()
+		{
+			//Перебор всех методов получения методов конфига до получения результата
+		}
+		public NetworkManager(TypeGettingConfig type)
+		{
+			_ConfigServer = ConfigurationServer.ReadConfigFromFile("user.json");
+		}
+		public void Start()
+		{
+			_server = TransportFactory.Create(_ConfigServer.Protocol);
 
-            Console.ReadLine();
-        }
-        public void Start()
-        {
+			RequestManagerDb requestManagerDb = new RequestManagerDb();
 
-        }
-    }
+			HandlerRequestFromServer handlerRequestFromServer = new HandlerRequestFromServer(_server, requestManagerDb.GetTables());
+
+			ChangeDb changeDb = new ChangeDb(handlerRequestFromServer, requestManagerDb);
+
+			_server.Start(new IPEndPoint(IPAddress.Any, _ConfigServer.Port));
+			//Console.ReadLine();
+		}
+	}
 }

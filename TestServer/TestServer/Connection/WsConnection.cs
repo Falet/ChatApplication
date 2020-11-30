@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Net;
-using WebSocketSharp.Server;
 
 namespace TestServer.Network
 {
-    class WsConnection : WebSocketBehavior, IConnection
+    using WebSocketSharp;
+    using WebSocketSharp.Server;
+    class WsConnection : WebSocketBehavior
     {
-        private WebSocketServer _server;
+        private WsServer _server;
 
+        //private readonly ConcurrentQueue<MessageContainer> _sendQueue;
 
         public WsConnection()
         {
@@ -18,16 +20,22 @@ namespace TestServer.Network
 
         #region Methods
 
-        public void Send()
+        public void AddServer(WsServer server)
+        {
+            _server = server;
+        }
+        protected override void OnOpen()
+        {
+        }
+
+        protected override void OnClose(CloseEventArgs e)
+        {
+        }
+
+        protected override void OnMessage(MessageEventArgs e)
         {
 
         }
-
-        public void Start()
-        {
-
-        }
-
         #endregion Methods
     }
 }

@@ -1,40 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TestServer.Network
+﻿namespace TestServer.Network
 {
-    public static class RequestManagerDb
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Data.SqlClient;
+    using TestServer.DbEF;
+    public class RequestManagerDb
     {
-        public static bool AddNewUser(string name)
+        public List<UserProperties> GetTables()
+        {
+            using (var db = new DBChat())
+            {
+                foreach (var item in db.PoolUsers)
+                {
+                    string Name = item.CharacterID;
+                    var RoomsOfUsers = db.Database.SqlQuery<Characters>("SELECT RoomID FROM Characters WHERE CharacterID = {0}", Name);
+                    foreach (var Room in RoomsOfUsers)
+                        Console.WriteLine(Room.RoomID);
+                }
+            }
+            return new List<UserProperties>();
+        }
+        public bool AddNewUser(string name)
         {
             return true;
         }
-        /*public static bool IsExistUser(string name)
-        {
-            return true;
-        }*/
-        public static bool AddNewMessage(string message, int room)
+        public bool AddNewMessage(string message, int room)
         {
             return true;
         }
-        public static bool CreatNewRoom(string nameOwner, List<string> listNameOfUsers)
+        public bool CreatNewRoom(string nameOwner, List<string> listNameOfUsers)
         {
             return true;
         }
-        public static bool AddUserToChat(string name, int room)
+        public bool AddUserToChat(string name, int room)
         {
             return true;
         }
-        public static bool RemoveUserFromChat(string name, int room)
+        public bool RemoveUserFromChat(string name, int room)
         {
             return true;
         }
-        public static bool GetMessageFromChat(int room)
+        public bool GetMessageFromChat(int room)
         {
             return true;
         }
-        public static List<string> GetAllNameUser()
+        public List<string> GetAllNameUser()
         {
             List<string> buf = new List<string>();
             return buf;

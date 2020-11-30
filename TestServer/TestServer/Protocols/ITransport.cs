@@ -3,7 +3,7 @@
 namespace TestServer.Network
 {
     using System;
-    using System.Collections.Generic;
+    using System.Net;
 
     public interface ITransport
     {
@@ -18,11 +18,9 @@ namespace TestServer.Network
 
         #region Methods
 
-        abstract public void Start();
+        public void Start(IPEndPoint IPendPoint);
 
         public void Stop();
-
-        public void SetDictionaryOfUsers(List<string> listNameOfUsers);
 
         public void AddConnection();
 
