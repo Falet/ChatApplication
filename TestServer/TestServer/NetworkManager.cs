@@ -14,12 +14,11 @@
 
             ITransport server = TransportFactory.Create(configServer.Protocol);
 
-            server.SetDictionaryOfUsers(RequestManagerDb.GetAllNameUser());//перенести в конструктор сервера, если получиться оставить класс RequestManagerDb статичным
+            //server.SetDictionaryOfUsers(RequestManagerDb.GetAllNameUser());//перенести в конструктор сервера, если получиться оставить класс RequestManagerDb статичным
 
             HandlerRequest handlerRequest = new HandlerRequest(server);
-
+            
             ChangeDb changeDb = new ChangeDb(handlerRequest);
-
 
             Console.ReadLine();
         }

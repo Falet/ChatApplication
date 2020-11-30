@@ -7,6 +7,7 @@ namespace TestServer.Network
 
     public interface ITransport
     {
+
         #region Events
 
         public event EventHandler<ConnectionStateChangedEventArgs> ConnectionStateChanged;
