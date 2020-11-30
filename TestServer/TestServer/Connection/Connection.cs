@@ -6,13 +6,22 @@ using WebSocketSharp.Server;
 
 namespace TestServer.Network
 {
-    class Connection
+    class Connection : WebSocketBehavior, IConnection
     {
-        WebSocketServer server;
+        private WebSocketServer _server;
+
+        #region Methods
+
         public Connection()
         {
 
         }
+
+        public void Send()
+        {
+
+        }
+
         public void Start()
         {
 
@@ -20,5 +29,7 @@ namespace TestServer.Network
             //server.AddWebSocketService<ChatG>("/", client => { client.AddServer(this); });
             server.Start();
         }
+
+        #endregion Methods
     }
 }

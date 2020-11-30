@@ -1,8 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿
+
 namespace TestServer.Network
 {
+    using System;
+    using System.Collections.Generic;
+
     public interface ITransport
     {
         #region Events
@@ -13,15 +15,9 @@ namespace TestServer.Network
 
         #endregion Events
 
-        #region Fields
-
-        Dictionary<string, Connection> 
-
-        #endregion Fields
-
         #region Methods
 
-        public void Start();
+        abstract public void Start();
 
         public void Stop();
 
