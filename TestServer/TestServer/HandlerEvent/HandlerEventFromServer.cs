@@ -10,19 +10,13 @@ namespace TestServer.Network
     {
         #region Fields
 
-        private List<UserProperties> _usersProperties;
-        private List<InfoAllChat> _infoAllChat;
+        private Dictionary<string,UserProperties> _usersProperties;
+        private Dictionary<int, InfoAllChat> _infoAllChat;
         private IGetData _data;
         private ITransport _server;
 
         #endregion Fields
 
-        public event EventHandler<UserConnectedEventArgs> NewUserConnected;
-        public event EventHandler<MessageReceivedEventArgs> NewMessageRecieved;
-        public event EventHandler<AddedUsersToChatEventArgs> NewUsersAddedToChat;
-        public event EventHandler<RemovedUsersFromChatEventArgs> UsersFromChatRemoved;
-        public event EventHandler<AddedChatEventArgs> NewChatCreated;
-        public event EventHandler<RemovedChatEventArgs> ChatRemoved;
 
         public HandlerRequestFromServer(ITransport server, IGetData data)
         {
@@ -38,46 +32,53 @@ namespace TestServer.Network
             _server.RemovedUsersFromChat += OnRemovedUsersFromChat;
 
             _data = data;
-            _usersProperties = _data.GetBeginData();
-            _infoAllChat = new List<InfoAllChat>();
+            _usersProperties = _data.GetUserInfo();
+            _infoAllChat = _data.GetRoomInfo();
         }
         public void OnConnect(object sender, UserConnectedEventArgs container)
         {
-            foreach (var connection in _usersProperties)
+            if (_usersProperties.TryGetValue(container.ClientName,out UserProperties userProperties))
             {
-                if (connection.Login == container.ClientName)
+                if(userProperties.IdConnection == Guid.Empty)
                 {
-                    if(connection.IdConnection == Guid.Empty)
-                    {
-                        connection.IdConnection = container.ClientId;
-                    }
-                    else
-                    {
-                        _server.FreeConnection(container.ClientId);
-                    }
+                    userProperties.IdConnection = container.ClientId;
                 }
                 else
                 {
-                    NewUserConnected?.Invoke(this, container);
+                    _server.FreeConnection(container.ClientId);
                 }
+            }
+            else
+            {
+                _usersProperties.Add(container.ClientName, new UserProperties { IdConnection = container.ClientId, Room = new List<InfoChat>() });
+                
             }
         }
         public void OnDisconnect(object sender, UserDisconnectedEventArgs container)
         {
-            foreach (var connection in _usersProperties)
+            if (_usersProperties.Remove(container.ClientName))
             {
-                if (connection.Login == container.ClientName)
-                {
-                    if (connection.IdConnection != Guid.Empty)
-                    {
-                        connection.IdConnection = Guid.Empty;
-                    }
-                }
+                //Данного клиента не существует(возможно стоит убрать)
             }
         }
-        public void OnMessage(object sender, MessageReceivedEventArgs container)
+        public async void OnMessage(object sender, MessageReceivedEventArgs container)
         {
-            NewMessageRecieved?.Invoke(this, container);
+            if(await Task.Run(() => _data.AddNewMessage(container)) == false)
+            {
+                //Сообщение не удалось добавить, сигнал серверу на запрет приему сообщений до добавления сообщения
+            }
+
+            List<Guid> idClentsForSendMessage = new List<Guid>();
+            foreach (var nameClient in _infoAllChat[container.Room].NameClients)
+            {
+                if (_usersProperties.TryGetValue(nameClient,out UserProperties guidClient))
+                {
+                    idClentsForSendMessage.Add(guidClient.IdConnection);
+                }
+            }
+
+            MessageContainer messageForUsersAtRoom = new MessageRequest(container.ClientName, container.Message, container.Room).GetContainer();
+            _server.Send(idClentsForSendMessage, messageForUsersAtRoom);
         }
         public void OnChatOpened(object sender, ConnectionToChatEventArgs container)
         {
@@ -85,9 +86,8 @@ namespace TestServer.Network
         }
         public async void OnAddedChat(object sender, AddedChatEventArgs container)
         {
-            List<UserProperties> x = await Task.Run(() => _data.GetBeginData());
-            _infoAllChat.Add(new InfoAllChat(_infoAllChat[_infoAllChat.Count - 1].IdChat + 1, container.ClientName));//или использовать Guid для нумерации комнат
-            NewChatCreated?.Invoke(this, container);//Отправляет номер комнаты на создание в БД
+            
+            //_infoAllChat.Add(new InfoAllChat(_infoAllChat[_infoAllChat.Count - 1].IdChat + 1, container.ClientName));//или использовать Guid для нумерации комнат
         }
         public void OnRemovedChat(object sender, RemovedChatEventArgs container)
         {

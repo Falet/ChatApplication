@@ -6,12 +6,13 @@ namespace TestServer.Network
 {
     public class InfoAllChat
     {
-        public int IdChat { get; }
         public string OwnerChat { get; }
-        public InfoAllChat(int idChat, string ownerChat)
+        public List<string> NameClients { get; }
+
+        public InfoAllChat(string ownerChat, List<string> nameClients)
         {
-            IdChat = idChat;
             OwnerChat = ownerChat;
+            NameClients = nameClients;
         }
     }
 }

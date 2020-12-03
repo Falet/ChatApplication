@@ -9,7 +9,7 @@
 
     public class RequestManagerDb : IGetData
     {
-        public List<UserProperties> GetBeginData()
+        public Dictionary<string, UserProperties> GetUserInfo()
         {
             List <UserProperties> listUserProperties = new List<UserProperties>();
             using (var db = new DBChat())
@@ -18,7 +18,6 @@
                 {
                     string Name = item.CharacterID;
                     UserProperties userProperties = new UserProperties();
-                    userProperties.Login = Name;
                     Console.WriteLine(Name);
                     var RoomsOfUsers = db.Characters
                                          .Where(User => User.CharacterID == Name);
@@ -28,7 +27,11 @@
                     }
                 }
             }
-            return new List<UserProperties>();
+            return new Dictionary<string,UserProperties>();
+        }
+        public Dictionary<int, InfoAllChat> GetRoomInfo()
+        {
+            throw new NotImplementedException();
         }
         public List<string> GetAllNameUser()
         {
@@ -41,7 +44,7 @@
             throw new NotImplementedException();
         }
 
-        public bool AddNewMessage(string message, int room)
+        public bool AddNewMessage(MessageReceivedEventArgs message)
         {
             throw new NotImplementedException();
         }
@@ -65,5 +68,7 @@
         {
             throw new NotImplementedException();
         }
+
+
     }
 }

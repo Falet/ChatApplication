@@ -8,13 +8,9 @@ namespace TestServer.Network
 	{
 		#region Properties
 
-		public string Login { get; set; }
-
 		public Guid IdConnection { get; set; }
 
-		public List<int> Room { get; set; }
-
-		public string OwnerRoom { get; set; }
+		public List<InfoChat> Room { get; set; }
 
 		#endregion Properties
 	}

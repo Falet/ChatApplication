@@ -2,6 +2,7 @@
 {
 	using TestServer.Network;
 	using System;
+	using System.Collections.Generic;
 	using System.Net;
 	class NetworkManager
 	{
@@ -29,7 +30,7 @@
 
 			ChangeDb changeDb = new ChangeDb(handlerRequestFromServer, requestManagerDb);
 
-			_server.Start();
+			_server.Start();//*/
 		}
 	}
 }

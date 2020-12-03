@@ -63,10 +63,12 @@ namespace TestServer.Network
         }
         protected override void OnOpen()
         {
+            _server.AddConnection(this);
         }
 
         protected override void OnClose(CloseEventArgs e)
         {
+            _server.FreeConnection(Id);
         }
 
         protected override void OnMessage(MessageEventArgs e)
@@ -74,8 +76,8 @@ namespace TestServer.Network
             if (e.IsText)
             {
                 var message = JsonConvert.DeserializeObject<MessageContainer>(e.Data);
+                _server.HandleMessage(Id, message);
             }
-            
         }
         private void SendCompleted(bool completed)
         {
