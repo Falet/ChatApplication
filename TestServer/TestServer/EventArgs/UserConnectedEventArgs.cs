@@ -4,25 +4,22 @@ using System.Text;
 
 namespace TestServer.Network
 {
-    public class MessageReceivedEventArgs
+    public class UserConnectedEventArgs
     {
         #region Properties
 
         public string ClientName { get; }
 
-        public string Message { get; }
-
-        public int Room { get; }
+        public Guid ClientId { get; }
 
         #endregion Properties
 
         #region Constructors
 
-        public MessageReceivedEventArgs(string clientName, string message, int room)
+        public UserConnectedEventArgs(string clientName, Guid clientId)
         {
             ClientName = clientName;
-            Message = message;
-            Room = room;
+            ClientId = clientId;
         }
 
         #endregion Constructors

@@ -9,7 +9,6 @@ namespace TestServer
             try
             {
                 var networkManager = new NetworkManager(TypeGettingConfig.Console);
-                networkManager.Start();
             }
             catch(Exception ex)
             {

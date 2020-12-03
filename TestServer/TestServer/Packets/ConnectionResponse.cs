@@ -4,13 +4,29 @@ using System.Text;
 
 namespace TestServer.Network
 {
-	class ConnectionResponse
+    public class ConnectionResponse
 	{
 		#region Properties
 
-		public ResultConnection Result { get; }
+		public ResultRequest Result { get; set; }
 
-		#endregion Properties
+        public string Reason { get; set; }
 
-	}
+        #endregion Properties
+
+        #region Methods
+
+        public MessageContainer GetContainer()
+        {
+            var container = new MessageContainer
+            {
+                Identifier = nameof(ConnectionResponse),
+                Payload = this
+            };
+
+            return container;
+        }
+
+        #endregion Methods
+    }
 }

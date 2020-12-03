@@ -2,12 +2,34 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TestServer.Packets
+namespace TestServer.Network
 {
-    class AddNewChatRequest
+    public class AddNewChatRequest
     {
-        public string Login;
+        public List<string> Users { get; }
 
-        public List<string> Users;
+        #region Constructors
+
+        public AddNewChatRequest(List<string> users)
+        {
+            Users = users;
+        }
+
+        #endregion Constructors
+
+        #region Methods
+
+        public MessageContainer GetContainer()
+        {
+            var container = new MessageContainer
+            {
+                Identifier = nameof(AddNewChatRequest),
+                Payload = this
+            };
+
+            return container;
+        }
+
+        #endregion Methods
     }
 }

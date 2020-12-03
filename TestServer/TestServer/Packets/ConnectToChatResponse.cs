@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TestServer.Packets
+namespace TestServer.Network
 {
-    class ConnectToChatResponse
+    public class ConnectToChatResponse
     {
     }
 }

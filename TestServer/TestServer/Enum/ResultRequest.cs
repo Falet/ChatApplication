@@ -4,8 +4,9 @@ using System.Text;
 
 namespace TestServer.Network
 {
-    public class EventRequest
+    public enum ResultRequest : byte
     {
-
+        Ok,
+        Failure,
     }
 }

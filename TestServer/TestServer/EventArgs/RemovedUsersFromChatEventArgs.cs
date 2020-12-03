@@ -4,13 +4,12 @@ using System.Text;
 
 namespace TestServer.Network
 {
-    public class MessageReceivedEventArgs
+    public class RemovedUsersFromChatEventArgs
     {
         #region Properties
-
         public string ClientName { get; }
 
-        public string Message { get; }
+        public List<string> Users { get; }
 
         public int Room { get; }
 
@@ -18,13 +17,14 @@ namespace TestServer.Network
 
         #region Constructors
 
-        public MessageReceivedEventArgs(string clientName, string message, int room)
+        public RemovedUsersFromChatEventArgs(string clientName, int room, List<string> users)
         {
             ClientName = clientName;
-            Message = message;
+            Users = users;
             Room = room;
         }
 
         #endregion Constructors
     }
 }
+

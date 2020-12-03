@@ -4,8 +4,7 @@ using System.Text;
 
 namespace TestServer.Network
 {
-    public class ConnectionStateChangedEventArgs
+    class RemoveUserFromChatResponse
     {
-
     }
 }

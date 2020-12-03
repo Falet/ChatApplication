@@ -10,22 +10,27 @@ namespace TestServer.Network
 
         #region Event
 
-        public event EventHandler<ConnectionStateChangedEventArgs> ConnectionStateChanged;
+        public event EventHandler<UserConnectedEventArgs> UserConnected;
         public event EventHandler<MessageReceivedEventArgs> MessageReceived;
-        public event EventHandler<ConnectionToChatEventArgs> ConnectionToChat;
+        public event EventHandler<ConnectionToChatEventArgs> ConnectedToChat;
+        public event EventHandler<AddedChatEventArgs> AddedChat;
+        public event EventHandler<RemovedChatEventArgs> RemovedChat;
+        public event EventHandler<AddedUsersToChatEventArgs> AddedUsersToChat;
+        public event EventHandler<RemovedUsersFromChatEventArgs> RemovedUsersFromChat;
+        public event EventHandler<UserDisconnectedEventArgs> UserDisconnected;
 
         #endregion Event
 
         #region Constructors
 
-        public TcpServer()
+        public TcpServer(IPEndPoint IPendPoint)
         {
 
         }
 
         #endregion Constructors
 
-        public void Start(IPEndPoint IPendPoint)
+        public void Start()
         {
 
         }
@@ -35,17 +40,12 @@ namespace TestServer.Network
 
         }
 
-        public void AddConnection()
+        public void FreeConnection(Guid ClientId)
         {
 
         }
 
-        public void FreeConnection()
-        {
-
-        }
-
-        public void Send()
+        public void Send(List<Guid> ListClientId, MessageContainer message)
         {
 
         }

@@ -1,10 +1,16 @@
-﻿namespace TestServer.Network
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace TestServer.Network
 {
-    public class ConnectToChatRequest
+    public class RemoveUserFromChatRequest
     {
         #region Properties
 
         public string ClientName { get; }
+
+        public List<string> Users { get; }
 
         public int Room { get; }
 
@@ -12,9 +18,10 @@
 
         #region Constructors
 
-        public ConnectToChatRequest(string clientName, int room)
+        public RemoveUserFromChatRequest(string clientName, List<string> users, int room)
         {
             ClientName = clientName;
+            Users = users;
             Room = room;
         }
 
@@ -26,7 +33,7 @@
         {
             var container = new MessageContainer
             {
-                Identifier = nameof(ConnectToChatRequest),
+                Identifier = nameof(RemoveUserFromChatRequest),
                 Payload = this
             };
 

@@ -4,25 +4,20 @@ using System.Text;
 
 namespace TestServer.Network
 {
-    public class MessageReceivedEventArgs
+    public class AddedChatEventArgs
     {
         #region Properties
-
         public string ClientName { get; }
 
-        public string Message { get; }
-
-        public int Room { get; }
-
+        public List<string> Users { get; }
         #endregion Properties
 
         #region Constructors
 
-        public MessageReceivedEventArgs(string clientName, string message, int room)
+        public AddedChatEventArgs(string clientName, List<string> users)
         {
             ClientName = clientName;
-            Message = message;
-            Room = room;
+            Users = users;
         }
 
         #endregion Constructors

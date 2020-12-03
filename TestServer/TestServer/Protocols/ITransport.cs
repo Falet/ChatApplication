@@ -1,8 +1,7 @@
-﻿
-
-namespace TestServer.Network
+﻿namespace TestServer.Network
 {
     using System;
+    using System.Collections.Generic;
     using System.Net;
 
     public interface ITransport
@@ -10,23 +9,26 @@ namespace TestServer.Network
 
         #region Events
 
-        public event EventHandler<ConnectionStateChangedEventArgs> ConnectionStateChanged;
+        
+        public event EventHandler<UserConnectedEventArgs> UserConnected;
+        public event EventHandler<UserDisconnectedEventArgs> UserDisconnected;
         public event EventHandler<MessageReceivedEventArgs> MessageReceived;
-        public event EventHandler<ConnectionToChatEventArgs> ConnectionToChat;
-
+        public event EventHandler<ConnectionToChatEventArgs> ConnectedToChat;
+        public event EventHandler<AddedChatEventArgs> AddedChat;
+        public event EventHandler<RemovedChatEventArgs> RemovedChat;
+        public event EventHandler<AddedUsersToChatEventArgs> AddedUsersToChat;
+        public event EventHandler<RemovedUsersFromChatEventArgs> RemovedUsersFromChat;
         #endregion Events
 
         #region Methods
 
-        public void Start(IPEndPoint IPendPoint);
+        public void Start();
 
         public void Stop();
 
-        public void AddConnection();
+        public void FreeConnection(Guid ClientId);
 
-        public void FreeConnection();
-
-        public void Send();
+        public void Send(List<Guid> ListClientId, MessageContainer message);
 
         #endregion Methods
     }

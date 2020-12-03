@@ -7,16 +7,16 @@ namespace TestServer.Network
     using System.Net;
     public static class TransportFactory
     {
-        public static ITransport Create(TransportType type)
+        public static ITransport Create(ConfigServer config)
         {
-            switch (type)
+            switch (config.Protocol)
             {
                 case TransportType.WebSocket:
-                    return new WsServer();
+                    return new WsServer(new IPEndPoint(IPAddress.Any, config.Port));
                 case TransportType.Tcp:
-                    return new TcpServer();
+                    return new TcpServer(new IPEndPoint(IPAddress.Any, config.Port));
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                    throw new ArgumentOutOfRangeException(nameof(config), config, null);
             }
         }
     }

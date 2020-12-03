@@ -17,19 +17,19 @@
 		public NetworkManager(TypeGettingConfig type)
 		{
 			_ConfigServer = ConfigurationServer.ReadConfigFromFile("user.json");
+			Start();
 		}
-		public void Start()
+		private void Start()
 		{
-			_server = TransportFactory.Create(_ConfigServer.Protocol);
+			_server = TransportFactory.Create(_ConfigServer);
 
 			RequestManagerDb requestManagerDb = new RequestManagerDb();
 
-			HandlerRequestFromServer handlerRequestFromServer = new HandlerRequestFromServer(_server, requestManagerDb.GetTables());
+			HandlerRequestFromServer handlerRequestFromServer = new HandlerRequestFromServer(_server, requestManagerDb);
 
 			ChangeDb changeDb = new ChangeDb(handlerRequestFromServer, requestManagerDb);
 
-			_server.Start(new IPEndPoint(IPAddress.Any, _ConfigServer.Port));
-			//Console.ReadLine();
+			_server.Start();
 		}
 	}
 }

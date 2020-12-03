@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TestServer.Network
 {
-    public class AddChatResponse
+    class AddNewUserToCharResponse
     {
     }
 }
