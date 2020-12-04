@@ -6,8 +6,9 @@
     using System.Data.SqlClient;
     using TestServer.DbEF;
     using System.Linq;
+    using System.Threading;
 
-    public class RequestManagerDb : IGetData
+    public class RequestManagerDb : IGetOrSetData
     {
         public Dictionary<string, UserProperties> GetUserInfo()
         {
@@ -31,7 +32,11 @@
         }
         public Dictionary<int, InfoAllChat> GetRoomInfo()
         {
-            throw new NotImplementedException();
+            return new Dictionary<int, InfoAllChat>();
+        }
+        public Dictionary<int, List<MessageInfo>> GetAllMessage()
+        {
+            return new Dictionary<int, List<MessageInfo>>();
         }
         public List<string> GetAllNameUser()
         {
@@ -39,34 +44,37 @@
             return buf;
         }
 
-        public bool AddNewUser(string name)
+        public bool AddNewUser(ClientInfo client)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
-        public bool AddNewMessage(MessageReceivedEventArgs message)
+        public bool AddNewMessage(MessageInfoForDb message)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
-        public bool CreatNewRoom(string nameOwner, List<string> listNameOfUsers)
+        public bool CreatNewRoom(CreatingChatInfo chatInfo)
         {
-            throw new NotImplementedException();
+            return true;
+        }
+        public bool RemoveRoom(int room)
+        {
+            return true;
+        }
+        public bool AddUserToRoom(AddClientToChat InfoAboutAddedChat)
+        {
+            return true;
         }
 
-        public bool AddUserToRoom(string name, int room)
+        public bool RemoveUserFromRoom(RemoveClientFromChat InfoAboutRemovedChat)
         {
-            throw new NotImplementedException();
-        }
-
-        public bool RemoveUserFromRoom(string name, int room)
-        {
-            throw new NotImplementedException();
+            return true;
         }
 
         public bool GetMessageFromRoom(int room)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
 

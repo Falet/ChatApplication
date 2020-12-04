@@ -9,7 +9,7 @@ namespace TestServer.Network
         #region Properties
         public string ClientName { get; }
 
-        public List<string> Users { get; }
+        public List<string> Clients { get; }
         #endregion Properties
 
         #region Constructors
@@ -17,7 +17,7 @@ namespace TestServer.Network
         public AddedChatEventArgs(string clientName, List<string> users)
         {
             ClientName = clientName;
-            Users = users;
+            Clients = users;
         }
 
         #endregion Constructors

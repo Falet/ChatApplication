@@ -28,8 +28,6 @@
 
 			HandlerRequestFromServer handlerRequestFromServer = new HandlerRequestFromServer(_server, requestManagerDb);
 
-			ChangeDb changeDb = new ChangeDb(handlerRequestFromServer, requestManagerDb);
-
 			_server.Start();//*/
 		}
 	}

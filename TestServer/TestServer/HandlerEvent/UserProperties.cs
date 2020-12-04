@@ -10,7 +10,7 @@ namespace TestServer.Network
 
 		public Guid IdConnection { get; set; }
 
-		public List<InfoChat> Room { get; set; }
+		public List<int> NumberRoom { get; set; }
 
 		#endregion Properties
 	}

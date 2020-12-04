@@ -10,7 +10,7 @@ namespace TestServer.Network
 
         public string ClientName { get; }
 
-        public int Room { get; }
+        public int NumberRoom { get; }
 
         #endregion Properties
 
@@ -19,7 +19,7 @@ namespace TestServer.Network
         public ConnectionToChatEventArgs(string clientName, int room)
         {
             ClientName = clientName;
-            Room = room;
+            NumberRoom = room;
         }
 
         #endregion Constructors
