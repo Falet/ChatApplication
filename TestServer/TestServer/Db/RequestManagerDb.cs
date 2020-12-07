@@ -30,9 +30,9 @@
             }
             return new Dictionary<string,UserProperties>();
         }
-        public Dictionary<int, InfoAllChat> GetRoomInfo()
+        public Dictionary<int, InfoRoom> GetRoomInfo()
         {
-            return new Dictionary<int, InfoAllChat>();
+            return new Dictionary<int, InfoRoom>();
         }
         public Dictionary<int, List<MessageInfo>> GetAllMessage()
         {
@@ -44,30 +44,31 @@
             return buf;
         }
 
-        public bool AddNewUser(ClientInfo client)
+        public bool AddNewUser(ClientInfo container)
         {
             return true;
         }
 
-        public bool AddNewMessage(MessageInfoForDb message)
+        public bool AddNewMessage(MessageInfoForDb container)
         {
             return true;
         }
 
-        public bool CreatNewRoom(CreatingChatInfo chatInfo)
+        public int CreatNewRoom(CreatingChatInfo container)
         {
-            return true;
+            int numberRoom = -1;
+            return numberRoom;
         }
         public bool RemoveRoom(int room)
         {
             return true;
         }
-        public bool AddUserToRoom(AddClientToChat InfoAboutAddedChat)
+        public bool AddUserToRoom(AddClientToChat container)
         {
             return true;
         }
 
-        public bool RemoveUserFromRoom(RemoveClientFromChat InfoAboutRemovedChat)
+        public bool RemoveUserFromRoom(RemoveClientFromChat container)
         {
             return true;
         }

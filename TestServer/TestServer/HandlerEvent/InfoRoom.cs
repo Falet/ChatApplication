@@ -4,12 +4,12 @@ using System.Text;
 
 namespace TestServer.Network
 {
-    public class InfoAllChat
+    public class InfoRoom
     {
         public string OwnerChat { get; }
         public List<string> NameClients { get; }
 
-        public InfoAllChat(string ownerChat, List<string> nameClients)
+        public InfoRoom(string ownerChat, List<string> nameClients)
         {
             OwnerChat = ownerChat;
             NameClients = nameClients;

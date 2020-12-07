@@ -4,14 +4,22 @@ using System.Text;
 
 namespace TestServer.Network
 {
-    public class RemoveChatResponse
+    public class MessageResponse
     {
+        #region Properties
+
+        public string FromClientName { get; }
+        public string Message { get; }
         public int Room { get; }
+
+        #endregion Properties
 
         #region Constructors
 
-        public RemoveChatResponse(int room)
+        public MessageResponse(string clientName, string message, int room)
         {
+            FromClientName = clientName;
+            Message = message;
             Room = room;
         }
 
@@ -23,7 +31,7 @@ namespace TestServer.Network
         {
             var container = new MessageContainer
             {
-                Identifier = nameof(RemoveChatResponse),
+                Identifier = nameof(MessageResponse),
                 Payload = this
             };
 

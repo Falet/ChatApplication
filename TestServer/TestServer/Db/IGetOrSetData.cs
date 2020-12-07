@@ -7,14 +7,14 @@ namespace TestServer.Network
     public interface IGetOrSetData
     {
         public Dictionary<string, UserProperties> GetUserInfo();
-        public Dictionary<int, InfoAllChat> GetRoomInfo();
+        public Dictionary<int, InfoRoom> GetRoomInfo();
         public Dictionary<int, List<MessageInfo>> GetAllMessage();
-        public bool AddNewUser(ClientInfo name);
-        public bool AddNewMessage(MessageInfoForDb message);
-        public bool CreatNewRoom(CreatingChatInfo chatInfo);
+        public bool AddNewUser(ClientInfo container);
+        public bool AddNewMessage(MessageInfoForDb container);
+        public int CreatNewRoom(CreatingChatInfo container);
         public bool RemoveRoom(int room);
-        public bool AddUserToRoom(AddClientToChat InfoAboutAddedChat);
-        public bool RemoveUserFromRoom(RemoveClientFromChat InfoAboutRemovedChat);
+        public bool AddUserToRoom(AddClientToChat container);
+        public bool RemoveUserFromRoom(RemoveClientFromChat container);
         public bool GetMessageFromRoom(int room);
         public List<string> GetAllNameUser();
     }

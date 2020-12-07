@@ -8,11 +8,24 @@ namespace TestServer.Network
 	{
 		#region Properties
 
-		public ResultRequest Result { get; set; }
+		public ResultRequest Result { get; }
 
-        public string Reason { get; set; }
+        public string Reason { get; }
+
+        public List<int> NumberRoom;
 
         #endregion Properties
+
+        #region Constructors
+
+        public ConnectionResponse(ResultRequest result, string reason, List<int> numberRoom)
+        {
+            Result = result;
+            Reason = reason;
+            NumberRoom = numberRoom;
+        }
+
+        #endregion Constructors
 
         #region Methods
 

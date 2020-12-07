@@ -4,15 +4,17 @@ using System.Text;
 
 namespace TestServer.Network
 {
-    public class RemoveChatResponse
+    public class AddNewChatResponse
     {
-        public int Room { get; }
+        public int NumberRoom { get; }
+        public List<string> Users { get; }
 
         #region Constructors
 
-        public RemoveChatResponse(int room)
+        public AddNewChatResponse(int numberRoom, List<string> users)
         {
-            Room = room;
+            NumberRoom = numberRoom;
+            Users = users;
         }
 
         #endregion Constructors
@@ -23,7 +25,7 @@ namespace TestServer.Network
         {
             var container = new MessageContainer
             {
-                Identifier = nameof(RemoveChatResponse),
+                Identifier = nameof(AddNewChatResponse),
                 Payload = this
             };
 
