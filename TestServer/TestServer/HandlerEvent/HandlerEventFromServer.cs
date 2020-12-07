@@ -34,8 +34,8 @@ namespace TestServer.Network
 
 			_data = data;
 
-			_usersProperties = _data.GetUserInfo();
-			_infoAllRoom = _data.GetRoomInfo();
+			_usersProperties = _data.GetAllUserInfo();
+			_infoAllRoom = _data.GetAllRoomInfo();
 			_MessageAtChat = _data.GetAllMessage();
 		}
 
@@ -120,11 +120,6 @@ namespace TestServer.Network
 						if(_MessageAtChat.TryGetValue(container.NumberRoom, out List<MessageInfo> messages))
 						{
 							await Task.Run(() => _server.Send(new List<Guid>() { userProperties.IdConnection }, new ConnectToChatResponse(container.NumberRoom, messages).GetContainer()));
-						}
-
-						if (await Task.Run(() => _data.GetMessageFromRoom(container.NumberRoom)))
-						{
-							//Сигнал серверу на отсутствие доступа к БД
 						}
 					}
 				}
@@ -214,7 +209,9 @@ namespace TestServer.Network
 						if (_usersProperties.TryGetValue(nameClient, out UserProperties clientOfChat))
 						{
 							idClientsForSendMessage.Add(clientOfChat.IdConnection);
-							_infoAllRoom[container.Room].NameClients.Add(nameClient);
+							InfoRoom buffer = infoChat;
+							infoChat.NameClients.Add(nameClient);
+							_infoAllRoom.TryUpdate(container.Room, infoChat, buffer);
 						}
 					}
 

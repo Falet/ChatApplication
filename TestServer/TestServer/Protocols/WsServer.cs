@@ -154,7 +154,6 @@ namespace TestServer.Network
                 connection.Send(message);
             }
         }
-
         #endregion Methods
     }
 }
