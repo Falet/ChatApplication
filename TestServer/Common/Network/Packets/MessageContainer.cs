@@ -1,0 +1,13 @@
+﻿namespace Common.Network.Packets
+{
+    public class MessageContainer
+    {
+        #region Properties
+
+        public string Identifier { get; set; }
+        public object Payload { get; set; }
+
+        #endregion Properties
+
+    }
+}
