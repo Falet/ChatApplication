@@ -10,16 +10,13 @@ namespace Common.Network.Packets
 
         public string NameOfClient { get; }
 
-        public List<int> NumberChat { get; }
-
         #endregion Properties
 
         #region Constructors
 
-        public ConnectionNoticeForClients(string nameOfClient, List<int> numberChat)
+        public ConnectionNoticeForClients(string nameOfClient)
         {
             NameOfClient = nameOfClient;
-            NumberChat = numberChat;
         }
 
         #endregion Constructors
