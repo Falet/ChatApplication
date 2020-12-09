@@ -1,4 +1,4 @@
-﻿namespace Common.Network
+﻿namespace Server.DataBase
 {
     using System;
     public class MessageInfoForDb

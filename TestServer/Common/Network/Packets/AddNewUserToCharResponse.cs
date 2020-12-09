@@ -1,7 +1,7 @@
 ﻿namespace Common.Network.Packets
 {
     using System.Collections.Generic;
-    class AddNewClientToChatResponse
+    public class AddNewClientToChatResponse
     {
         #region Properties
 

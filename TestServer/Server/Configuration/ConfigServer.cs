@@ -1,12 +1,13 @@
-﻿namespace Common.Network
+﻿namespace Server.Configuration
 {
     using Newtonsoft.Json;
+    using Common.Network;
     public class ConfigServer
     {
         #region Properties
 
         [JsonProperty]
-        public TransportType Protocol { private set;  get; }
+        public TypeTransport Protocol { private set;  get; }
         [JsonProperty]
         public int Port { private set; get; }
 

@@ -1,12 +1,12 @@
-﻿namespace Common.Network
+﻿namespace Server.DataBase
 {
     using System;
     using System.Collections.Generic;
-    using Common.DbEF;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Collections.Concurrent;
-
+    using Common.Network;
+    using Network;
     public class RequestManagerDb : IGetOrSetData
     {
         #region Methods

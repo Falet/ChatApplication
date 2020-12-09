@@ -1,8 +1,7 @@
-﻿
-namespace Server
+﻿namespace Server
 {
     using System;
-    using Common.Network;
+    using Common.Configuration;
     class Program
     {
         static void Main(string[] args)

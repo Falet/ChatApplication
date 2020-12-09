@@ -1,7 +1,7 @@
-﻿namespace Common.Network
+﻿namespace Server.DataBase
 {
     using System.Collections.Generic;
-    public class RemoveClientFromChat
+    public class AddClientToChat
     {
         #region Properties
 
@@ -9,6 +9,6 @@
         public List<string> NameOfClients { get; set; }
 
         #endregion Properties
-
+        
     }
 }

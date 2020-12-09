@@ -1,7 +1,6 @@
-﻿namespace Common.Network
+﻿namespace Server.DataBase
 {
     using System.Data.Entity;
-    using Common.DbEF;
     public class DBChat : DbContext
     {
         #region Properties

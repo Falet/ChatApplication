@@ -1,14 +1,14 @@
-﻿namespace Common.Network
+﻿namespace Server.DataBase
 {
     using System.Collections.Generic;
-    public class AddClientToChat
+    public class CreatingChatInfo
     {
         #region Properties
 
-        public int NumberChat { get; set; }
+        public string NameOfClientSender { get; set; }
+
         public List<string> NameOfClients { get; set; }
 
         #endregion Properties
-        
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Common.DbEF
+﻿namespace Server.DataBase
 {
     using System.ComponentModel.DataAnnotations;
     public class Messages

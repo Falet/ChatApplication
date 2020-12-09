@@ -1,6 +1,6 @@
 ﻿namespace Common.Network
 {
-    public enum TransportType
+    public enum TypeTransport
     {
         WebSocket,
         Tcp,

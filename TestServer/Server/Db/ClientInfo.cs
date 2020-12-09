@@ -1,4 +1,4 @@
-﻿namespace Common.Network
+﻿namespace Server.DataBase
 {
     public class ClientInfo
     {

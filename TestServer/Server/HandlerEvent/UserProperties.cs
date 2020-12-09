@@ -1,4 +1,4 @@
-﻿namespace Common.Network
+﻿namespace Server.Network
 {
 	using System;
 	using System.Collections.Generic;

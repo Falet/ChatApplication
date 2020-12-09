@@ -1,8 +1,10 @@
-﻿namespace Common.Network
+﻿namespace Server.DataBase
 {
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Common.Network;
+    using Network;
     public interface IGetOrSetData
     {
         #region Methods

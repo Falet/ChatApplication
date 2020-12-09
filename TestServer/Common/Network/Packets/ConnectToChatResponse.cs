@@ -1,6 +1,7 @@
 ﻿namespace Common.Network.Packets
 {
     using System.Collections.Generic;
+
     public class ConnectToChatResponse
     {
         #region Properties

@@ -1,12 +1,13 @@
-﻿namespace Common.Network
+﻿namespace Server.Network
 {
 	using System;
 	using System.Collections.Generic;
 	using System.Collections.Concurrent;
 	using System.Threading.Tasks;
-	using Packets;
+	using Common.Network;
+	using Common.Network.Packets;
     using System.Linq;
-
+	using DataBase;
     public class HandlerRequestFromClient
 	{
 		#region Fields
@@ -126,6 +127,10 @@
 				await Task.Run(() =>  _server.Send(idClientsForSendMessage, new MessageResponse(container.NameOfClient, container.Message, container.NumberChat).GetContainer()));
 
 				DateTime time = DateTime.Now;
+				/*if(_MessagesAtChat.TryGetValue(container.NumberChat,out List<MessageInfo> allMessageAtChat))
+                {
+					_MessagesAtChat.TryUpdate(container.NumberChat, allMessageAtChat.Add(new MessageInfo { FromMessage = container.NameOfClient, Text = container.Message, Time = time }), allMessageAtChat);
+				}*/
 				if (_MessagesAtChat.ContainsKey(container.NumberChat))
 				{
 					_MessagesAtChat[container.NumberChat].Add(new MessageInfo { FromMessage = container.NameOfClient, Text = container.Message, Time = time });
@@ -169,7 +174,7 @@
 
 		public async void OnAddedChat(object sender, AddedChatEventArgs container)
 		{
-			if (_cachedClientProperies.TryGetValue(container.NameOfClientSender, out ClientProperties clientProperties))
+			if (_cachedClientProperies.TryGetValue(container.NameOfClientSender, out ClientProperties clientSenderProperties))
 			{
 				List<Guid> idClientsForSendMessage = new List<Guid>();//Создание списка id для рассылки им сообщений
 				foreach (var nameClient in container.NameOfClientsForAdd)
@@ -179,6 +184,11 @@
 						idClientsForSendMessage.Add(clientOfChat.IdConnection);
 					}
 				}
+				if(clientSenderProperties.IdConnection != Guid.Empty)
+                {
+					idClientsForSendMessage.Add(clientSenderProperties.IdConnection);
+				}
+				
 
 				int numberChat = await Task.Run(() => _data.CreatNewChat(new CreatingChatInfo { NameOfClientSender = container.NameOfClientSender, NameOfClients = container.NameOfClientsForAdd }));
 				if(numberChat != -1)

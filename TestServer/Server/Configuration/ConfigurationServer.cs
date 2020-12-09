@@ -1,4 +1,4 @@
-﻿namespace Common.Network
+﻿namespace Server.Configuration
 {
 	using System.IO;
 	using Newtonsoft.Json;

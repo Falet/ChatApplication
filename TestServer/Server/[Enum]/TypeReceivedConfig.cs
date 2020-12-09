@@ -1,4 +1,4 @@
-﻿namespace Common.Network
+﻿namespace Common.Configuration
 {
     public enum TypeReceivedConfig
     {
