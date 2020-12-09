@@ -4,9 +4,11 @@
     using Newtonsoft.Json.Linq;
     using WebSocketSharp;
     using System.Net;
+    using System;
+
     public class WsClient
     {
-        /*#region Fields
+        #region Fields
 
         private readonly IPEndPoint _listenAddress;
 
@@ -33,7 +35,7 @@
                 case nameof(ConnectionResponse):
                     {
                         var connectionResponse = ((JObject)container.Payload).ToObject(typeof(ConnectionResponse)) as ConnectionResponse;
-                        ClientConnected?.Invoke(this, new ClientConnectedEventArgs(null, clientId));
+                        ClientConnected?.Invoke(this, new ClientConnectedEventArgs());
                         break;
                     }
                 case nameof(MessageResponse):
@@ -79,6 +81,6 @@
                         break;
                     }
             }
-        }*/
+        }
     }
 }

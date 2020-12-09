@@ -10,9 +10,16 @@
 	using DataBase;
     public class HandlerRequestFromClient
 	{
-		#region Fields
 
-		private ConcurrentDictionary<string,ClientProperties> _cachedClientProperies;//Ключ - имя пользователя
+		#region Const
+
+		private const int NumberGeneralChat = 1;
+
+        #endregion Const
+
+        #region Fields
+
+        private ConcurrentDictionary<string, ClientProperties> _cachedClientProperies;//Ключ - имя пользователя
 		private ConcurrentDictionary<int, InfoChat> _infoAllChat;//Ключ - номер комнаты
 		private ConcurrentDictionary<int, List<MessageInfo>> _MessagesAtChat;//Ключ - номер комнаты
 		private IGetOrSetData _data;
@@ -46,29 +53,57 @@
 
 		#region Methods
 
+
+		//Везде доделать обновления списка с информацией о клиенте
 		public async void OnConnect(object sender, ClientConnectedEventArgs container)
 		{
 			if (_cachedClientProperies.TryGetValue(container.ClientName,out ClientProperties clientProperties))
 			{
 				if(clientProperties.IdConnection == Guid.Empty)
 				{
-					await Task.Run(() => _server.Send(new List<Guid>() { clientProperties.IdConnection }, new ConnectionResponse(ResultRequest.Ok, "Пользователь подключен", clientProperties.NumbersChat).GetContainer()));
+					await Task.Run(() => _server.Send(new List<Guid>() { clientProperties.IdConnection }, 
+										 new ConnectionResponse(ResultRequest.Ok, "Пользователь подключен", 
+																new Dictionary<int, string>(), 
+																new Dictionary<string, bool>()).GetContainer()));
 					clientProperties.IdConnection = container.ClientId;
 					await Task.Run(() => _server.SendAll(new ConnectionNoticeForClients(container.ClientName).GetContainer()));
 				}
 				else
 				{
-					await Task.Run(() => _server.Send(new List<Guid>() { clientProperties.IdConnection }, new ConnectionResponse(ResultRequest.Failure, "Такой пользователь уже есть", new List<int>()).GetContainer()));
+					await Task.Run(() => _server.Send(new List<Guid>() { clientProperties.IdConnection }, 
+										 new ConnectionResponse(ResultRequest.Failure, "Такой пользователь уже есть",
+																new Dictionary<int, string>(),
+																new Dictionary<string, bool>()).GetContainer()));
 					await Task.Run(() => _server.FreeConnection(clientProperties.IdConnection));
 				}
 			}
 			else
 			{
-				await Task.Run(() => _server.Send(new List<Guid>() { clientProperties.IdConnection }, new ConnectionResponse(ResultRequest.Ok, "Новый пользователь зарегистрирован",clientProperties.NumbersChat).GetContainer()));
+				//Первый аргумент номер комнаты, второй словарь клиентов и их активность
+				Dictionary<string, bool> chatInfoForClient = new Dictionary<string, bool>();
+				if(_infoAllChat.TryGetValue(NumberGeneralChat, out InfoChat infoGeneralChat))
+				{
+					foreach (var nameClientAtChat in infoGeneralChat.NameClients)
+					{
+						if (_cachedClientProperies.TryGetValue(nameClientAtChat, out ClientProperties clientAtChat))
+                        {
+							if(clientAtChat.IdConnection != Guid.Empty)
+                            {
+								chatInfoForClient.Add(nameClientAtChat, true);
+							}
+                            else
+                            {
+								chatInfoForClient.Add(nameClientAtChat, false);
+							}
+						}
+					}
+				}
+				await Task.Run(() => _server.Send(new List<Guid>() { clientProperties.IdConnection }, 
+									 new ConnectionResponse(ResultRequest.Ok, "Новый пользователь зарегистрирован",
+															new Dictionary<int, string>() { { NumberGeneralChat, infoGeneralChat.OwnerChat } }, 
+															chatInfoForClient).GetContainer()));
 
 				_cachedClientProperies.TryAdd(container.ClientName, new ClientProperties { IdConnection = container.ClientId, NumbersChat = new List<int>() });
-
-				OnAddedClientsToChat(this, new AddedClientsToChatEventArgs("Server",1,new List<string>() { container.ClientName }));
 
 				await Task.Run(() => _server.SendAll(new ConnectionNoticeForClients(container.ClientName).GetContainer()));
 
@@ -180,25 +215,30 @@
 		{
 			if (_cachedClientProperies.TryGetValue(container.NameOfClientSender, out ClientProperties clientSenderProperties))
 			{
-				List<Guid> idClientsForSendMessage = new List<Guid>();//Создание списка id для рассылки им сообщений
-				foreach (var nameClient in container.NameOfClientsForAdd)
-				{
-					if (_cachedClientProperies.TryGetValue(nameClient, out ClientProperties clientOfChat) && clientOfChat.IdConnection != Guid.Empty)
-					{
-						idClientsForSendMessage.Add(clientOfChat.IdConnection);
-					}
-				}
-				if(clientSenderProperties.IdConnection != Guid.Empty)
-                {
-					idClientsForSendMessage.Add(clientSenderProperties.IdConnection);
-				}
-				
-
 				int numberChat = await Task.Run(() => _data.CreatNewChat(new CreatingChatInfo { NameOfClientSender = container.NameOfClientSender, NameOfClients = container.NameOfClientsForAdd }));
-				if(numberChat != -1)
+				if (numberChat != -1)
 				{
+					List<Guid> idClientsForSendMessage = new List<Guid>();//Создание списка id для рассылки им сообщений
+					foreach (var nameClient in container.NameOfClientsForAdd)
+					{
+						if (_cachedClientProperies.TryGetValue(nameClient, out ClientProperties clientOfChat))
+						{
+							if (clientOfChat.IdConnection != Guid.Empty)
+							{
+								idClientsForSendMessage.Add(clientOfChat.IdConnection);
+							}
+							var lastValueChatsClient = clientOfChat;
+							clientOfChat.NumbersChat.Add(numberChat);
+							_cachedClientProperies.TryUpdate(nameClient, clientOfChat, lastValueChatsClient);
+						}
+					}
+					if (clientSenderProperties.IdConnection != Guid.Empty)
+					{
+						idClientsForSendMessage.Add(clientSenderProperties.IdConnection);
+					}
+
 					await Task.Run(() => _server.Send(idClientsForSendMessage, new AddNewChatResponse(numberChat, container.NameOfClientsForAdd).GetContainer()));
-					_infoAllChat.TryAdd(numberChat, new InfoChat{ OwnerChat = container.NameOfClientSender, NameClients = container.NameOfClientsForAdd });
+					_infoAllChat.TryAdd(numberChat, new InfoChat { OwnerChat = container.NameOfClientSender, NameClients = container.NameOfClientsForAdd });
 				}
 				else
 				{
