@@ -54,7 +54,7 @@
 				{
 					await Task.Run(() => _server.Send(new List<Guid>() { clientProperties.IdConnection }, new ConnectionResponse(ResultRequest.Ok, "Пользователь подключен", clientProperties.NumbersChat).GetContainer()));
 					clientProperties.IdConnection = container.ClientId;
-					await ClientNotice(container.ClientName);
+					await Task.Run(() => _server.SendAll(new ConnectionNoticeForClients(container.ClientName).GetContainer()));
 				}
 				else
 				{
@@ -70,7 +70,7 @@
 
 				OnAddedClientsToChat(this, new AddedClientsToChatEventArgs("Server",1,new List<string>() { container.ClientName }));
 
-				await ClientNotice(container.ClientName);
+				await Task.Run(() => _server.SendAll(new ConnectionNoticeForClients(container.ClientName).GetContainer()));
 
 				if (!await Task.Run(() => _data.AddNewClient(new ClientInfo { NameOfClient = container.ClientName})))
 				{
@@ -79,7 +79,8 @@
 			}
 		}
 
-		private async Task ClientNotice(string nameClientConnected)//Доделать:рассылку другим пользователям, что зашел пользователь
+		//Если не будет существовать общего чата, то нужно будет рассылать сообщение о подключении только тем пользователям, которые находятся в одном чате
+		/*private async Task ClientNotice(string nameClientConnected)//Доделать:рассылку другим пользователям, что зашел пользователь
 		{
 			List<Guid> ChatForNotice = new List<Guid>();
 			if(_cachedClientProperies.TryGetValue(nameClientConnected, out ClientProperties clientProperties))
@@ -100,13 +101,16 @@
 				var DistinctListClients = ChatForNotice.Distinct().ToList();
 				await Task.Run(() => _server.Send(DistinctListClients, new ConnectionNoticeForClients(nameClientConnected).GetContainer()));
 			}
-		}
+		}*/
 
 		public async void OnDisconnect(object sender, ClientDisconnectedEventArgs container)
 		{
 			if (_cachedClientProperies.TryGetValue(container.NameOfClient,out ClientProperties clientProperties) && clientProperties.IdConnection != Guid.Empty)
 			{
 				await Task.Run(() => _server.FreeConnection(clientProperties.IdConnection));
+
+				await Task.Run(() => _server.SendAll(new DisconnectRequest(container.NameOfClient).GetContainer()));
+
 				_cachedClientProperies.TryUpdate(container.NameOfClient, new ClientProperties{ IdConnection = Guid.Empty, NumbersChat = clientProperties.NumbersChat }, clientProperties);
 			}
 		}
@@ -127,13 +131,12 @@
 				await Task.Run(() =>  _server.Send(idClientsForSendMessage, new MessageResponse(container.NameOfClient, container.Message, container.NumberChat).GetContainer()));
 
 				DateTime time = DateTime.Now;
-				/*if(_MessagesAtChat.TryGetValue(container.NumberChat,out List<MessageInfo> allMessageAtChat))
+
+				if(_MessagesAtChat.TryGetValue(container.NumberChat,out List<MessageInfo> allMessageAtChat))
                 {
-					_MessagesAtChat.TryUpdate(container.NumberChat, allMessageAtChat.Add(new MessageInfo { FromMessage = container.NameOfClient, Text = container.Message, Time = time }), allMessageAtChat);
-				}*/
-				if (_MessagesAtChat.ContainsKey(container.NumberChat))
-				{
-					_MessagesAtChat[container.NumberChat].Add(new MessageInfo { FromMessage = container.NameOfClient, Text = container.Message, Time = time });
+					var lastValueMessages = allMessageAtChat;
+					allMessageAtChat.Add(new MessageInfo { FromMessage = container.NameOfClient, Text = container.Message, Time = time });
+					_MessagesAtChat.TryUpdate(container.NumberChat, allMessageAtChat, lastValueMessages);
 				}
 
 				if (!await Task.Run(() => _data.AddNewMessage(new MessageInfoForDb { NumberChat = container.NumberChat, 

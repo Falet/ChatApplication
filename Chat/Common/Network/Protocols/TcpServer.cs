@@ -51,6 +51,11 @@
             var buf = message.Payload.GetType();
         }
 
+
+        public void SendAll(MessageContainer message)
+        {
+
+        }
         #endregion Methods
     }
 }

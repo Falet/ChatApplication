@@ -29,6 +29,8 @@
 
         public void Send(List<Guid> ListClientId, MessageContainer message);
 
+        public void SendAll(MessageContainer message);
+
         #endregion Methods
     }
 }

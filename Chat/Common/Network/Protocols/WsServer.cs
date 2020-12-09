@@ -154,6 +154,13 @@
                 connection.Send(message);
             }
         }
+        public void SendAll(MessageContainer message)
+        {
+            foreach (var connection in _connections)
+            {
+                connection.Value.Send(message);
+            }
+        }
         #endregion Methods
     }
 }
