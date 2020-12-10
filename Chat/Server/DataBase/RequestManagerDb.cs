@@ -7,13 +7,25 @@
     using System.Collections.Concurrent;
     using Common.Network;
     using Network;
-    public class RequestManagerDb : IGetOrSetData
+    public class RequestManagerDb : IHandlerRequestToData
     {
         #region Methods
-
-        public ConcurrentDictionary<string, ClientProperties> GetInfoAboutAllClient()
+        public ConcurrentDictionary<string, Guid> GetInfoAboutAllClient()
         {
-            ConcurrentDictionary<string, ClientProperties> allClientInfo = new ConcurrentDictionary<string, ClientProperties>();
+            ConcurrentDictionary<string, Guid> allClientInfo = new ConcurrentDictionary<string, Guid>();
+            using (var db = new DBChat())
+            {
+                foreach (var item in db.PoolClients)
+                {
+                    allClientInfo.TryAdd(item.ClientID, Guid.Empty);
+                }
+            }
+            return allClientInfo;
+        }
+
+        public ConcurrentDictionary<string, ClientProperties> GetInfoAboutLinkClientToChat()
+        {
+            ConcurrentDictionary<string, ClientProperties> allLinkInfo = new ConcurrentDictionary<string, ClientProperties>();
             using (var db = new DBChat())
             {
                 foreach (var item in db.PoolClients)
@@ -25,10 +37,10 @@
                     {
                         numbersChat.Add(Chat.ChatID);
                     }
-                    allClientInfo.TryAdd(item.ClientID, new ClientProperties { IdConnection = Guid.Empty, NumbersChat = numbersChat });
+                    allLinkInfo.TryAdd(item.ClientID, new ClientProperties { IdConnection = Guid.Empty, NumbersChat = numbersChat });
                 }
             }
-            return allClientInfo;
+            return allLinkInfo;
         }
 
         public ConcurrentDictionary<int, InfoChat> GetInfoAboutAllChat()
@@ -45,7 +57,7 @@
                     {
                         clientsName.Add(Client.ClientID);
                     }
-                    allChatInfo.TryAdd(item.ChatID, new InfoChat { OwnerChat = item.OwnerChat, NameClients = clientsName });
+                    allChatInfo.TryAdd(item.ChatID, new InfoChat { OwnerChat = item.OwnerChat, NameOfClients = clientsName });
                 }
             }
             return allChatInfo;

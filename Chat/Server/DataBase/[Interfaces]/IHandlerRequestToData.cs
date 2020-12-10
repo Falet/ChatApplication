@@ -1,15 +1,17 @@
 ﻿namespace Server.DataBase
 {
+    using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Common.Network;
     using Network;
-    public interface IGetOrSetData
+    public interface IHandlerRequestToData
     {
         #region Methods
 
-        public ConcurrentDictionary<string, ClientProperties> GetInfoAboutAllClient();
+        public ConcurrentDictionary<string, Guid> GetInfoAboutAllClient();
+        public ConcurrentDictionary<string, ClientProperties> GetInfoAboutLinkClientToChat();
         public ConcurrentDictionary<int, InfoChat> GetInfoAboutAllChat();
         public ConcurrentDictionary<int, List<MessageInfo>> GetAllMessageFromChats();
         public Task<bool> AddNewClient(ClientInfo container);

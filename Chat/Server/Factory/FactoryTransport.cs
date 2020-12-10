@@ -4,11 +4,11 @@
     using Configuration;
     using System.Net;
     using System;
-    public static class TransportFactory
+    public class TransportFactory
     {
         #region Methods
 
-        public static ITransportServer Create(ConfigServer config)
+        public ITransportServer Create(ConfigServer config)
         {
             switch (config.Protocol)
             {

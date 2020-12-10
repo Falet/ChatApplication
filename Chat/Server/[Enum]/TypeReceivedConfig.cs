@@ -1,4 +1,4 @@
-﻿namespace Common.Configuration
+﻿namespace Server.Configuration
 {
     public enum TypeReceivedConfig
     {

@@ -10,7 +10,6 @@
 	using DataBase;
     public class HandlerRequestFromClient
 	{
-
 		#region Const
 
 		private const int NumberGeneralChat = 1;
@@ -22,14 +21,14 @@
         private ConcurrentDictionary<string, ClientProperties> _cachedClientProperies;//Ключ - имя пользователя
 		private ConcurrentDictionary<int, InfoChat> _infoAllChat;//Ключ - номер комнаты
 		private ConcurrentDictionary<int, List<MessageInfo>> _MessagesAtChat;//Ключ - номер комнаты
-		private IGetOrSetData _data;
+		private IHandlerRequestToData _data;
 		private ITransportServer _server;
 
 		#endregion Fields
 
 		#region Constructors
 
-		public HandlerRequestFromClient(ITransportServer server, IGetOrSetData data)
+		public HandlerRequestFromClient(ITransportServer server, IHandlerRequestToData data)
 		{
 			_server = server;
 
@@ -44,7 +43,7 @@
 
 			_data = data;
 
-			_cachedClientProperies = _data.GetInfoAboutAllClient();
+			_cachedClientProperies = _data.GetInfoAboutLinkClientToChat();
 			_infoAllChat = _data.GetInfoAboutAllChat();
 			_MessagesAtChat = _data.GetAllMessageFromChats();
 		}
@@ -52,7 +51,6 @@
 		#endregion Constructors
 
 		#region Methods
-
 
 		//Везде доделать обновления списка с информацией о клиенте
 		public async void OnConnect(object sender, ClientConnectedEventArgs container)
@@ -83,7 +81,7 @@
 				Dictionary<string, bool> chatInfoForClient = new Dictionary<string, bool>();
 				if(_infoAllChat.TryGetValue(NumberGeneralChat, out InfoChat infoGeneralChat))
 				{
-					foreach (var nameClientAtChat in infoGeneralChat.NameClients)
+					foreach (var nameClientAtChat in infoGeneralChat.NameOfClients)
 					{
 						if (_cachedClientProperies.TryGetValue(nameClientAtChat, out ClientProperties clientAtChat))
                         {
@@ -103,7 +101,7 @@
 															new Dictionary<int, string>() { { NumberGeneralChat, infoGeneralChat.OwnerChat } }, 
 															chatInfoForClient).GetContainer()));
 
-				_cachedClientProperies.TryAdd(container.ClientName, new ClientProperties { IdConnection = container.ClientId, NumbersChat = new List<int>() });
+				_cachedClientProperies.TryAdd(container.ClientName, new ClientProperties { IdConnection = container.ClientId, NumbersChat = new List<int>() { NumberGeneralChat } });
 
 				await Task.Run(() => _server.SendAll(new ConnectionNoticeForClients(container.ClientName).GetContainer()));
 
@@ -157,7 +155,7 @@
 			   && _infoAllChat.TryGetValue(container.NumberChat, out InfoChat infoChat))
 			{
 				List<Guid> idClientsForSendMessage = new List<Guid>();//Создание списка id для рассылки им сообщений
-				foreach (var nameClient in infoChat.NameClients)
+				foreach (var nameClient in infoChat.NameOfClients)
 				{
 					if (_cachedClientProperies.TryGetValue(nameClient, out ClientProperties clientProperties) && clientProperties.IdConnection != Guid.Empty)
 					{
@@ -193,7 +191,7 @@
 			if(_cachedClientProperies.TryGetValue(container.NameOfClient,out ClientProperties clientProperties)
 			   && _infoAllChat.TryGetValue(container.NumberChat, out InfoChat infoChat))
 			{
-				foreach(var nameClientAtChat in infoChat.NameClients)
+				foreach(var nameClientAtChat in infoChat.NameOfClients)
 				{
 					if(nameClientAtChat == container.NameOfClient)
 					{
@@ -238,7 +236,7 @@
 					}
 
 					await Task.Run(() => _server.Send(idClientsForSendMessage, new AddNewChatResponse(numberChat, container.NameOfClientsForAdd).GetContainer()));
-					_infoAllChat.TryAdd(numberChat, new InfoChat { OwnerChat = container.NameOfClientSender, NameClients = container.NameOfClientsForAdd });
+					_infoAllChat.TryAdd(numberChat, new InfoChat { OwnerChat = container.NameOfClientSender, NameOfClients = container.NameOfClientsForAdd });
 				}
 				else
 				{
@@ -258,12 +256,15 @@
 				if(container.NameOfClient == infoChat.OwnerChat)
 				{
 					List<Guid> idClientsForSendMessage = new List<Guid>();//Создание списка id для рассылки им сообщений
-					foreach (var nameClient in infoChat.NameClients)
+					foreach (var nameClient in infoChat.NameOfClients)
 					{
 						if (_cachedClientProperies.TryGetValue(nameClient, out ClientProperties clientOfChat) && clientOfChat.IdConnection != Guid.Empty)
 						{
 							idClientsForSendMessage.Add(clientOfChat.IdConnection);
 						}
+						var lastValueChatsClient = clientOfChat;
+						clientOfChat.NumbersChat.Remove(container.NumberChat);
+						_cachedClientProperies.TryUpdate(nameClient, clientOfChat, lastValueChatsClient);
 					}
 
 					await Task.Run(() => _server.Send(idClientsForSendMessage, new RemoveChatResponse(container.NumberChat).GetContainer()));
@@ -296,9 +297,8 @@
 					InfoChat buffer = infoChat;
 					List<Guid> idClientsForSendMessage = new List<Guid>();//Создание списка id для рассылки им сообщений
 
-					infoChat.NameClients.Union(container.NameOfClients);
-
-					foreach (var nameClient in infoChat.NameClients)
+					
+					foreach (var nameClient in container.NameOfClients)
 					{
 						if (_cachedClientProperies.TryGetValue(nameClient, out ClientProperties clientOfChat))
 						{
@@ -306,12 +306,28 @@
                             {
 								idClientsForSendMessage.Add(clientOfChat.IdConnection);
 							}
+							var lastValueChatsClient = clientOfChat;
+							clientOfChat.NumbersChat.Add(container.NumberChat);
+							_cachedClientProperies.TryUpdate(nameClient, clientOfChat, lastValueChatsClient);
 						}
 						else
                         {
-							infoChat.NameClients.Remove(nameClient);
+							container.NameOfClients.Remove(nameClient);
 						}
 					}
+
+					infoChat.NameOfClients.Union(container.NameOfClients);
+					foreach (var nameClient in infoChat.NameOfClients)
+					{
+						if (_cachedClientProperies.TryGetValue(nameClient, out ClientProperties clientOfChat))
+						{
+							if (clientOfChat.IdConnection != Guid.Empty)
+							{
+								idClientsForSendMessage.Add(clientOfChat.IdConnection);
+							}
+						}
+                    }
+
 					await Task.Run(() => _server.Send(idClientsForSendMessage, new AddNewClientToChatResponse(container.NameOfClientSender, container.NameOfClients, container.NumberChat).GetContainer()));
 
 					_infoAllChat.TryUpdate(container.NumberChat, infoChat, buffer);
@@ -330,14 +346,14 @@
 		}
 		public async void OnRemovedClientsFromChat(object sender, RemovedClientsFromChatEventArgs container)
 		{
-			if (_cachedClientProperies.ContainsKey(container.NameOfClient)
+			if (_cachedClientProperies.TryGetValue(container.NameOfClient, out ClientProperties clientProperties)
 				&& _infoAllChat.TryGetValue(container.NumberChat, out InfoChat infoChat))
 			{
 				if (container.NameOfClient == infoChat.OwnerChat)
 				{
 					InfoChat buffer = infoChat;
 					List<Guid> idClientsForSendMessage = new List<Guid>();//Создание списка id для рассылки им сообщений
-					foreach (var nameClient in infoChat.NameClients)
+					foreach (var nameClient in infoChat.NameOfClients)
 					{
 						if (_cachedClientProperies.TryGetValue(nameClient, out ClientProperties clientOfChat) && clientOfChat.IdConnection != Guid.Empty)
 						{
@@ -347,7 +363,10 @@
 
 					foreach(var nameClientForRemove in container.NameOfClients)
                     {
-						infoChat.NameClients.Remove(nameClientForRemove);
+						infoChat.NameOfClients.Remove(nameClientForRemove);
+						var lastValueChatsClient = clientProperties;
+						clientProperties.NumbersChat.Remove(container.NumberChat);
+						_cachedClientProperies.TryUpdate(nameClientForRemove, clientProperties, lastValueChatsClient);
 					}
 
 					await Task.Run(() => _server.Send(idClientsForSendMessage, new RemoveClientFromChatResponse(container.NameOfClient, container.NameOfClients, container.NumberChat).GetContainer()));

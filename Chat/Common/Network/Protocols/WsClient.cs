@@ -8,7 +8,7 @@
 
     public class WsClient
     {
-        #region Fields
+        /*#region Fields
 
         private readonly IPEndPoint _listenAddress;
 
@@ -81,6 +81,6 @@
                         break;
                     }
             }
-        }
+        }*/
     }
 }

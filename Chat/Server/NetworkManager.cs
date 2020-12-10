@@ -1,15 +1,17 @@
 ﻿namespace Server
 {
 	using Server.Network;
-	using Common.Configuration;
-	using Common.Network;
 	using Configuration;
+	using Common.Network;
 	using DataBase;
-	class NetworkManager
+    using Unity;
+
+    class NetworkManager
 	{
 
 		ITransportServer _server;
 		ConfigServer _ConfigServer;
+		IUnityContainer container = new UnityContainer();
 
 		#region Constructors
 
@@ -23,13 +25,14 @@
 			Start();
 		}
 
-		#endregion Constructors
+        #endregion Constructors
 
-		#region Methods
+        #region Methods
 
-		private void Start()
+        private void Start()
 		{
-			_server = TransportFactory.Create(_ConfigServer);
+			container.RegisterSingleton<WsServer>();
+			//_server = TransportFactory.Create(_ConfigServer);
 
 			RequestManagerDb requestManagerDb = new RequestManagerDb();
 
