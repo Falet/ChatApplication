@@ -5,7 +5,7 @@
     {
         #region Properties
 
-        public string NameOfClient { get; }
+        public string NameOfRemover { get; }
 
         public List<string> NameOfClients { get; }
 
@@ -17,7 +17,7 @@
 
         public RemovedClientsFromChatEventArgs(string clientName, int numberChat, List<string> clients)
         {
-            NameOfClient = clientName;
+            NameOfRemover = clientName;
             NameOfClients = clients;
             NumberChat = numberChat;
         }

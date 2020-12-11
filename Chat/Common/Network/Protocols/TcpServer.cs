@@ -17,6 +17,7 @@
         public event EventHandler<AddedClientsToChatEventArgs> AddedClientsToChat;
         public event EventHandler<RemovedClientsFromChatEventArgs> RemovedClientsFromChat;
         public event EventHandler<ClientDisconnectedEventArgs> ClientDisconnected;
+        public event EventHandler<ClientRequestedNumbersChatEventArgs> RequestNumbersChats;
 
         #endregion Event
 

@@ -1,7 +1,7 @@
 ﻿namespace Server.DataBase
 {
     using System;
-    public class MessageInfoForDb
+    public class MessageInfoForDataBase
     {
         #region Properties
 

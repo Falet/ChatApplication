@@ -5,6 +5,7 @@ using Server.Network;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,238 +13,239 @@ namespace Server.HandlerEvent
 {
     public class HandlerChat
     {
+
+        public ConcurrentDictionary<int, InfoChat> InfoChats { get; }//Ключ - номер комнаты
+
         #region Fields
 
         private ConcurrentDictionary<string, ClientProperties> _cachedClientProperies;//Ключ - имя пользователя
-        public  ConcurrentDictionary<int, InfoChat> InfoChats { get; }//Ключ - номер комнаты
-        private ConcurrentDictionary<int, List<MessageInfo>> _MessagesAtChat;//Ключ - номер комнаты
         private IHandlerRequestToData _data;
         private ITransportServer _server;
-		private HandlerConnection _connection;
-		//ДОДЕЛАТЬ ЧАТЫ
-		#endregion Fields
+        private HandlerConnection _connection;
 
-		public HandlerChat(ITransportServer server, IHandlerRequestToData data, HandlerConnection connection)
+        #endregion Fields
+
+        public HandlerChat(ITransportServer server, IHandlerRequestToData data, HandlerConnection connection)
         {
-			_server = server;
+            _server = server;
 
-			_server.ConnectedToChat += OnChatOpened;
-			_server.AddedChat += OnAddedChat;
-			_server.RemovedChat += OnRemovedChat;
-			_server.AddedClientsToChat += OnAddedClientsToChat;
-			_server.RemovedClientsFromChat += OnRemovedClientsFromChat;
+            
+            _server.AddedChat += OnAddedChat;
+            _server.RemovedChat += OnRemovedChat;
+            _server.AddedClientsToChat += OnAddedClientsToChat;
+            _server.RemovedClientsFromChat += OnRemovedClientsFromChat;
+            _server.RequestNumbersChats += OnRequestNumbersChats;
+            _data = data;
 
-			_data = data;
+            _cachedClientProperies = _data.GetInfoAboutLinkClientToChat();
+            InfoChats = _data.GetInfoAboutAllChat();
 
-			_cachedClientProperies = _data.GetInfoAboutLinkClientToChat();
-			InfoChats = _data.GetInfoAboutAllChat();
+            _connection = connection;
+        }
 
-			_connection = connection;
-		}
+        #region Methods
 
-		#region Methods
+        public async void OnAddedChat(object sender, AddedChatEventArgs container)
+        {
+            if (_connection.cachedClientName.TryGetValue(container.NameOfClientSender, out Guid clientCreatorGuid))
+            {
+                int numberChat = await Task.Run(() => _data.CreatNewChat(new CreatingChatInfo { NameOfClientSender = container.NameOfClientSender, NameOfClients = container.NameOfClientsForAdd }));
+                if (numberChat != -1)
+                {
+                    List<Guid> idClientsForSendMessage = new List<Guid>();//Создание списка id для рассылки им сообщений
+                    List<string> NameForChange = container.NameOfClientsForAdd;
+                    await Task.Run(() => CreateUserListForChangeInfoChat(ref NameForChange, numberChat, ref idClientsForSendMessage));
 
-		public async void OnChatOpened(object sender, ConnectionToChatEventArgs container)
-		{
-			if (_connection.cachedClientName.TryGetValue(container.NameOfClient, out Guid clientGuid)
-			   && InfoChats.TryGetValue(container.NumberChat, out InfoChat infoChat))
-			{
-				foreach (var nameClientAtChat in infoChat.NameOfClients)
-				{
-					if (nameClientAtChat == container.NameOfClient)
-					{
-						if (_MessagesAtChat.TryGetValue(container.NumberChat, out List<MessageInfo> messages) && clientGuid != Guid.Empty)
-						{
-							await Task.Run(() => _server.Send(new List<Guid>() { clientGuid }, new ConnectToChatResponse(container.NumberChat, messages).GetContainer()));
-						}
-					}
-				}
-			}
-			else
-			{
-				//Ошибка
-				return;
-			}
-		}
-		//ДОДЕЛАТЬ ЧАТЫ
-		public async void OnAddedChat(object sender, AddedChatEventArgs container)
-		{
-			if (_cachedClientProperies.TryGetValue(container.NameOfClientSender, out ClientProperties clientSenderProperties))
-			{
-				int numberChat = await Task.Run(() => _data.CreatNewChat(new CreatingChatInfo { NameOfClientSender = container.NameOfClientSender, NameOfClients = container.NameOfClientsForAdd }));
-				if (numberChat != -1)
-				{
-					List<Guid> idClientsForSendMessage = new List<Guid>();//Создание списка id для рассылки им сообщений
-					foreach (var nameClient in container.NameOfClientsForAdd)
-					{
-						if (_cachedClientProperies.TryGetValue(nameClient, out ClientProperties clientOfChat))
-						{
-							if (clientOfChat.IdConnection != Guid.Empty)
-							{
-								idClientsForSendMessage.Add(clientOfChat.IdConnection);
-							}
-							var lastValueChatsClient = clientOfChat;
-							clientOfChat.NumbersChat.Add(numberChat);
-							_cachedClientProperies.TryUpdate(nameClient, clientOfChat, lastValueChatsClient);
-						}
-					}
-					if (clientSenderProperties.IdConnection != Guid.Empty)
-					{
-						idClientsForSendMessage.Add(clientSenderProperties.IdConnection);
-					}
+                    if (clientCreatorGuid != Guid.Empty)
+                    {
+                        idClientsForSendMessage.Add(clientCreatorGuid);
+                    }
 
-					await Task.Run(() => _server.Send(idClientsForSendMessage, new AddNewChatResponse(numberChat, container.NameOfClientsForAdd).GetContainer()));
-					InfoChats.TryAdd(numberChat, new InfoChat { OwnerChat = container.NameOfClientSender, NameOfClients = container.NameOfClientsForAdd });
-				}
-				else
-				{
-					//Ошибка добавления
-				}
-			}
-			else
-			{
-				//Ошибка, не существует клиента
-			}
-		}
-		public async void OnRemovedChat(object sender, RemovedChatEventArgs container)
-		{
-			if (_cachedClientProperies.TryGetValue(container.NameOfClient, out ClientProperties clientProperties)
-				&& InfoChats.TryGetValue(container.NumberChat, out InfoChat infoChat))
-			{
-				if (container.NameOfClient == infoChat.OwnerChat)
-				{
-					List<Guid> idClientsForSendMessage = new List<Guid>();//Создание списка id для рассылки им сообщений
-					foreach (var nameClient in infoChat.NameOfClients)
-					{
-						if (_cachedClientProperies.TryGetValue(nameClient, out ClientProperties clientOfChat) && clientOfChat.IdConnection != Guid.Empty)
-						{
-							idClientsForSendMessage.Add(clientOfChat.IdConnection);
-						}
-						var lastValueChatsClient = clientOfChat;
-						clientOfChat.NumbersChat.Remove(container.NumberChat);
-						_cachedClientProperies.TryUpdate(nameClient, clientOfChat, lastValueChatsClient);
-					}
+                    var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage, new AddNewChatResponse(numberChat, container.NameOfClientsForAdd).GetContainer()));
+                    InfoChats.TryAdd(numberChat, new InfoChat { OwnerChat = container.NameOfClientSender, NameOfClients = container.NameOfClientsForAdd });
+                    if(!await _data.AddClientToChat(new AddClientToChat { NumberChat = numberChat, NameOfClients = NameForChange }))
+                    {
+                        //Ошибка добавления клиентов
+                    }
+                }
+                else
+                {
+                    //Ошибка добавления чата
+                }
+            }
+            else
+            {
+                //Ошибка, не существует клиента
+            }
+        }
+        public async void OnRemovedChat(object sender, RemovedChatEventArgs container)
+        {
+            if (_cachedClientProperies.TryGetValue(container.NameOfClient, out ClientProperties clientProperties)
+                && InfoChats.TryGetValue(container.NumberChat, out InfoChat infoChat))
+            {
+                if (container.NameOfClient == infoChat.OwnerChat)
+                {
+                    List<Guid> idClientsForSendMessage = new List<Guid>();//Создание списка id для рассылки им сообщений
+                    List<string> NameForChange = infoChat.NameOfClients;
+                    await Task.Run(() => CreateUserListForChangeInfoChat(ref NameForChange, container.NumberChat, ref idClientsForSendMessage));
 
-					await Task.Run(() => _server.Send(idClientsForSendMessage, new RemoveChatResponse(container.NumberChat).GetContainer()));
+                    var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage, new RemoveChatResponse(container.NumberChat).GetContainer()));
 
-					if (!InfoChats.TryRemove(container.NumberChat, out InfoChat infoRemovedChat))
-					{
-						//Не нашел такую комнату
-					}
+                    if (!InfoChats.TryRemove(container.NumberChat, out InfoChat infoRemovedChat))
+                    {
+                        //Не нашел такую комнату
+                    }
 
-					if (!await Task.Run(() => _data.RemoveChat(container.NumberChat)))
-					{
-						//Ошибка на удаление в БД
-					}
-				}
-			}
-			else
-			{
-				//Ошибка
-				return;
-			}
-		}
+                    if (!await Task.Run(() => _data.RemoveChat(container.NumberChat)))
+                    {
+                        //Ошибка на удаление в БД
+                    }
+                }
+            }
+            else
+            {
+                //Ошибка
+            }
+        }
 
-		public async void OnAddedClientsToChat(object sender, AddedClientsToChatEventArgs container)
-		{
-			if (_cachedClientProperies.TryGetValue(container.NameOfClientSender, out ClientProperties clientProperties)
-				&& InfoChats.TryGetValue(container.NumberChat, out InfoChat infoChat))
-			{
-				if (container.NameOfClientSender == infoChat.OwnerChat)
-				{
-					InfoChat buffer = infoChat;
-					List<Guid> idClientsForSendMessage = new List<Guid>();//Создание списка id для рассылки им сообщений
+        public async void OnAddedClientsToChat(object sender, AddedClientsToChatEventArgs container)
+        {
+            if (_cachedClientProperies.TryGetValue(container.NameOfClientSender, out ClientProperties clientProperties)
+                && InfoChats.TryGetValue(container.NumberChat, out InfoChat infoChat))
+            {
+                if (container.NameOfClientSender == infoChat.OwnerChat)
+                {
+                    
+                    List<Guid> idClientsForSendMessage = new List<Guid>();//Создание списка id для рассылки им сообщений
+                    List<string> NameForChange = container.NameOfClients;
+                    await Task.Run(() => CreateUserListForChangeInfoChat(ref NameForChange, container.NumberChat, ref idClientsForSendMessage));
 
+                    InfoChat buffer = infoChat;
+                    infoChat.NameOfClients.Union(NameForChange);
+                    await Task.Run(() => AddNamesForMail(infoChat.NameOfClients, ref idClientsForSendMessage));
 
-					foreach (var nameClient in container.NameOfClients)
-					{
-						if (_cachedClientProperies.TryGetValue(nameClient, out ClientProperties clientOfChat))
-						{
-							if (clientOfChat.IdConnection != Guid.Empty)
-							{
-								idClientsForSendMessage.Add(clientOfChat.IdConnection);
-							}
-							var lastValueChatsClient = clientOfChat;
-							clientOfChat.NumbersChat.Add(container.NumberChat);
-							_cachedClientProperies.TryUpdate(nameClient, clientOfChat, lastValueChatsClient);
-						}
-						else
-						{
-							container.NameOfClients.Remove(nameClient);
-						}
-					}
+                    var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage, new AddNewClientToChatResponse(container.NameOfClientSender, NameForChange, container.NumberChat).GetContainer()));
 
-					infoChat.NameOfClients.Union(container.NameOfClients);
-					foreach (var nameClient in infoChat.NameOfClients)
-					{
-						if (_cachedClientProperies.TryGetValue(nameClient, out ClientProperties clientOfChat))
-						{
-							if (clientOfChat.IdConnection != Guid.Empty)
-							{
-								idClientsForSendMessage.Add(clientOfChat.IdConnection);
-							}
-						}
-					}
+                    InfoChats.TryUpdate(container.NumberChat, infoChat, buffer);
 
-					await Task.Run(() => _server.Send(idClientsForSendMessage, new AddNewClientToChatResponse(container.NameOfClientSender, container.NameOfClients, container.NumberChat).GetContainer()));
+                    if (!await Task.Run(() => _data.AddClientToChat(new AddClientToChat { NumberChat = container.NumberChat, NameOfClients = NameForChange })))
+                    {
+                        //Ошибка на добавление в БД
+                    }
+                }
+            }
+            else
+            {
+                //Ошибка
+            }
+        }
+        public async void OnRemovedClientsFromChat(object sender, RemovedClientsFromChatEventArgs container)
+        {
+            if (_cachedClientProperies.TryGetValue(container.NameOfRemover, out ClientProperties clientProperties)
+                && InfoChats.TryGetValue(container.NumberChat, out InfoChat infoChat))
+            {
+                if (container.NameOfRemover == infoChat.OwnerChat)
+                {
+                    List<Guid> idClientsForSendMessage = new List<Guid>();//Создание списка id для рассылки им сообщений
+                    List<string> NameForChange = container.NameOfClients;
+                    await Task.Run(() => CreateUserListForChangeInfoChat(ref NameForChange, container.NumberChat, ref idClientsForSendMessage));
 
-					InfoChats.TryUpdate(container.NumberChat, infoChat, buffer);
+                    InfoChat buffer = infoChat;
+                    infoChat.NameOfClients.Except(container.NameOfClients);
+                    await Task.Run(() => AddNamesForMail(infoChat.NameOfClients, ref idClientsForSendMessage));
 
-					if (!await Task.Run(() => _data.AddClientToChat(new AddClientToChat { NumberChat = container.NumberChat, NameOfClients = container.NameOfClients })))
-					{
-						//Ошибка на добавление в БД
-					}
-				}
-			}
-			else
-			{
-				//Ошибка
-				return;
-			}
-		}
-		public async void OnRemovedClientsFromChat(object sender, RemovedClientsFromChatEventArgs container)
-		{
-			if (_cachedClientProperies.TryGetValue(container.NameOfClient, out ClientProperties clientProperties)
-				&& InfoChats.TryGetValue(container.NumberChat, out InfoChat infoChat))
-			{
-				if (container.NameOfClient == infoChat.OwnerChat)
-				{
-					InfoChat buffer = infoChat;
-					List<Guid> idClientsForSendMessage = new List<Guid>();//Создание списка id для рассылки им сообщений
-					foreach (var nameClient in infoChat.NameOfClients)
-					{
-						if (_cachedClientProperies.TryGetValue(nameClient, out ClientProperties clientOfChat) && clientOfChat.IdConnection != Guid.Empty)
-						{
-							idClientsForSendMessage.Add(clientOfChat.IdConnection);
-						}
-					}
+                    var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage, new RemoveClientFromChatResponse(container.NameOfRemover, container.NameOfClients, container.NumberChat).GetContainer()));
 
-					foreach (var nameClientForRemove in container.NameOfClients)
-					{
-						infoChat.NameOfClients.Remove(nameClientForRemove);
-						var lastValueChatsClient = clientProperties;
-						clientProperties.NumbersChat.Remove(container.NumberChat);
-						_cachedClientProperies.TryUpdate(nameClientForRemove, clientProperties, lastValueChatsClient);
-					}
+                    InfoChats.TryUpdate(container.NumberChat, infoChat, buffer);
 
-					await Task.Run(() => _server.Send(idClientsForSendMessage, new RemoveClientFromChatResponse(container.NameOfClient, container.NameOfClients, container.NumberChat).GetContainer()));
+                    if (!await Task.Run(() => _data.RemoveClientFromChat(new RemoveClientFromChat { NumberChat = container.NumberChat, NameOfClients = container.NameOfClients })))
+                    {
+                        //Ошибка на удаление в БД
+                    }
+                }
+            }
+            else
+            {
+                //Ошибка
+            }
+        }
 
-					InfoChats.TryUpdate(container.NumberChat, infoChat, buffer);
+        public void OnRequestNumbersChats(object sender, ClientRequestedNumbersChatEventArgs container)
+        {
+            if(_connection.cachedClientName.TryGetValue(container.NameOfClientSender,out Guid clientGuid))
+            {
+                Dictionary<string, bool> activityClient = new Dictionary<string, bool>();
+                Dictionary<int, string> infoAboutChats = new Dictionary<int, string>();
 
-					if (!await Task.Run(() => _data.RemoveClientFromChat(new RemoveClientFromChat { NumberChat = container.NumberChat, NameOfClients = container.NameOfClients })))
-					{
-						//Ошибка на удаление в БД
-					}
-				}
-			}
-			else
-			{
-				//Ошибка
-				return;
-			}
-		}
+                if (_cachedClientProperies.TryGetValue(container.NameOfClientSender, out ClientProperties clientProperties))
+                {
+                    foreach (var numberChat in clientProperties.NumbersChat)
+                    {
+                        if (InfoChats.TryGetValue(numberChat, out InfoChat infoChat))
+                        {
+                            GetActivityClient(infoChat.NameOfClients, out activityClient);
+                            infoAboutChats.Add(numberChat, infoChat.OwnerChat);
+                        }
+                    }
+                    var SendMessageToServer = Task.Run
+                    (
+                    () => _server.Send(new List<Guid> { clientGuid },
+                                 Container.GetContainer(nameof(GetNumbersAccessibleChatsResponse), 
+                                 new GetNumbersAccessibleChatsResponse(activityClient, infoAboutChats)))
+                    );
+                }
+            }
+        }
 
+        private void CreateUserListForChangeInfoChat(ref List<string> namesClientForCreat,int numberChat,ref List<Guid> namesForMail)
+        {
+            foreach (var nameClient in namesClientForCreat)
+            {
+                if (_cachedClientProperies.TryGetValue(nameClient, out ClientProperties clientOfChat))
+                {
+                    if (_connection.cachedClientName.TryGetValue(nameClient, out Guid clientGuid) && clientGuid != Guid.Empty)
+                    {
+                        namesForMail.Add(clientGuid);
+                    }
+                    var lastValueChatsClient = clientOfChat;
+                    clientOfChat.NumbersChat.Remove(numberChat);
+                    _cachedClientProperies.TryUpdate(nameClient, clientOfChat, lastValueChatsClient);
+                }
+                else
+                {
+                    namesClientForCreat.Remove(nameClient);
+                }
+            }
+        }
 
-		#endregion Methods
-	}
+        private void AddNamesForMail(List<string> namesClientForCreat, ref List<Guid> namesForMail)
+        {
+            foreach (var nameClientAtChat in namesClientForCreat)
+            {
+                if (_connection.cachedClientName.TryGetValue(nameClientAtChat, out Guid clientGuid) && clientGuid != Guid.Empty)
+                {
+                    namesForMail.Add(clientGuid);
+                }
+            }
+        }
+        private void GetActivityClient(List<string> namesClient,out Dictionary<string, bool> resultCheckActivity)
+        {
+            resultCheckActivity = new Dictionary<string, bool>();
+            foreach (var nameClient in namesClient)
+            {
+                if (_connection.cachedClientName.TryGetValue(nameClient, out Guid clientAtChat))
+                {
+                    if (clientAtChat != Guid.Empty)
+                    {
+                        resultCheckActivity.Add(nameClient, true);
+                    }
+                    else
+                    {
+                        resultCheckActivity.Add(nameClient, false);
+                    }
+                }
+            }
+        }
+        #endregion Methods
+    }
 }

@@ -30,6 +30,7 @@
         public event EventHandler<AddedClientsToChatEventArgs> AddedClientsToChat;
         public event EventHandler<RemovedClientsFromChatEventArgs> RemovedClientsFromChat;
         public event EventHandler<ClientDisconnectedEventArgs> ClientDisconnected;
+        public event EventHandler<ClientRequestedNumbersChatEventArgs> RequestNumbersChats;
 
         #endregion Event
 
@@ -135,6 +136,13 @@
                     RemovedClientsFromChat?.Invoke(this, new RemovedClientsFromChatEventArgs(connection.Login,
                                                                                          removeClientFromChatRequest.NumberChat,
                                                                                          removeClientFromChatRequest.Clients));
+                    break;
+                }
+                case nameof(GetNumbersAccessibleChatsRequest):
+                {
+                    var requestNumbersChats = ((JObject)container.Payload)
+                                                    .ToObject(typeof(GetNumbersAccessibleChatsRequest)) as GetNumbersAccessibleChatsRequest;
+                    RequestNumbersChats?.Invoke(this, new ClientRequestedNumbersChatEventArgs(requestNumbersChats.NameClient));
                     break;
                 }
             }

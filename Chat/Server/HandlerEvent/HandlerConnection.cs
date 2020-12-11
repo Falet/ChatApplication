@@ -19,10 +19,12 @@ namespace Server.HandlerEvent
 
 		#endregion Const
 
+		public ConcurrentDictionary<string, Guid> cachedClientName { get; }//Ключ - имя пользователя
+
 		#region Fields
 
-		public ConcurrentDictionary<string, Guid> cachedClientName { get; }//Ключ - имя пользователя
-        private IHandlerRequestToData _data;
+
+		private IHandlerRequestToData _data;
         private ITransportServer _server;
 		private HandlerChat _chats;
 
@@ -47,56 +49,46 @@ namespace Server.HandlerEvent
 			{
 				if (clientGuid == Guid.Empty)
 				{
-					await Task.Run(() => _server.Send(new List<Guid>() { clientGuid },
-										 new ConnectionResponse(ResultRequest.Ok, "Пользователь подключен",
-																new Dictionary<int, string>(),
-																new Dictionary<string, bool>()).GetContainer()));
 					clientGuid = container.ClientId;
-					await Task.Run(() => _server.SendAll(new ConnectionNoticeForClients(container.ClientName).GetContainer()));
+					var SendMessageToServer = Task.Run(() =>
+					_server.SendAll(Container.GetContainer(nameof(ConnectionNoticeForClients), new ConnectionNoticeForClients(container.ClientName)))
+					);
 				}
 				else
 				{
-					await Task.Run(() => _server.Send(new List<Guid>() { clientGuid },
-										 new ConnectionResponse(ResultRequest.Failure, "Такой пользователь уже есть",
-																new Dictionary<int, string>(),
-																new Dictionary<string, bool>()).GetContainer()));
-					await Task.Run(() => _server.FreeConnection(clientGuid));
+					var SendMessageToServer = Task.Run(() =>
+					_server.Send(new List<Guid>() { clientGuid },
+								 Container.GetContainer(nameof(ConnectionResponse), 
+														new ConnectionResponse(ResultRequest.Failure, "Такой пользователь уже есть")))
+					);
+					var SendMessageDisconnectToServer = Task.Run(() => _server.FreeConnection(clientGuid));
 				}
 			}
 			else
 			{
-				//Первый аргумент номер комнаты, второй словарь клиентов и их активность
-				Dictionary<string, bool> chatInfoForClient = new Dictionary<string, bool>();
-				if (_chats.InfoChats.TryGetValue(NumberGeneralChat, out InfoChat infoGeneralChat))
-				{
-					foreach (var nameClientAtChat in infoGeneralChat.NameOfClients)
-					{
-						if (cachedClientName.TryGetValue(nameClientAtChat, out Guid clientAtChat))
-						{
-							if (clientAtChat != Guid.Empty)
-							{
-								chatInfoForClient.Add(nameClientAtChat, true);
-							}
-							else
-							{
-								chatInfoForClient.Add(nameClientAtChat, false);
-							}
-						}
-					}
-				}
-				await Task.Run(() => _server.Send(new List<Guid>() { clientGuid },
-									 new ConnectionResponse(ResultRequest.Ok, "Новый пользователь зарегистрирован",
-															new Dictionary<int, string>() { { NumberGeneralChat, infoGeneralChat.OwnerChat } },
-															chatInfoForClient).GetContainer()));
-
 				cachedClientName.TryAdd(container.ClientName,  container.ClientId);
 
-				await Task.Run(() => _server.SendAll(new ConnectionNoticeForClients(container.ClientName).GetContainer()));
+				var SendMessageToServer = Task.Run(() =>
+					_server.SendAll(Container.GetContainer(nameof(ConnectionNoticeForClients), new ConnectionNoticeForClients(container.ClientName)))
+				);
 
 				if (!await Task.Run(() => _data.AddNewClient(new ClientInfo { NameOfClient = container.ClientName })))
 				{
 					//Ошибка, не получилось записать
 				}
+			}
+		}
+		public void OnDisconnect(object sender, ClientDisconnectedEventArgs container)
+		{
+			if (cachedClientName.TryGetValue(container.NameOfClient, out Guid clientGuid) && clientGuid != Guid.Empty)
+			{
+				var SendMessageDisconnectToServer = Task.Run(() => _server.FreeConnection(clientGuid));
+
+				var SendMessageToServer = Task.Run(() =>
+					_server.SendAll(Container.GetContainer(nameof(DisconnectRequest), new DisconnectRequest(container.NameOfClient)))
+				);
+
+				cachedClientName.TryUpdate(container.NameOfClient, Guid.Empty, clientGuid);
 			}
 		}
 
@@ -124,18 +116,5 @@ namespace Server.HandlerEvent
 				await Task.Run(() => _server.Send(DistinctListClients, new ConnectionNoticeForClients(nameClientConnected).GetContainer()));
 			}
 		}*/
-
-		public async void OnDisconnect(object sender, ClientDisconnectedEventArgs container)
-		{
-			if (cachedClientName.TryGetValue(container.NameOfClient, out Guid clientGuid) && clientGuid != Guid.Empty)
-			{
-				await Task.Run(() => _server.FreeConnection(clientGuid));
-
-				await Task.Run(() => _server.SendAll(new DisconnectRequest(container.NameOfClient).GetContainer()));
-
-				cachedClientName.TryUpdate(container.NameOfClient, Guid.Empty, clientGuid);
-			}
-		}
-
 	}
 }

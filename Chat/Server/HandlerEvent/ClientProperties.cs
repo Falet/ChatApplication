@@ -6,7 +6,6 @@
 	{
 		#region Properties
 
-		public Guid IdConnection { get; set; }
 
 		public List<int> NumbersChat { get; set; }
 

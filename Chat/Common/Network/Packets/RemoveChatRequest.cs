@@ -4,7 +4,7 @@
     {
         #region Properties
 
-        public string Sender { get; }
+        public string NameOfRemover { get; }
 
         public int NumberChat { get; }
 
@@ -13,9 +13,9 @@
 
         #region Constructors
 
-        public RemoveChatRequest(string sender, int numberChat)
+        public RemoveChatRequest(string remover, int numberChat)
         {
-            Sender = sender;
+            NameOfRemover = remover;
             NumberChat = numberChat;
         }
 

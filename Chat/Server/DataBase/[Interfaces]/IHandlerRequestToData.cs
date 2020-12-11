@@ -15,7 +15,7 @@
         public ConcurrentDictionary<int, InfoChat> GetInfoAboutAllChat();
         public ConcurrentDictionary<int, List<MessageInfo>> GetAllMessageFromChats();
         public Task<bool> AddNewClient(ClientInfo container);
-        public Task<bool> AddNewMessage(MessageInfoForDb container);
+        public Task<bool> AddNewMessage(MessageInfoForDataBase container);
         public Task<int> CreatNewChat(CreatingChatInfo container);
         public Task<bool> RemoveChat(int numberChat);
         public Task<bool> AddClientToChat(AddClientToChat container);

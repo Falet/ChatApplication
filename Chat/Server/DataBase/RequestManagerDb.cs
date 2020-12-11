@@ -37,7 +37,7 @@
                     {
                         numbersChat.Add(Chat.ChatID);
                     }
-                    allLinkInfo.TryAdd(item.ClientID, new ClientProperties { IdConnection = Guid.Empty, NumbersChat = numbersChat });
+                    allLinkInfo.TryAdd(item.ClientID, new ClientProperties { NumbersChat = numbersChat });
                 }
             }
             return allLinkInfo;
@@ -102,7 +102,7 @@
             return true;
         }
 
-        public async Task<bool> AddNewMessage(MessageInfoForDb container)
+        public async Task<bool> AddNewMessage(MessageInfoForDataBase container)
         {
             using (var db = new DBChat())
             {
@@ -124,30 +124,25 @@
             return true;
         }
 
-        public async Task<int> CreatNewChat(CreatingChatInfo container)
+        public int CreatNewChat(CreatingChatInfo container)
         {
             int numberChat = -1;
             using (var db = new DBChat())
             {
                 Chats chat = new Chats
                 {
-                    Type = "O",
+                    Type = "Group",
                     OwnerChat = container.NameOfClientSender,
                 };
                 db.PoolChat.Add(chat);
 
                 Task<int> taskDb = db.SaveChangesAsync();
-                taskDb.Wait();
 
-                if (taskDb.Status == TaskStatus.Faulted)
+                if(taskDb.Result == 0)
                 {
                     return numberChat;
                 }
-
-                if(await Task.Run(() => AddClientToChat(new AddClientToChat { NumberChat = chat.ChatID, NameOfClients = container.NameOfClients })))
-                {
-                    //Вызов исключения на невозможность добавить пользователей в комнату
-                }
+                numberChat = chat.ChatID;
             }
             return numberChat;
         }
