@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Server.HandlerEvent
+namespace Server.Network
 {
     public static class Container
     {

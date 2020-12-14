@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Server.HandlerEvent
+namespace Server.Network
 {
     public class HandlerConnection
     {
@@ -30,7 +30,7 @@ namespace Server.HandlerEvent
 
 		#endregion Fields
 
-		public HandlerConnection(ITransportServer server, IHandlerRequestToData data, HandlerChat chats)
+		public HandlerConnection(ITransportServer server, IHandlerRequestToData data)
         {
             _server = server;
 
@@ -38,10 +38,11 @@ namespace Server.HandlerEvent
             _server.ClientDisconnected += OnDisconnect;
 
             _data = data;
-
             cachedClientName = _data.GetInfoAboutAllClient();
+		}
+		public void AddChats(HandlerChat chats)
+        {
 			_chats = chats;
-
 		}
 		public async void OnConnect(object sender, ClientConnectedEventArgs container)
 		{

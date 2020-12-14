@@ -22,8 +22,12 @@
                 container.RegisterSingleton<ITransportServer, WsServer>(new InjectionConstructor(new IPEndPoint(IPAddress.Any, _ConfigServer.Port)));
 
                 container.RegisterType<IHandlerRequestToData, RequestManagerDb>();
-                container.RegisterType<HandlerRequestFromClient>();
-                container.Resolve<HandlerRequestFromClient>();
+
+                container.RegisterType<HandlerConnection>();
+                container.RegisterType<HandlerChat>();
+                container.RegisterType<HandlerMessage>();
+
+                container.Resolve<HandlerMessage>();
             }
             catch(Exception ex)
             {

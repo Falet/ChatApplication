@@ -39,7 +39,6 @@
         public WsServer(IPEndPoint IPendPoint)
         {
             _listenAddress = IPendPoint;
-            _server = new WebSocketServer(_listenAddress.Address, _listenAddress.Port, false);
             _connections = new ConcurrentDictionary<Guid, WsConnection>();
         }
 

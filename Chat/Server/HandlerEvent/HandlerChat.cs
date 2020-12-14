@@ -9,11 +9,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Server.HandlerEvent
+namespace Server.Network
 {
     public class HandlerChat
     {
-
         public ConcurrentDictionary<int, InfoChat> InfoChats { get; }//Ключ - номер комнаты
 
         #region Fields
@@ -28,23 +27,21 @@ namespace Server.HandlerEvent
         public HandlerChat(ITransportServer server, IHandlerRequestToData data, HandlerConnection connection)
         {
             _server = server;
-
             
             _server.AddedChat += OnAddedChat;
             _server.RemovedChat += OnRemovedChat;
             _server.AddedClientsToChat += OnAddedClientsToChat;
             _server.RemovedClientsFromChat += OnRemovedClientsFromChat;
             _server.RequestNumbersChats += OnRequestNumbersChats;
-            _data = data;
 
+            _data = data;
             _cachedClientProperies = _data.GetInfoAboutLinkClientToChat();
             InfoChats = _data.GetInfoAboutAllChat();
-
             _connection = connection;
+            _connection.AddChats(this);
         }
 
         #region Methods
-
         public async void OnAddedChat(object sender, AddedChatEventArgs container)
         {
             if (_connection.cachedClientName.TryGetValue(container.NameOfClientSender, out Guid clientCreatorGuid))
