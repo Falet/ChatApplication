@@ -91,8 +91,8 @@
     <Compile Include="Views\PrivateChat.xaml.cs">
       <DependentUpon>PrivateChat.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Page3.xaml.cs">
-      <DependentUpon>Page3.xaml</DependentUpon>
+    <Compile Include="Views\EventLog.xaml.cs">
+      <DependentUpon>EventLog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\UserControl1.xaml.cs">
       <DependentUpon>UserControl1.xaml</DependentUpon>
@@ -117,7 +117,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Page3.xaml">
+    <Page Include="Views\EventLog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

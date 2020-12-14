@@ -1,4 +1,4 @@
-﻿namespace Server.HandlerEvent
+﻿namespace Server.Network
 {
     using Common.Network;
     using Common.Network.Packets;
@@ -27,9 +27,11 @@
             _server.MessageReceived += OnMessage;
             _server.ConnectedToChat += OnChatOpened;
 
+            _data = data;
+            MessagesAtChat = _data.GetAllMessageFromChats();
+
             _connection = connection;
             _chats = chats;
-            _data = data;
         }
         public void OnChatOpened(object sender, ConnectionToChatEventArgs container)
         {

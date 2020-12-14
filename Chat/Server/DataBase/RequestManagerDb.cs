@@ -124,7 +124,7 @@
             return true;
         }
 
-        public int CreatNewChat(CreatingChatInfo container)
+        public async Task<int> CreatNewChat(CreatingChatInfo container)
         {
             int numberChat = -1;
             using (var db = new DBChat())
