@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace Client.Views
 {
     /// <summary>
-    /// Interaction logic for Page3.xaml
+    /// Interaction logic for ClientAtChat.xaml
     /// </summary>
-    public partial class Page3 : Page
+    public partial class ClientsAtChat : UserControl
     {
-        public Page3()
+        public ClientsAtChat()
         {
             InitializeComponent();
         }

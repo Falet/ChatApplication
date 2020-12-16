@@ -16,13 +16,18 @@ using System.Windows.Shapes;
 namespace Client.Views
 {
     /// <summary>
-    /// Interaction logic for Page1.xaml
+    /// Interaction logic for Chat.xaml
     /// </summary>
-    public partial class Page1 : Page
+    public partial class Chat : UserControl
     {
-        public Page1()
+        public Chat()
         {
             InitializeComponent();
+        }
+
+        private void ListBox_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
         }
     }
 }

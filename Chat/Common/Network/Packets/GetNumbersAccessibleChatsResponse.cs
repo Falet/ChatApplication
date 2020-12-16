@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Common.Network.Packets
+﻿namespace Common.Network.Packets
 {
+    using System.Collections.Generic;
     public class GetNumbersAccessibleChatsResponse
     {
         #region Properties
@@ -11,7 +8,6 @@ namespace Common.Network.Packets
         public Dictionary<int, string> NumbersChatsForClient { get; }
         public Dictionary<string, bool> InfoClientsAtChat { get; }
         
-
         #endregion Properties
 
         #region Constructors

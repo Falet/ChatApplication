@@ -92,30 +92,5 @@ namespace Server.Network
 				cachedClientName.TryUpdate(container.NameOfClient, Guid.Empty, clientGuid);
 			}
 		}
-
-		//Если не будет существовать общего чата, то нужно будет рассылать сообщение о подключении только тем пользователям, 
-		//которые находятся в одном чате с подключившимся
-		/*private async Task ClientNotice(string nameClientConnected)//Доделать:рассылку другим пользователям, что зашел пользователь
-		{
-			List<Guid> ChatForNotice = new List<Guid>();
-			if(_cachedClientProperies.TryGetValue(nameClientConnected, out ClientProperties clientProperties))
-            {
-				foreach(var numberChat in clientProperties.NumbersChat)
-                {
-					if(_infoAllChat.TryGetValue(numberChat, out InfoChat infoChat))
-                    {
-						foreach(var nameClient in infoChat.NameClients)
-                        {
-							if(_cachedClientProperies.TryGetValue(nameClient, out ClientProperties clientPropertiesForNotice) && clientPropertiesForNotice.IdConnection != Guid.Empty)
-                            {
-								ChatForNotice.Add(clientPropertiesForNotice.IdConnection);
-							}	
-						}
-					}
-                }
-				var DistinctListClients = ChatForNotice.Distinct().ToList();
-				await Task.Run(() => _server.Send(DistinctListClients, new ConnectionNoticeForClients(nameClientConnected).GetContainer()));
-			}
-		}*/
 	}
 }

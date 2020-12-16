@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace Client.Views
 {
     /// <summary>
-    /// Interaction logic for Page2.xaml
+    /// Interaction logic for CreateChat.xaml
     /// </summary>
-    public partial class Page2 : Page
+    public partial class CreateChat : UserControl
     {
-        public Page2()
+        public CreateChat()
         {
             InitializeComponent();
         }

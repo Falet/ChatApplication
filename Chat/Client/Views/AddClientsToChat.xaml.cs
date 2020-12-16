@@ -1,5 +1,4 @@
-﻿using Client.Views;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Client
+namespace Client.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for AddClientsToChat.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class AddClientsToChat : UserControl
     {
-        public MainWindow()
+        public AddClientsToChat()
         {
             InitializeComponent();
         }

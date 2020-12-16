@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="Client.Views.ClientsAtChat"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Client.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="0.1*"/>
+			<RowDefinition Height="0.1*"/>
+			<RowDefinition Height="0.1*"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="90*"/>
+			<ColumnDefinition Width="90*"/>
+		</Grid.ColumnDefinitions>
+		<ListBox x:Name="ListClientsAtChat" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" SelectionMode="Multiple">
+
+		</ListBox>
+
+		<Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Content="Добавить"
+                Command="{Binding AddClientsInChat}" ToolTipService.InitialShowDelay="0">
+			<Button.ToolTip>
+				<ToolTip>
+					Добавить пользователей в чат
+				</ToolTip>
+			</Button.ToolTip>
+		</Button>
+		<Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="Удалить"
+                Command="{Binding RemoveClientsFromChat}" ToolTipService.InitialShowDelay="0">
+			<Button.ToolTip>
+				<ToolTip>
+					Удалить выделенных пользователей в чат
+				</ToolTip>
+			</Button.ToolTip>
+		</Button>
+		<TextBlock  Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center">
+			Пользователи не выделены
+		</TextBlock>
+	</Grid>
+</UserControl>

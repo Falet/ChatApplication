@@ -1,7 +1,8 @@
 ﻿namespace Client
 {
     using System.Windows;
-
+    using Client.ViewModels;
+    using Client.Views;
     using Prism.Ioc;
     using Prism.Mvvm;
     using Prism.Unity;
@@ -15,15 +16,18 @@
     {
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterSingleton<ITextMessagesController, TextMessagesController>();
-            containerRegistry.Register<TextMessageViewModel>();
+            //containerRegistry.RegisterSingleton<ITextMessagesController, TextMessagesController>();
+            containerRegistry.Register<ControlNavigationChatsViewModel>();
+            containerRegistry.Register<ChatViewModel>();
+            containerRegistry.Register<EventLogViewModel>();
         }
 
         protected override void ConfigureViewModelLocator()
         {
             base.ConfigureViewModelLocator();
 
-            BindViewModelToView<TextMessageViewModel, TextMessageView>();
+            BindViewModelToView<ControlNavigationChatsViewModel, ControlNavigationChats>();
+            BindViewModelToView<ChatViewModel, Chat>();
         }
 
         protected override Window CreateShell()
@@ -36,5 +40,6 @@
         {
             ViewModelLocationProvider.Register(typeof(TView).ToString(), () => Container.Resolve<TViewModel>());
         }
+
     }
 }
