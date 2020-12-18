@@ -1,12 +1,30 @@
 ﻿<UserControl x:Class="Client.Views.LoginMenu"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Client.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        
+             mc:Ignorable="d" >
+    <Grid Height="356" Width="561">
+        <Canvas>
+            <TextBlock Height="29" Width="58" Canvas.Left="10" Canvas.Top="54" Text="IP" TextAlignment="Center" FontSize="16">
+            </TextBlock>
+            <TextBox Width="198" Height="29" Canvas.Left="68" Canvas.Top="54">
+            </TextBox>
+            <TextBlock Height="29" Width="58" Canvas.Left="10" Canvas.Top="116" Text="Port" TextAlignment="Center" FontSize="16">
+            </TextBlock>
+            <TextBox Width="198" Height="29" Canvas.Left="68" Canvas.Top="116">
+            </TextBox>
+            <TextBlock Height="29" Width="58" Canvas.Left="10" Canvas.Top="182" Text="Login" TextAlignment="Center" FontSize="16">
+            </TextBlock>
+            <TextBox Width="198" Height="29" Canvas.Left="68" Canvas.Top="182">
+            </TextBox>
+            <Button Height="60" Width="198" Canvas.Left="68" Canvas.Top="244" Content="Sign in">
+            </Button>
+            <ComboBox Canvas.Left="336" Canvas.Top="54" Width="209" Height="29">
+                <TextBlock>WebSocket</TextBlock>
+                <TextBlock>TCP</TextBlock>
+            </ComboBox>
+        </Canvas>
     </Grid>
 </UserControl>
