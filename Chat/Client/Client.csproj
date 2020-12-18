@@ -85,9 +85,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModels\AddClientsToChatViewModel.cs" />
     <Compile Include="ViewModels\ChatViewModel.cs" />
     <Compile Include="ViewModels\ControlNavigationChatsViewModel.cs" />
+    <Compile Include="ViewModels\ControlVisibility.cs" />
+    <Compile Include="ViewModels\CreateChatViewModel.cs" />
     <Compile Include="ViewModels\EventLogViewModel.cs" />
+    <Compile Include="ViewModels\LoginMenuViewModel.cs" />
     <Compile Include="Views\AddClientsToChat.xaml.cs">
       <DependentUpon>AddClientsToChat.xaml</DependentUpon>
     </Compile>

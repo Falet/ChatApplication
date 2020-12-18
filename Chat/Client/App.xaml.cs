@@ -16,10 +16,13 @@
     {
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            //containerRegistry.RegisterSingleton<ITextMessagesController, TextMessagesController>();
             containerRegistry.Register<ControlNavigationChatsViewModel>();
             containerRegistry.Register<ChatViewModel>();
+            containerRegistry.Register<AddClientsToChatViewModel>();
+            containerRegistry.Register<LoginMenuViewModel>();
+            containerRegistry.Register<CreateChatViewModel>();
             containerRegistry.Register<EventLogViewModel>();
+            containerRegistry.Register<ControlVisibility>();
         }
 
         protected override void ConfigureViewModelLocator()
@@ -27,7 +30,11 @@
             base.ConfigureViewModelLocator();
 
             BindViewModelToView<ControlNavigationChatsViewModel, ControlNavigationChats>();
+            BindViewModelToView<LoginMenuViewModel, LoginMenu>();
             BindViewModelToView<ChatViewModel, Chat>();
+            BindViewModelToView<AddClientsToChatViewModel, AddClientsToChat>();
+            BindViewModelToView<CreateChatViewModel, CreateChat>();
+            BindViewModelToView<ControlVisibility, MainWindow>();
         }
 
         protected override Window CreateShell()

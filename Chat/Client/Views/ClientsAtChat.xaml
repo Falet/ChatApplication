@@ -13,15 +13,11 @@
 			<RowDefinition Height="0.1*"/>
 			<RowDefinition Height="0.1*"/>
 		</Grid.RowDefinitions>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="90*"/>
-			<ColumnDefinition Width="90*"/>
-		</Grid.ColumnDefinitions>
-		<ListBox x:Name="ListClientsAtChat" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" SelectionMode="Multiple">
+		<ListBox x:Name="ListClientsAtChat" Grid.Row="0" SelectionMode="Multiple">
 
 		</ListBox>
 
-		<Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Content="Добавить"
+		<Button Grid.Row="2" Content="Добавить"
                 Command="{Binding AddClientsInChat}" ToolTipService.InitialShowDelay="0">
 			<Button.ToolTip>
 				<ToolTip>
@@ -29,7 +25,7 @@
 				</ToolTip>
 			</Button.ToolTip>
 		</Button>
-		<Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="Удалить"
+		<Button Grid.Row="1" Content="Удалить"
                 Command="{Binding RemoveClientsFromChat}" ToolTipService.InitialShowDelay="0">
 			<Button.ToolTip>
 				<ToolTip>
@@ -37,7 +33,9 @@
 				</ToolTip>
 			</Button.ToolTip>
 		</Button>
-		<TextBlock  Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center">
+		<TextBlock  Grid.Row="3"
+					TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center"
+					Visibility="Hidden">
 			Пользователи не выделены
 		</TextBlock>
 	</Grid>
