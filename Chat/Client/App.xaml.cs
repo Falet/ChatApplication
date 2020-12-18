@@ -33,6 +33,7 @@
             BindViewModelToView<LoginMenuViewModel, LoginMenu>();
             BindViewModelToView<ChatViewModel, Chat>();
             BindViewModelToView<AddClientsToChatViewModel, AddClientsToChat>();
+            BindViewModelToView<ClientsAtChatViewModel, ClientsAtChat>();
             BindViewModelToView<CreateChatViewModel, CreateChat>();
             BindViewModelToView<ControlVisibility, MainWindow>();
         }

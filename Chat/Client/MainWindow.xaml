@@ -9,12 +9,9 @@
 		xmlns:view="clr-namespace:Client.Views"
 		xmlns:viewModel="clr-namespace:Client.ViewModels"
 		mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="1000"
-
-		d:DataContext="{d:DesignInstance viewModel:ControlVisibility}">
+        Title="MainWindow" Height="600" Width="1000">
 	<Grid>
 		<view:LoginMenu Visibility="{Binding VisibilityLoginMenu}"></view:LoginMenu>
 		<view:ControlNavigationChats Visibility="{Binding VisibilityNavigationChat}"></view:ControlNavigationChats>
-		<Button Margin="330,181,0,0" Command ="{Binding SendCommand}"/>
 	</Grid>
 </Window>

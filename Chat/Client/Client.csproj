@@ -87,6 +87,7 @@
     </ApplicationDefinition>
     <Compile Include="ViewModels\AddClientsToChatViewModel.cs" />
     <Compile Include="ViewModels\ChatViewModel.cs" />
+    <Compile Include="ViewModels\ClientsAtChatViewModel.cs" />
     <Compile Include="ViewModels\ControlNavigationChatsViewModel.cs" />
     <Compile Include="ViewModels\ControlVisibility.cs" />
     <Compile Include="ViewModels\CreateChatViewModel.cs" />

@@ -3,28 +3,51 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:Client.Views"
-             mc:Ignorable="d" >
-    <Grid Height="356" Width="561">
-        <Canvas>
-            <TextBlock Height="29" Width="58" Canvas.Left="10" Canvas.Top="54" Text="IP" TextAlignment="Center" FontSize="16">
-            </TextBlock>
-            <TextBox Width="198" Height="29" Canvas.Left="68" Canvas.Top="54">
-            </TextBox>
-            <TextBlock Height="29" Width="58" Canvas.Left="10" Canvas.Top="116" Text="Port" TextAlignment="Center" FontSize="16">
-            </TextBlock>
-            <TextBox Width="198" Height="29" Canvas.Left="68" Canvas.Top="116">
-            </TextBox>
-            <TextBlock Height="29" Width="58" Canvas.Left="10" Canvas.Top="182" Text="Login" TextAlignment="Center" FontSize="16">
-            </TextBlock>
-            <TextBox Width="198" Height="29" Canvas.Left="68" Canvas.Top="182">
-            </TextBox>
-            <Button Height="60" Width="198" Canvas.Left="68" Canvas.Top="244" Content="Sign in">
-            </Button>
-            <ComboBox Canvas.Left="336" Canvas.Top="54" Width="209" Height="29">
-                <TextBlock>WebSocket</TextBlock>
-                <TextBlock>TCP</TextBlock>
-            </ComboBox>
-        </Canvas>
-    </Grid>
+             xmlns:interactivity="http://prismlibrary.com/"
+		     interactivity:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:local="clr-namespace:Client"
+		     xmlns:view="clr-namespace:Client.Views"
+		     xmlns:viewModel="clr-namespace:Client.ViewModels"
+			 mc:Ignorable="d" 
+			 d:DataContext="{d:DesignInstance viewModel:LoginMenuViewModel}">
+	
+	<Grid Height="356" Width="561">
+		<Canvas>
+			<TextBlock Height="29" Width="58" Canvas.Left="10" Canvas.Top="54" 
+					   Text="IP" TextAlignment="Center" FontSize="16"
+					   />
+
+			<TextBox Width="198" Height="29" Canvas.Left="68" Canvas.Top="54"
+					 Text="{Binding TextIP}"/>
+
+			<TextBlock Height="29" Width="58" Canvas.Left="10" Canvas.Top="116" 
+					   Text="Port" TextAlignment="Center" FontSize="16"/>
+
+			<TextBox Width="198" Height="29" Canvas.Left="68" Canvas.Top="116"
+					 Text="{Binding TextPort}"/>
+
+			<TextBlock Height="29" Width="58" Canvas.Left="10" Canvas.Top="182" 
+					   Text="Login" TextAlignment="Center" FontSize="16"/>
+
+			<TextBox Width="198" Height="29" Canvas.Left="68" Canvas.Top="182"
+					 Text="{Binding TextLogin}"/>
+
+			<Button Height="60" Width="198" Canvas.Left="68" Canvas.Top="244" 
+					Content="Sign in"
+					Command="{Binding SignIn}"/>
+
+			<ComboBox Canvas.Left="336" Canvas.Top="54" Width="209" Height="29"
+					  SelectedItem="{Binding CurrentItemProtocol}">
+				<ComboBoxItem IsSelected="True">
+					<TextBlock>WebSocket</TextBlock>
+				</ComboBoxItem>
+				<ComboBoxItem IsSelected="False">
+					<TextBlock>TCP</TextBlock>
+				</ComboBoxItem>
+			</ComboBox>
+			<TextBlock Width="209" Height="95" Canvas.Left="336" Canvas.Top="116" 
+					   Text="{Binding TextError}" TextAlignment="Center" TextWrapping="Wrap">
+			</TextBlock>
+		</Canvas>
+	</Grid>
 </UserControl>

@@ -13,21 +13,7 @@ namespace Client.ViewModels
     using Prism.Events;
     public class ControlVisibility : BindableBase
     {
-        private Visibility _loginVisibility = Visibility.Visible;
-        private Visibility _navigationChatVisibility = Visibility.Hidden;
-
-        public Visibility VisibilityLoginMenu
-        {
-            get => _loginVisibility;
-            set => SetProperty(ref _loginVisibility,value);
-        }
-
-        public Visibility VisibilityNavigationChat
-        {
-            get => _navigationChatVisibility;
-            set => SetProperty(ref _navigationChatVisibility, value);
-        }
-
+        /*
         public DelegateCommand SendCommand { get; }
 
         public ControlVisibility()
@@ -38,6 +24,6 @@ namespace Client.ViewModels
         private void ExecuteSendCommand()
         {
             _navigationChatVisibility = Visibility.Hidden;
-        }
+        }*/
     }
 }

@@ -24,10 +24,5 @@ namespace Client.Views
         {
             InitializeComponent();
         }
-
-        private void ListBox_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
-
-        }
     }
 }

@@ -8,10 +8,10 @@ using System.Windows;
 
 namespace Client.ViewModels
 {
-    public class ControlNavigationChatsViewModel : BindableBase
+    public class ClientsAtChatViewModel : BindableBase
     {
         private Visibility _visibilityView = Visibility.Visible;
-        public Visibility VisibilityNavigationChat
+        public Visibility VisibilityClientsAtChat
         {
             get => _visibilityView;
             set => SetProperty(ref _visibilityView, value);
