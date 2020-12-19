@@ -22,7 +22,7 @@
             containerRegistry.Register<LoginMenuViewModel>();
             containerRegistry.Register<CreateChatViewModel>();
             containerRegistry.Register<EventLogViewModel>();
-            containerRegistry.Register<ControlViewClientsViewModel>(); 
+            containerRegistry.Register<ControlVisibilityViewClientsViewModel>(); 
         }
 
         protected override void ConfigureViewModelLocator()

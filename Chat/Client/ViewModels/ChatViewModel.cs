@@ -13,41 +13,40 @@ namespace Client.ViewModels
 {
     public class ChatViewModel : BindableBase
     {
-        private List<string> _messagesCollection;
-        private string _textMessages;
-        private ControlViewClientsViewModel _controlViewClients;
-
-        public List<string> MessagesCollection
-        {
-            get => _messagesCollection;
-            set => SetProperty(ref _messagesCollection, value);
-        }
         
+        private string _textMessages;
+        private ControlVisibilityViewClientsViewModel _controlVisibilityViewClients;
+        private ObservableCollection<string> _messagesCollection;
+
         public string CurrentTextMessage
         {
             get => _textMessages;
             set => SetProperty(ref _textMessages, value);
         }
-        public ControlViewClientsViewModel controlViewClients
+        public ControlVisibilityViewClientsViewModel controlVisibilityViewClients
         {
-            get => _controlViewClients;
-            set => SetProperty(ref _controlViewClients, value);
+            get => _controlVisibilityViewClients;
+            set => SetProperty(ref _controlVisibilityViewClients, value);
         }
-        
+        public ObservableCollection<string> MessagesCollection
+        {
+            get => _messagesCollection;
+            set => SetProperty(ref _messagesCollection, value);
+        }
 
         public DelegateCommand SendMessage { get; }
 
         public ChatViewModel()
         {
-            _controlViewClients = new ControlViewClientsViewModel();
-            _messagesCollection = new List<string>();
-            _messagesCollection.Add("adsf");
+            _controlVisibilityViewClients = new ControlVisibilityViewClientsViewModel();
+            _messagesCollection = new ObservableCollection<string>();
+
             SendMessage = new DelegateCommand(ExecuteSendMessage);
         }
         
         private void ExecuteSendMessage()
         {
-
+            _messagesCollection.Add("asdfsdf");
         }
     }
 }

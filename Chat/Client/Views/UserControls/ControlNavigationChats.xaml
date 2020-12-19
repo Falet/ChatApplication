@@ -11,8 +11,8 @@
 			 mc:Ignorable="d" 
 			 d:DataContext="{d:DesignInstance viewModel:ControlNavigationChatsViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
-	<TabControl x:Name="ApplicationChat" TabStripPlacement="Left">
-		<TabItem x:Name="Logs">
+	<TabControl TabStripPlacement="Left">
+		<TabItem>
 			<TabItem.Header>
 				<StackPanel Orientation="Horizontal">
 					<Ellipse Height="10" Width="10" Fill="Black" />
@@ -23,7 +23,7 @@
 				<view:Chat></view:Chat>
 			</TabItem.Content>
 		</TabItem>
-		<TabItem x:Name="GeneralChat">
+		<TabItem>
 			<TabItem.Header>
 				<StackPanel Orientation="Horizontal">
 					<Ellipse Height="10" Width="10" Fill="Black" />
@@ -34,7 +34,7 @@
 				<view:Chat></view:Chat>
 			</TabItem.Content>
 		</TabItem>
-		<TabItem x:Name="CreateChat">
+		<TabItem>
 			<TabItem.Header>
 				<StackPanel Orientation="Horizontal">
 					<Ellipse Height="10" Width="10" Fill="Black" />
