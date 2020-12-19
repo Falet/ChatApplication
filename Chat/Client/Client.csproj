@@ -85,11 +85,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ViewModels\AddClientsToChatViewModel.cs" />
+    <Compile Include="ViewModels\AddClientsAtChatViewModel.cs" />
     <Compile Include="ViewModels\ChatViewModel.cs" />
     <Compile Include="ViewModels\ClientsAtChatViewModel.cs" />
+    <Compile Include="ViewModels\ControlViewClientsViewModel.cs" />
     <Compile Include="ViewModels\ControlNavigationChatsViewModel.cs" />
-    <Compile Include="ViewModels\ControlVisibility.cs" />
     <Compile Include="ViewModels\CreateChatViewModel.cs" />
     <Compile Include="ViewModels\EventLogViewModel.cs" />
     <Compile Include="ViewModels\LoginMenuViewModel.cs" />

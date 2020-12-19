@@ -18,11 +18,11 @@
         {
             containerRegistry.Register<ControlNavigationChatsViewModel>();
             containerRegistry.Register<ChatViewModel>();
-            containerRegistry.Register<AddClientsToChatViewModel>();
+            //containerRegistry.Register<AddClientsToChatViewModel>();
             containerRegistry.Register<LoginMenuViewModel>();
             containerRegistry.Register<CreateChatViewModel>();
             containerRegistry.Register<EventLogViewModel>();
-            containerRegistry.Register<ControlVisibility>();
+            containerRegistry.Register<ControlViewClientsViewModel>(); 
         }
 
         protected override void ConfigureViewModelLocator()
@@ -32,10 +32,9 @@
             BindViewModelToView<ControlNavigationChatsViewModel, ControlNavigationChats>();
             BindViewModelToView<LoginMenuViewModel, LoginMenu>();
             BindViewModelToView<ChatViewModel, Chat>();
-            BindViewModelToView<AddClientsToChatViewModel, AddClientsToChat>();
-            BindViewModelToView<ClientsAtChatViewModel, ClientsAtChat>();
-            BindViewModelToView<CreateChatViewModel, CreateChat>();
-            BindViewModelToView<ControlVisibility, MainWindow>();
+            //BindViewModelToView<AddClientsViewModel, AddClientsToChat>(); 
+            //BindViewModelToView<CreateChatViewModel, CreateChat>();
+            //BindViewModelToView<ClientsChatViewModel, ClientsAtChat>();
         }
 
         protected override Window CreateShell()

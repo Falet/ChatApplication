@@ -15,6 +15,7 @@ namespace Client.ViewModels
     {
         private List<string> _messagesCollection;
         private string _textMessages;
+        private ControlViewClientsViewModel _controlViewClients;
 
         public List<string> MessagesCollection
         {
@@ -27,16 +28,23 @@ namespace Client.ViewModels
             get => _textMessages;
             set => SetProperty(ref _textMessages, value);
         }
+        public ControlViewClientsViewModel controlViewClients
+        {
+            get => _controlViewClients;
+            set => SetProperty(ref _controlViewClients, value);
+        }
+        
 
-
-        public DelegateCommand SendMessage;
+        public DelegateCommand SendMessage { get; }
 
         public ChatViewModel()
         {
+            _controlViewClients = new ControlViewClientsViewModel();
             _messagesCollection = new List<string>();
             _messagesCollection.Add("adsf");
             SendMessage = new DelegateCommand(ExecuteSendMessage);
         }
+        
         private void ExecuteSendMessage()
         {
 

@@ -3,13 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:interactivity="http://prismlibrary.com/"
-		     interactivity:ViewModelLocator.AutoWireViewModel="True"
              xmlns:local="clr-namespace:Client"
 		     xmlns:view="clr-namespace:Client.Views"
 		     xmlns:viewModel="clr-namespace:Client.ViewModels"
 			 mc:Ignorable="d"
-			 d:DataContext="{d:DesignInstance viewModel:ChatViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
 		<Grid.RowDefinitions>
@@ -22,7 +19,8 @@
 				 ItemsSource="{Binding ClientsAtChatCollection}"/>
 
 		<Button Grid.Row="2" Content="Добавить"
-                Command="{Binding AddClientsInChat}" ToolTipService.InitialShowDelay="0">
+                Command="{Binding }"
+				ToolTipService.InitialShowDelay="0">
 			<Button.ToolTip>
 				<ToolTip>
 					Добавить пользователей в чат
@@ -30,7 +28,7 @@
 			</Button.ToolTip>
 		</Button>
 		<Button Grid.Row="1" Content="Удалить"
-                Command="{Binding RemoveClientsFromChat}" ToolTipService.InitialShowDelay="0">
+                ToolTipService.InitialShowDelay="0">
 			<Button.ToolTip>
 				<ToolTip>
 					Удалить выделенных пользователей в чат
