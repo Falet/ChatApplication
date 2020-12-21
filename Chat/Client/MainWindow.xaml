@@ -9,7 +9,7 @@
 		xmlns:view="clr-namespace:Client.Views"
 		xmlns:viewModel="clr-namespace:Client.ViewModels"
 		mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="1000">
+        Title="MainWindow" Height="600" Width="1000" WindowStartupLocation="CenterScreen">
 	<Grid>
 		<view:LoginMenu Visibility="{Binding VisibilityLoginMenu}"></view:LoginMenu>
 		<view:ControlNavigationChats Visibility="{Binding VisibilityNavigationChat}"></view:ControlNavigationChats>

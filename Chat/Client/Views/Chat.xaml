@@ -11,26 +11,34 @@
 			 mc:Ignorable="d" 
 			 d:DataContext="{d:DesignInstance viewModel:ChatViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="4*"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="615*"/>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="303*"/>
+			<RowDefinition Height="23*"/>
+			<RowDefinition Height="124*"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="615*"/>
 			<ColumnDefinition Width="180*"/>
 		</Grid.ColumnDefinitions>
 
-		<ListBox Grid.Row="0" Grid.Column="0" ItemsSource="{Binding MessagesCollection}">
-			<TextBlock Text="dfsdf"/>
-		</ListBox>
-
-		<TextBox Grid.Row="1" Grid.Column="0" Text="{Binding CurrentTextMessage}" TextWrapping="Wrap"/>
-        <Button Grid.Row="1" Grid.Column="1" Content="Send"
+		<ListBox Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" ItemsSource="{Binding MessagesCollection}"/>
+		<TextBox Grid.Row="2" Grid.Column="0" Text="{Binding CurrentTextMessage, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap"/>
+		<Button Grid.Row="2" Grid.Column="1" Content="Send"
                 Command="{Binding SendMessage}"/>
-		<view:ClientsAtChat Grid.Row="0" Grid.Column="1"
+		
+		<Button Grid.Row="1" Grid.Column="1" Content="{Binding TextButtonChangeViewClients}"
+                Command="{Binding ChangeVisibilityViewClients}"
+				ToolTipService.InitialShowDelay="0">
+			<Button.ToolTip>
+				<ToolTip>
+					<TextBlock Text="{Binding TextToolTip}"/>
+				</ToolTip>
+			</Button.ToolTip>
+		</Button>
+		<view:ClientsAtChat Grid.Row="0"  Grid.Column="1"
 							   DataContext="{Binding controlVisibilityViewClients.ClientsAtChatViewModel}"/>
 		<view:AddClientsToChat Grid.Row="0" Grid.Column="1"
 							   DataContext="{Binding controlVisibilityViewClients.AddClientsAtChatViewModel}"/>
-    </Grid>
+	</Grid>
 </UserControl>

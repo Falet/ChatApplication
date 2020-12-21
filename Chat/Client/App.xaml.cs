@@ -1,6 +1,7 @@
 ﻿namespace Client
 {
     using System.Windows;
+    using Client.Model;
     using Client.ViewModels;
     using Client.Views;
     using Prism.Ioc;
@@ -16,6 +17,7 @@
     {
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.RegisterSingleton<IClientInfo, ClientInfo>();
             containerRegistry.Register<ControlNavigationChatsViewModel>();
             containerRegistry.Register<ChatViewModel>();
             //containerRegistry.Register<AddClientsToChatViewModel>();

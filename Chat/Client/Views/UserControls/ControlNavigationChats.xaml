@@ -11,39 +11,31 @@
 			 mc:Ignorable="d" 
 			 d:DataContext="{d:DesignInstance viewModel:ControlNavigationChatsViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
-	<TabControl TabStripPlacement="Left">
-		<TabItem>
-			<TabItem.Header>
-				<StackPanel Orientation="Horizontal">
-					<Ellipse Height="10" Width="10" Fill="Black" />
-					<TextBlock Margin="3">Логи сервера</TextBlock>
-				</StackPanel>
-			</TabItem.Header>
-			<TabItem.Content>
-				<view:Chat></view:Chat>
-			</TabItem.Content>
-		</TabItem>
-		<TabItem>
-			<TabItem.Header>
-				<StackPanel Orientation="Horizontal">
-					<Ellipse Height="10" Width="10" Fill="Black" />
-					<TextBlock Margin="3" Text="Общий чат"/>
-				</StackPanel>
-			</TabItem.Header>
-			<TabItem.Content>
-				<view:Chat></view:Chat>
-			</TabItem.Content>
-		</TabItem>
-		<TabItem>
-			<TabItem.Header>
-				<StackPanel Orientation="Horizontal">
-					<Ellipse Height="10" Width="10" Fill="Black" />
-					<TextBlock Margin="3">Создать чат</TextBlock>
-				</StackPanel>
-			</TabItem.Header>
-			<TabItem.Content>
-				<view:CreateChat></view:CreateChat>
-			</TabItem.Content>
-		</TabItem>
-	</TabControl>
+
+
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="303*"/>
+			<RowDefinition Height="23*"/>
+		</Grid.RowDefinitions>
+		<Button Grid.Row="2" Command="{Binding CreateChat}" Content="{Binding TextButtonChangeViewClients}">
+
+		</Button>
+		<TabControl TabStripPlacement="Left" ItemsSource="{Binding TabControlChat, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedChat}">
+			<TabControl.ItemTemplate>
+				<DataTemplate>
+					<StackPanel Orientation="Horizontal">
+						<Ellipse Height="10" Width="10" Fill="Black" />
+						<TextBlock Margin="3" Text="{Binding NameTab}"/>
+					</StackPanel>
+				</DataTemplate>
+			</TabControl.ItemTemplate>
+			<TabControl.ContentTemplate>
+				<DataTemplate>
+					<view:Chat DataContext="{Binding ChangeSelectedChat}"/>
+				</DataTemplate>
+			</TabControl.ContentTemplate>
+		</TabControl>
+	</Grid>
+	
 </UserControl>

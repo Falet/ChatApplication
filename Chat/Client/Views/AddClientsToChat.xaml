@@ -13,7 +13,6 @@
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="0.1*"/>
 			<RowDefinition Height="0.1*"/>
-			<RowDefinition Height="0.1*"/>
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="90*"/>
@@ -30,15 +29,7 @@
 				</ToolTip>
 			</Button.ToolTip>
 		</Button>
-		<Button Grid.Row="2" Grid.Column="0" Content="Назад"
-                 ToolTipService.InitialShowDelay="0">
-			<Button.ToolTip>
-				<ToolTip>
-					Вернутся к списку пользователей чата
-				</ToolTip>
-			</Button.ToolTip>
-		</Button>
-		<TextBlock  Grid.Row="3" Grid.Column="1" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center">
+		<TextBlock  Grid.Row="2" Grid.Column="0" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center">
 			Ошибка
 		</TextBlock>
 	</Grid>
