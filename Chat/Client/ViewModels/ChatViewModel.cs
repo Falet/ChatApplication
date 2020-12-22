@@ -22,7 +22,7 @@ namespace Client.ViewModels
         private string _textToolTip;
         private readonly IClientInfo _clientInfo;
 
-        public int NameTab { get; }
+        
         public string CurrentTextMessage
         {
             get => _textMessages;
@@ -48,14 +48,14 @@ namespace Client.ViewModels
             get => _textToolTip;
             set => SetProperty(ref _textToolTip, value);
         }
-
+        public int NameTab { get; set; }
         public DelegateCommand SendMessage { get; }
         public DelegateCommand ChangeVisibilityViewClients { get; }
 
         public ChatViewModel()
         {
             _clientInfo = new ClientInfo();
-            NameTab = new Random().Next();
+            
             _controlVisibilityViewClients = new ControlVisibilityViewClientsViewModel();
             _textButtonChangeViewClients = "Добавить";
             _messagesCollection = new ObservableCollection<ListBoxItem>();

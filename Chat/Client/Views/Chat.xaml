@@ -37,8 +37,8 @@
 			</Button.ToolTip>
 		</Button>
 		<view:ClientsAtChat Grid.Row="0"  Grid.Column="1"
-							   DataContext="{Binding controlVisibilityViewClients.ClientsAtChatViewModel}"/>
+							   DataContext="{Binding ControlVisibilityViewClients.ClientsAtChatViewModel}"/>
 		<view:AddClientsToChat Grid.Row="0" Grid.Column="1"
-							   DataContext="{Binding controlVisibilityViewClients.AddClientsAtChatViewModel}"/>
+							   DataContext="{Binding ControlVisibilityViewClients.AddClientsAtChatViewModel}"/>
 	</Grid>
 </UserControl>

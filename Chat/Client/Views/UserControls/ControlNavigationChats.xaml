@@ -21,11 +21,11 @@
 		<Button Grid.Row="2" Command="{Binding CreateChat}" Content="{Binding TextButtonChangeViewClients}">
 
 		</Button>
-		<TabControl TabStripPlacement="Left" ItemsSource="{Binding TabControlChat, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedChat}">
+		<TabControl TabStripPlacement="Left" ItemsSource="{Binding TabControlChat}">
 			<TabControl.ItemTemplate>
 				<DataTemplate>
 					<StackPanel Orientation="Horizontal">
-						<Ellipse Height="10" Width="10" Fill="Black" />
+						<Ellipse Height="10" Width="10" Fill="Black"/>
 						<TextBlock Margin="3" Text="{Binding NameTab}"/>
 					</StackPanel>
 				</DataTemplate>
@@ -35,6 +35,7 @@
 					<view:Chat DataContext="{Binding ChangeSelectedChat}"/>
 				</DataTemplate>
 			</TabControl.ContentTemplate>
+			
 		</TabControl>
 	</Grid>
 	

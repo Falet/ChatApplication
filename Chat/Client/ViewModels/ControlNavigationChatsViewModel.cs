@@ -13,8 +13,8 @@ namespace Client.ViewModels
     public class ControlNavigationChatsViewModel : BindableBase
     {
         private Visibility _visibilityView = Visibility.Visible;
-        private ObservableCollection<ChatViewModel> _chatCollection;
-        private ChatViewModel _selectedChat;
+        private ObservableCollection<ControlTabChat> _chatCollection;
+
         private string _selectedTabChat;
         private string _textButtonChangeViewClients;
         private Dictionary<string, ChatViewModel> _allChats;
@@ -23,15 +23,10 @@ namespace Client.ViewModels
             get => _visibilityView;
             set => SetProperty(ref _visibilityView, value);
         }
-        public ObservableCollection<ChatViewModel> TabControlChat
+        public ObservableCollection<ControlTabChat> TabControlChat
         {
             get => _chatCollection;
             set => SetProperty(ref _chatCollection, value);
-        }
-        public ChatViewModel ChangeSelectedChat
-        {
-            get => _selectedChat;
-            set => SetProperty(ref _selectedChat, value);
         }
         public string SelectedChat
         {
@@ -43,19 +38,19 @@ namespace Client.ViewModels
             get => _textButtonChangeViewClients;
             set => SetProperty(ref _textButtonChangeViewClients, value);
         }
+
         public DelegateCommand CreateChat { get; }
         public DelegateCommand SelectChange { get; }
         public ControlNavigationChatsViewModel()
         {
-            _chatCollection = new ObservableCollection<ChatViewModel>();
-            _allChats = new Dictionary<string, ChatViewModel>();
+            _chatCollection = new ObservableCollection<ControlTabChat>();
+
+            _chatCollection.Add(new ControlTabChat() { NameTab = 1123 });
+            _chatCollection.Add(new ControlTabChat() { NameTab = 1123 });
 
             ChatViewModel buf = new ChatViewModel();
-            _selectedChat = buf;
-            _allChats.Add(buf.NameTab.ToString(), buf);
-            TabControlChat.Add(buf);
-            _selectedChat = buf;
-            //SelectChange = new DelegateCommand(ChangeViewModelOfViewChat);
+            buf.NameTab = new Random().Next();
+
             CreateChat = new DelegateCommand(CreateChatView).ObservesProperty(() => TabControlChat);
         }
         private void ChangeViewModelOfViewChat()
@@ -63,15 +58,13 @@ namespace Client.ViewModels
             TextButtonChangeViewClients = new Random().Next().ToString();
             if (_allChats.TryGetValue(SelectedChat, out ChatViewModel chat))
             {
-                ChangeSelectedChat = chat;
+
             }
         }
         private void CreateChatView()
         {
             ChatViewModel buf = new ChatViewModel();
-            _allChats.Add(buf.NameTab.ToString(), buf);
-            TabControlChat.Add(buf);
-            ChangeSelectedChat = buf;
+            buf.NameTab = new Random().Next();
         }
     }
 }
