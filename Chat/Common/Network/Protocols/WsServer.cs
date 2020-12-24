@@ -89,9 +89,9 @@
                     ClientConnected?.Invoke(this, new ClientConnectedEventArgs(connection.Login, clientId));
                     break;
                 }
-                case nameof(DisconnectRequest):
+                case nameof(DisconnectNotice):
                 {
-                    var connectionRequest = ((JObject)container.Payload).ToObject(typeof(ConnectionRequest)) as ConnectionRequest;
+                    var connectionRequest = ((JObject)container.Payload).ToObject(typeof(DisconnectNotice)) as DisconnectNotice;
                     ClientDisconnected?.Invoke(this, new ClientDisconnectedEventArgs(connection.Login));
                     break;
                 }

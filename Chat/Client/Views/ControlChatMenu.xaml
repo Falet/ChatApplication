@@ -1,0 +1,39 @@
+﻿<UserControl x:Class="Client.Views.ControlChatMenu"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:interactivity="http://prismlibrary.com/"
+		     interactivity:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:local="clr-namespace:Client"
+		     xmlns:view="clr-namespace:Client.Views"
+		     xmlns:viewModel="clr-namespace:Client.ViewModels"
+			 mc:Ignorable="d" 
+			 d:DataContext="{d:DesignInstance viewModel:ControlChatMenuViewModel}"
+             d:DesignHeight="450" d:DesignWidth="800">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="303*"/>
+			<RowDefinition Height="23*"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="4*"/>
+			<ColumnDefinition Width="21*"/>
+		</Grid.ColumnDefinitions>
+		<Button Grid.Row="1" Content="{Binding TextButtonChangeViewChatMenu}"
+				Command="{Binding CreateChat}"
+				ToolTipService.InitialShowDelay="0">
+			<Button.ToolTip>
+				<ToolTip>
+					<TextBlock Text="{Binding TextToolTip}"/>
+				</ToolTip>
+			</Button.ToolTip>
+		</Button>
+		<view:ControlNavigationChats Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="2"
+								DataContext="{Binding ControlVisibilityElements.VisibilityControlNavigationChatsViewModel}"
+								/>
+		<view:CreateChat Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="2"
+								DataContext="{Binding ControlVisibilityElements.VisibilityCreateChat}"
+								/>
+	</Grid>
+</UserControl>

@@ -18,13 +18,16 @@
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterSingleton<IClientInfo, ClientInfo>();
+            containerRegistry.RegisterSingleton<ITransportClient, WsClient>();
+            containerRegistry.RegisterSingleton<IHandlerResponseFromServer, HandlerResponseFromServer>();
             containerRegistry.Register<ControlNavigationChatsViewModel>();
             containerRegistry.Register<ChatViewModel>();
-            //containerRegistry.Register<AddClientsToChatViewModel>();
             containerRegistry.Register<LoginMenuViewModel>();
             containerRegistry.Register<CreateChatViewModel>();
             containerRegistry.Register<EventLogViewModel>();
-            containerRegistry.Register<ControlVisibilityViewClientsViewModel>(); 
+            containerRegistry.Register<ControlChatMenuViewModel>();
+            containerRegistry.Register<CreateChatViewModel>();
+            containerRegistry.Register<AddClientsAtChatViewModel>(); 
         }
 
         protected override void ConfigureViewModelLocator()
@@ -34,9 +37,10 @@
             BindViewModelToView<ControlNavigationChatsViewModel, ControlNavigationChats>();
             BindViewModelToView<LoginMenuViewModel, LoginMenu>();
             BindViewModelToView<ChatViewModel, Chat>();
-            //BindViewModelToView<AddClientsViewModel, AddClientsToChat>(); 
-            //BindViewModelToView<CreateChatViewModel, CreateChat>();
-            //BindViewModelToView<ClientsChatViewModel, ClientsAtChat>();
+            BindViewModelToView<ControlChatMenuViewModel, ControlChatMenu>();
+            BindViewModelToView<AddClientsAtChatViewModel, AddClientsToChat>();
+            BindViewModelToView<CreateChatViewModel, CreateChat>();
+            BindViewModelToView<ClientsAtChatViewModel, ClientsAtChat>();
         }
 
         protected override Window CreateShell()

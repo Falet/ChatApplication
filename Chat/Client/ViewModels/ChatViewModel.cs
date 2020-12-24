@@ -17,12 +17,12 @@ namespace Client.ViewModels
         private string _textMessages;
         private ControlVisibilityViewClientsViewModel _controlVisibilityViewClients;
         private string _textButtonChangeViewClients;
-        private bool IsViewClientsChanged = true;
-        private ObservableCollection<ListBoxItem> _messagesCollection;
+        private bool IsViewClientsChanged;
+        private ObservableCollection<string> _messagesCollection;
         private string _textToolTip;
         private readonly IClientInfo _clientInfo;
+        private IHandlerMessages _handlerMessages;
 
-        
         public string CurrentTextMessage
         {
             get => _textMessages;
@@ -38,7 +38,7 @@ namespace Client.ViewModels
             get => _textButtonChangeViewClients;
             set => SetProperty(ref _textButtonChangeViewClients, value);
         }
-        public ObservableCollection<ListBoxItem> MessagesCollection
+        public ObservableCollection<string> MessagesCollection
         {
             get => _messagesCollection;
             set => SetProperty(ref _messagesCollection, value);
@@ -48,18 +48,23 @@ namespace Client.ViewModels
             get => _textToolTip;
             set => SetProperty(ref _textToolTip, value);
         }
-        public int NameTab { get; set; }
+        public int NumberChat { get;}
         public DelegateCommand SendMessage { get; }
         public DelegateCommand ChangeVisibilityViewClients { get; }
 
-        public ChatViewModel()
+        public ChatViewModel(IHandlerMessages handlerMessages, int numberChat)
         {
             _clientInfo = new ClientInfo();
             
             _controlVisibilityViewClients = new ControlVisibilityViewClientsViewModel();
             _textButtonChangeViewClients = "Добавить";
-            _messagesCollection = new ObservableCollection<ListBoxItem>();
+            _messagesCollection = new ObservableCollection<string>();
             _textToolTip = "Добавить клиентов в чат из общего списка";
+            IsViewClientsChanged = true;
+
+            _handlerMessages = handlerMessages;
+
+            NumberChat = numberChat;
 
             SendMessage = new DelegateCommand(ExecuteSendMessage,IsMessageNotEmpty).ObservesProperty(() => CurrentTextMessage);
             ChangeVisibilityViewClients = new DelegateCommand(ChangeViewClients).ObservesProperty(() => TextButtonChangeViewClients);
@@ -68,10 +73,9 @@ namespace Client.ViewModels
 
         private void ExecuteSendMessage()
         {
-            MessagesCollection.Add(new ListBoxItem()
-            {
-                Content = string.Format("Sender: {0}\nMessage: {1}", _clientInfo.Login, CurrentTextMessage)
-            });
+            //MessagesCollection.Add(string.Format("Sender: {0}\nMessage: {1}", _clientInfo.Login, CurrentTextMessage));
+
+            CurrentTextMessage = null;
         }
         private bool IsMessageNotEmpty()
         {

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Common.Network.Packets
 {
-    public class ConnectionNoticeForClients
+    public class DisconnectNotice
     {
         #region Properties
 
@@ -14,7 +14,7 @@ namespace Common.Network.Packets
 
         #region Constructors
 
-        public ConnectionNoticeForClients(string nameOfClient)
+        public DisconnectNotice(string nameOfClient)
         {
             NameOfClient = nameOfClient;
         }

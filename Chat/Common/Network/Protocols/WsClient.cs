@@ -76,7 +76,7 @@
                         var removeClientFromChatResponse = ((JObject)container.Payload)
                                                         .ToObject(typeof(RemoveClientFromChatResponse)) as RemoveClientFromChatResponse;
                         RemovedClientsFromChat?.Invoke(this, new RemovedClientsFromChatEventArgs(connection.Login,
-                                                                                             removeClientFromChatResponse.NumberChat,
+                                                                                              removeClientFromChatResponse.NumberChat,
                                                                                              removeClientFromChatResponse.Clients));
                         break;
                     }

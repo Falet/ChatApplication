@@ -1,13 +1,14 @@
-﻿using Common.Network;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Common.Network;
 
 namespace Client.Model
 {
-    public class HandlerResponseFromServer : IHandlerResponseFromServer
+    public interface IHandlerResponseFromServer
     {
         public event EventHandler<ClientConnectedEventArgs> ClientConnected;
         public event EventHandler<MessageReceivedEventArgs> MessageReceived;
@@ -18,10 +19,6 @@ namespace Client.Model
         public event EventHandler<RemovedClientsFromChatEventArgs> RemovedClientsFromChat;
         public event EventHandler<ClientDisconnectedEventArgs> ClientDisconnected;
         public event EventHandler<ClientRequestedNumbersChatEventArgs> RequestNumbersChats;
-
-        public void SendMessage(string message)
-        {
-            throw new NotImplementedException();
-        }
+        void SendMessage(string message);
     }
 }

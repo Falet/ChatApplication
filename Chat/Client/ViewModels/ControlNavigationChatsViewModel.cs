@@ -1,4 +1,5 @@
-﻿using Prism.Commands;
+﻿using Client.Model;
+using Prism.Commands;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
@@ -13,58 +14,60 @@ namespace Client.ViewModels
     public class ControlNavigationChatsViewModel : BindableBase
     {
         private Visibility _visibilityView = Visibility.Visible;
-        private ObservableCollection<ControlTabChat> _chatCollection;
-
-        private string _selectedTabChat;
+        private ObservableCollection<ChatViewModel> _chatCollection;
+        private IHandlerMessages _handlerMessages;
+        private IHandlerChats _handlerChats;
+        private ChatViewModel _selectedItemChat;
         private string _textButtonChangeViewClients;
-        private Dictionary<string, ChatViewModel> _allChats;
         public Visibility VisibilityNavigationChat
         {
             get => _visibilityView;
             set => SetProperty(ref _visibilityView, value);
         }
-        public ObservableCollection<ControlTabChat> TabControlChat
+        public ObservableCollection<ChatViewModel> ChatCollection
         {
             get => _chatCollection;
             set => SetProperty(ref _chatCollection, value);
         }
-        public string SelectedChat
+        public ChatViewModel SelectedChat
         {
-            get => _selectedTabChat;
-            set => SetProperty(ref _selectedTabChat, value, () => ChangeViewModelOfViewChat());
+            get => _selectedItemChat;
+            set => SetProperty(ref _selectedItemChat, value, () => ChangeViewModelOfViewChat());
         }
         public string TextButtonChangeViewClients
         {
             get => _textButtonChangeViewClients;
             set => SetProperty(ref _textButtonChangeViewClients, value);
         }
-
+        private ChatViewModel _currentViewModelChat;
+        public ChatViewModel CurrentViewModelChat
+        {
+            get => _currentViewModelChat;
+            set => SetProperty(ref _currentViewModelChat, value);
+        }
         public DelegateCommand CreateChat { get; }
         public DelegateCommand SelectChange { get; }
-        public ControlNavigationChatsViewModel()
+        public ControlNavigationChatsViewModel(IHandlerMessages handlerMessages, IHandlerChats handlerChats)
         {
-            _chatCollection = new ObservableCollection<ControlTabChat>();
+            _chatCollection = new ObservableCollection<ChatViewModel>();
 
-            _chatCollection.Add(new ControlTabChat() { NameTab = 1123 });
-            _chatCollection.Add(new ControlTabChat() { NameTab = 1123 });
+            CreateChatView();
 
-            ChatViewModel buf = new ChatViewModel();
-            buf.NameTab = new Random().Next();
+            _handlerMessages = handlerMessages;
+            _handlerChats = handlerChats;
 
-            CreateChat = new DelegateCommand(CreateChatView).ObservesProperty(() => TabControlChat);
+            CreateChat = new DelegateCommand(CreateChatView).ObservesProperty(() => ChatCollection);
         }
         private void ChangeViewModelOfViewChat()
         {
-            TextButtonChangeViewClients = new Random().Next().ToString();
-            if (_allChats.TryGetValue(SelectedChat, out ChatViewModel chat))
-            {
-
-            }
+            CurrentViewModelChat = _selectedItemChat;
         }
         private void CreateChatView()
         {
-            ChatViewModel buf = new ChatViewModel();
-            buf.NameTab = new Random().Next();
+            int numberChat = new Random().Next();
+            ChatViewModel newChat = new ChatViewModel(_handlerMessages, numberChat);
+            SelectedChat = newChat;
+            _chatCollection.Add(newChat);
         }
     }
 }

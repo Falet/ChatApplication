@@ -1,9 +1,4 @@
-﻿using Common.Network.Packets;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Server.Network
+﻿namespace Common.Network.Packets
 {
     public static class Container
     {

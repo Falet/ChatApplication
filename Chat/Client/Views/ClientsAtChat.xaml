@@ -14,7 +14,7 @@
 			<RowDefinition Height="0.1*"/>
 			<RowDefinition Height="0.1*"/>
 		</Grid.RowDefinitions>
-		<ListBox Grid.Row="0" SelectionMode="Multiple"/>
+		<ListBox Grid.Row="0" SelectionMode="Multiple" ItemsSource="{Binding CollectionClientsAtChat}"/>
 
 		<Button Grid.Row="1" Content="Удалить"
                 ToolTipService.InitialShowDelay="0">

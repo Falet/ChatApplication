@@ -86,7 +86,7 @@ namespace Server.Network
 				var SendMessageDisconnectToServer = Task.Run(() => _server.FreeConnection(clientGuid));
 
 				var SendMessageToServer = Task.Run(() =>
-					_server.SendAll(Container.GetContainer(nameof(DisconnectRequest), new DisconnectRequest(container.NameOfClient)))
+					_server.SendAll(Container.GetContainer(nameof(DisconnectNotice), new DisconnectNotice(container.NameOfClient)))
 				);
 
 				cachedClientName.TryUpdate(container.NameOfClient, Guid.Empty, clientGuid);

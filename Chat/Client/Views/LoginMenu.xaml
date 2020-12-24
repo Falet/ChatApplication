@@ -8,8 +8,7 @@
              xmlns:local="clr-namespace:Client"
 		     xmlns:view="clr-namespace:Client.Views"
 		     xmlns:viewModel="clr-namespace:Client.ViewModels"
-			 mc:Ignorable="d" 
-			 d:DataContext="{d:DesignInstance viewModel:LoginMenuViewModel}">
+			 mc:Ignorable="d">
 	
 	<Grid Height="356" Width="561">
 		<Canvas>
@@ -18,26 +17,26 @@
 					   />
 
 			<TextBox Width="198" Height="29" Canvas.Left="68" Canvas.Top="54"
-					 Text="{Binding TextIP}"/>
+					 Text="{Binding IP,UpdateSourceTrigger=PropertyChanged}"/>
 
 			<TextBlock Height="29" Width="58" Canvas.Left="10" Canvas.Top="116" 
 					   Text="Port" TextAlignment="Center" FontSize="16"/>
 
 			<TextBox Width="198" Height="29" Canvas.Left="68" Canvas.Top="116"
-					 Text="{Binding TextPort}"/>
+					 Text="{Binding Port,UpdateSourceTrigger=PropertyChanged}"/>
 
 			<TextBlock Height="29" Width="58" Canvas.Left="10" Canvas.Top="182" 
 					   Text="Login" TextAlignment="Center" FontSize="16"/>
 
 			<TextBox Width="198" Height="29" Canvas.Left="68" Canvas.Top="182"
-					 Text="{Binding TextLogin}"/>
+					 Text="{Binding Login,UpdateSourceTrigger=PropertyChanged}"/>
 
 			<Button Height="60" Width="198" Canvas.Left="68" Canvas.Top="244" 
 					Content="Sign in"
 					Command="{Binding SignIn}"/>
 
 			<ComboBox Canvas.Left="336" Canvas.Top="54" Width="209" Height="29"
-					  SelectedItem="{Binding CurrentItemProtocol}">
+					  SelectedItem="{Binding Protocol}">
 				<ComboBoxItem IsSelected="True">
 					<TextBlock>WebSocket</TextBlock>
 				</ComboBoxItem>
@@ -45,7 +44,7 @@
 					<TextBlock>TCP</TextBlock>
 				</ComboBoxItem>
 			</ComboBox>
-			<TextBlock Width="209" Height="95" Canvas.Left="336" Canvas.Top="116" 
+			<TextBlock Width="209" Height="188" Canvas.Left="336" Canvas.Top="116" 
 					   Text="{Binding TextError}" TextAlignment="Center" TextWrapping="Wrap">
 			</TextBlock>
 		</Canvas>
