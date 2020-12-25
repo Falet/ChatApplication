@@ -6,7 +6,6 @@
 	{
 		#region Properties
 
-
 		public List<int> NumbersChat { get; set; }
 
 		#endregion Properties

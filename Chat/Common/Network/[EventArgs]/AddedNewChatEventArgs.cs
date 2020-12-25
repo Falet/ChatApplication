@@ -1,7 +1,7 @@
 ﻿namespace Common.Network
 {
     using System.Collections.Generic;
-    public class AddedChatEventArgs
+    public class AddedNewChatEventArgs
     {
         #region Properties
 
@@ -11,9 +11,9 @@
 
         #endregion Properties
 
-        #region Constructors
+        #region Constructors 
 
-        public AddedChatEventArgs(string nameofClientSender, List<string> nameOfClients)
+        public AddedNewChatEventArgs(string nameofClientSender, List<string> nameOfClients)
         {
             NameOfClientSender = nameofClientSender;
             NameOfClientsForAdd = nameOfClients;

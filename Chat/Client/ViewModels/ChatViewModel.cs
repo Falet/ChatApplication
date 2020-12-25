@@ -1,4 +1,5 @@
 ﻿using Client.Model;
+using Common.Network;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
@@ -48,25 +49,27 @@ namespace Client.ViewModels
             get => _textToolTip;
             set => SetProperty(ref _textToolTip, value);
         }
-        public int NumberChat { get;}
+        public int NumberChat { get; }
         public DelegateCommand SendMessage { get; }
         public DelegateCommand ChangeVisibilityViewClients { get; }
 
-        public ChatViewModel(IHandlerMessages handlerMessages, int numberChat)
+        public ChatViewModel(IHandlerConnection handlerConnection, IHandlerMessages handlerMessages, IHandlerChats handlerChats, int numberChat)
         {
             _clientInfo = new ClientInfo();
-            
-            _controlVisibilityViewClients = new ControlVisibilityViewClientsViewModel();
+
+            _controlVisibilityViewClients = new ControlVisibilityViewClientsViewModel(handlerConnection, handlerChats);
             _textButtonChangeViewClients = "Добавить";
             _messagesCollection = new ObservableCollection<string>();
             _textToolTip = "Добавить клиентов в чат из общего списка";
             IsViewClientsChanged = true;
 
             _handlerMessages = handlerMessages;
+            _handlerMessages.MessageReceived += OnMessageReceived;
+            _handlerMessages.ConnectedToChat += OnConnectedToChat;
 
             NumberChat = numberChat;
 
-            SendMessage = new DelegateCommand(ExecuteSendMessage,IsMessageNotEmpty).ObservesProperty(() => CurrentTextMessage);
+            SendMessage = new DelegateCommand(ExecuteSendMessage, IsMessageNotEmpty).ObservesProperty(() => CurrentTextMessage);
             ChangeVisibilityViewClients = new DelegateCommand(ChangeViewClients).ObservesProperty(() => TextButtonChangeViewClients);
             ChangeVisibilityViewClients.ObservesProperty(() => TextToolTip);
         }
@@ -98,6 +101,14 @@ namespace Client.ViewModels
                 _controlVisibilityViewClients.AddClientsAtChatViewModel.VisibilityOfControlAddClient = Visibility.Visible;
                 TextToolTip = "Назад к списку клиентов в чате";
             }
+        }
+        private void OnMessageReceived(object sender, MessageReceivedEventArgs container)
+        {
+
+        }
+        private void OnConnectedToChat(object sender, ConnectionToChatEventArgs container)
+        {
+
         }
     }
 }

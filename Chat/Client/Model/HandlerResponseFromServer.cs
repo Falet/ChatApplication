@@ -12,7 +12,7 @@ namespace Client.Model
         public event EventHandler<ClientConnectedEventArgs> ClientConnected;
         public event EventHandler<MessageReceivedEventArgs> MessageReceived;
         public event EventHandler<ConnectionToChatEventArgs> ConnectedToChat;
-        public event EventHandler<AddedChatEventArgs> AddedChat;
+        public event EventHandler<AddedNewChatEventArgs> AddedChat;
         public event EventHandler<RemovedChatEventArgs> RemovedChat;
         public event EventHandler<AddedClientsToChatEventArgs> AddedClientsToChat;
         public event EventHandler<RemovedClientsFromChatEventArgs> RemovedClientsFromChat;

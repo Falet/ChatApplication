@@ -1,4 +1,5 @@
 ﻿using Client.Model;
+using Common.Network;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
@@ -17,6 +18,7 @@ namespace Client.ViewModels
         private ObservableCollection<ChatViewModel> _chatCollection;
         private IHandlerMessages _handlerMessages;
         private IHandlerChats _handlerChats;
+        private IHandlerConnection _handlerConnection;
         private ChatViewModel _selectedItemChat;
         private string _textButtonChangeViewClients;
         public Visibility VisibilityNavigationChat
@@ -47,25 +49,27 @@ namespace Client.ViewModels
         }
         public DelegateCommand CreateChat { get; }
         public DelegateCommand SelectChange { get; }
-        public ControlNavigationChatsViewModel(IHandlerMessages handlerMessages, IHandlerChats handlerChats)
+        public ControlNavigationChatsViewModel(IHandlerConnection handlerConnection, IHandlerMessages handlerMessages, IHandlerChats handlerChats)
         {
             _chatCollection = new ObservableCollection<ChatViewModel>();
 
-            CreateChatView();
-
-            _handlerMessages = handlerMessages;
             _handlerChats = handlerChats;
+            _handlerChats.AddedChat += OnCreateChat;
+            _handlerConnection = handlerConnection;
+            _handlerMessages = handlerMessages;
 
-            CreateChat = new DelegateCommand(CreateChatView).ObservesProperty(() => ChatCollection);
+            AddClientsAtChatViewModel addClientsToChat = new AddClientsAtChatViewModel(_handlerConnection, _handlerChats);
         }
         private void ChangeViewModelOfViewChat()
         {
             CurrentViewModelChat = _selectedItemChat;
+            _handlerMessages.Send(CurrentViewModelChat.NumberChat);
         }
-        private void CreateChatView()
+        private void OnCreateChat(object sender, AddedChatEventArgs container)
         {
-            int numberChat = new Random().Next();
-            ChatViewModel newChat = new ChatViewModel(_handlerMessages, numberChat);
+            ClientsAtChatViewModel clientsAtChat = new ClientsAtChatViewModel(_handlerConnection, _handlerChats,
+                                                                              container.NumberChat, container.NameOfClientsForAdd);
+            ChatViewModel newChat = new ChatViewModel(addClientsToChat, clientsAtChat, _handlerMessages, container.NumberChat);
             SelectedChat = newChat;
             _chatCollection.Add(newChat);
         }

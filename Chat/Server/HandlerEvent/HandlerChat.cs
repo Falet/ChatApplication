@@ -13,7 +13,12 @@ namespace Server.Network
 {
     public class HandlerChat
     {
-        public ConcurrentDictionary<int, InfoChat> InfoChats { get; }//Ключ - номер комнаты
+        #region Const
+
+        const int NumberGeneralChat = 1;
+
+        #endregion Const
+
 
         #region Fields
 
@@ -23,6 +28,8 @@ namespace Server.Network
         private HandlerConnection _connection;
 
         #endregion Fields
+
+        public ConcurrentDictionary<int, InfoChat> InfoChats { get; }//Ключ - номер комнаты
 
         public HandlerChat(ITransportServer server, IHandlerRequestToData data, HandlerConnection connection)
         {
@@ -42,7 +49,7 @@ namespace Server.Network
         }
 
         #region Methods
-        public async void OnAddedChat(object sender, AddedChatEventArgs container)
+        public async void OnAddedChat(object sender, AddedNewChatEventArgs container)
         {
             if (_connection.cachedClientName.TryGetValue(container.NameOfClientSender, out Guid clientCreatorGuid))
             {
@@ -184,13 +191,26 @@ namespace Server.Network
                             infoAboutChats.Add(numberChat, infoChat.OwnerChat);
                         }
                     }
-                    var SendMessageToServer = Task.Run
+                    
+                }
+                else
+                {
+                    if(_cachedClientProperies.TryAdd(container.NameOfClientSender,
+                                                  new ClientProperties{ NumbersChat = new List<int> { NumberGeneralChat } }))
+                    {
+                        if (InfoChats.TryGetValue(NumberGeneralChat, out InfoChat infoChat))
+                        {
+                            GetActivityClient(infoChat.NameOfClients, out activityClient);
+                            infoAboutChats.Add(NumberGeneralChat, infoChat.OwnerChat);
+                        }
+                    }
+                }
+                var SendMessageToServer = Task.Run
                     (
                     () => _server.Send(new List<Guid> { clientGuid },
-                                 Container.GetContainer(nameof(GetNumbersAccessibleChatsResponse), 
+                                 Container.GetContainer(nameof(GetNumbersAccessibleChatsResponse),
                                  new GetNumbersAccessibleChatsResponse(activityClient, infoAboutChats)))
                     );
-                }
             }
         }
 

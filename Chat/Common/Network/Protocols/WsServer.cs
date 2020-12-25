@@ -25,7 +25,7 @@
         public event EventHandler<ClientConnectedEventArgs> ClientConnected;
         public event EventHandler<MessageReceivedEventArgs> MessageReceived;
         public event EventHandler<ConnectionToChatEventArgs> ConnectedToChat;
-        public event EventHandler<AddedChatEventArgs> AddedChat;
+        public event EventHandler<AddedNewChatEventArgs> AddedChat;
         public event EventHandler<RemovedChatEventArgs> RemovedChat;
         public event EventHandler<AddedClientsToChatEventArgs> AddedClientsToChat;
         public event EventHandler<RemovedClientsFromChatEventArgs> RemovedClientsFromChat;
@@ -110,7 +110,7 @@
                 case nameof(AddNewChatRequest):
                 {
                     var addNewChatRequest = ((JObject)container.Payload).ToObject(typeof(AddNewChatRequest)) as AddNewChatRequest;
-                    AddedChat?.Invoke(this, new AddedChatEventArgs(connection.Login, addNewChatRequest.Clients));
+                    AddedChat?.Invoke(this, new AddedNewChatEventArgs(connection.Login, addNewChatRequest.Clients));
                     break;
                 }
                 case nameof(RemoveChatRequest):

@@ -1,4 +1,5 @@
-﻿using Prism.Mvvm;
+﻿using Client.Model;
+using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,6 +18,10 @@ namespace Client.ViewModels
         {
             get => _visibilityViewClientsAtChat;
             set => SetProperty(ref _visibilityViewClientsAtChat, value);
+        }
+        public ClientsAtChatViewModel(IHandlerConnection handlerConnection, IHandlerChats handlerChats)
+        {
+
         }
     }
 }

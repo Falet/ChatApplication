@@ -1,10 +1,12 @@
-﻿using Common.Network;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Client.Model
 {
+    using Common.Network.Packets;
+    using Common.Network;
     public interface IHandlerConnection
     {
         public event EventHandler<ClientConnectedToServerEventArgs> ClientConnected;

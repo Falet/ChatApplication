@@ -137,6 +137,9 @@ namespace Client.ViewModels
             if(container.Result == ResultRequest.Ok)
             {
                 VisibilityLoginMenu = Visibility.Collapsed;
+            }
+            else
+            {
                 TextError = container.Reason;
             }
         }

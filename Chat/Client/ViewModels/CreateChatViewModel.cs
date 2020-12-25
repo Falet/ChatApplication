@@ -18,7 +18,7 @@ namespace Client.ViewModels
             get => _visibilityView;
             set => SetProperty(ref _visibilityView, value);
         }
-        public CreateChatViewModel(IHandlerChats handlerChats)
+        public CreateChatViewModel(IHandlerConnection handlerConnection, IHandlerChats handlerChats)
         {
             _handlerChats = handlerChats;
         }

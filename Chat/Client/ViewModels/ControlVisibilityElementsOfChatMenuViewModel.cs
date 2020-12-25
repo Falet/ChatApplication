@@ -21,10 +21,10 @@ namespace Client.ViewModels
             private set;
         }
 
-        public ControlVisibilityElementsOfChatMenuViewModel(IHandlerMessages handlerMessages, IHandlerChats handlerChats)
+        public ControlVisibilityElementsOfChatMenuViewModel(IHandlerConnection handlerConnection, IHandlerMessages handlerMessages, IHandlerChats handlerChats)
         {
-            VisibilityControlNavigationChatsViewModel = new ControlNavigationChatsViewModel(handlerMessages, handlerChats);
-            VisibilityCreateChat = new CreateChatViewModel(handlerChats); 
+            VisibilityControlNavigationChatsViewModel = new ControlNavigationChatsViewModel(handlerConnection, handlerMessages, handlerChats);
+            VisibilityCreateChat = new CreateChatViewModel(handlerConnection, handlerChats); 
             VisibilityControlNavigationChatsViewModel.VisibilityNavigationChat = Visibility.Visible;
             VisibilityCreateChat.VisibilityCreateChat = Visibility.Hidden;
         }

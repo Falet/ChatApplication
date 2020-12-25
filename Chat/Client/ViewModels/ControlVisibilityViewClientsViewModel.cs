@@ -1,4 +1,5 @@
-﻿using Prism.Mvvm;
+﻿using Client.Model;
+using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,10 +22,10 @@ namespace Client.ViewModels
             private set;
         }
 
-        public ControlVisibilityViewClientsViewModel()
+        public ControlVisibilityViewClientsViewModel(IHandlerConnection handlerConnection, IHandlerChats handlerChats, int numberChat)
         {
-            AddClientsAtChatViewModel = new AddClientsAtChatViewModel();
-            ClientsAtChatViewModel = new ClientsAtChatViewModel();
+            AddClientsAtChatViewModel = new AddClientsAtChatViewModel(handlerConnection, handlerChats, numberChat);
+            ClientsAtChatViewModel = new ClientsAtChatViewModel(handlerConnection, handlerChats);
             ClientsAtChatViewModel.VisibilityClientsAtChat = Visibility.Visible;
             AddClientsAtChatViewModel.VisibilityOfControlAddClient = Visibility.Hidden;
         }
