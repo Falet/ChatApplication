@@ -10,16 +10,14 @@ namespace Common.Network.Packets
 
         public string NameOfClient { get; }
 
-        public List<int> NumberChats { get; }
 
         #endregion Properties
 
         #region Constructors
 
-        public DisconnectNotice(string nameOfClient,List<int> numberChats)
+        public DisconnectNotice(string nameOfClient)
         {
             NameOfClient = nameOfClient;
-            NumberChats = numberChats;
         }
 
         #endregion Constructors

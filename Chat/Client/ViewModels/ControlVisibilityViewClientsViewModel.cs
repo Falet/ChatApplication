@@ -11,7 +11,7 @@ namespace Client.ViewModels
 {
     public class ControlVisibilityViewClientsViewModel : BindableBase
     {
-        public AddClientsAtChatViewModel AddClientsAtChatViewModel
+        public AllClientViewModel AllClientViewModel
         {
             get;
             private set;
@@ -22,12 +22,12 @@ namespace Client.ViewModels
             private set;
         }
 
-        public ControlVisibilityViewClientsViewModel(IHandlerConnection handlerConnection, IHandlerChats handlerChats, int numberChat)
+        public ControlVisibilityViewClientsViewModel(AllClientViewModel allClientViewModel, ClientsAtChatViewModel clientsAtChatViewModel)
         {
-            AddClientsAtChatViewModel = new AddClientsAtChatViewModel(handlerConnection, handlerChats, numberChat);
-            ClientsAtChatViewModel = new ClientsAtChatViewModel(handlerConnection, handlerChats);
+            AllClientViewModel = allClientViewModel;
+            ClientsAtChatViewModel = clientsAtChatViewModel;
             ClientsAtChatViewModel.VisibilityClientsAtChat = Visibility.Visible;
-            AddClientsAtChatViewModel.VisibilityOfControlAddClient = Visibility.Hidden;
+            AllClientViewModel.VisibilityOfControlAllClient = Visibility.Hidden;
         }
     }
 }

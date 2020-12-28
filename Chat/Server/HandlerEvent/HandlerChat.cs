@@ -28,7 +28,7 @@ namespace Server.Network
         private HandlerConnection _connection;
 
         #endregion Fields
-
+         
         public ConcurrentDictionary<int, InfoChat> InfoChats { get; }//Ключ - номер комнаты
 
         public HandlerChat(ITransportServer server, IHandlerRequestToData data, HandlerConnection connection)
@@ -183,7 +183,7 @@ namespace Server.Network
 
                 if (_cachedClientProperies.TryGetValue(container.NameOfClientSender, out ClientProperties clientProperties))
                 {
-                    foreach (var numberChat in clientProperties.NumbersChat)
+                    foreach(var numberChat in clientProperties.NumbersChat)
                     {
                         if (InfoChats.TryGetValue(numberChat, out InfoChat infoChat))
                         {
@@ -191,7 +191,6 @@ namespace Server.Network
                             infoAboutChats.Add(numberChat, infoChat.OwnerChat);
                         }
                     }
-                    
                 }
                 else
                 {
@@ -254,11 +253,11 @@ namespace Server.Network
                 {
                     if (clientAtChat != Guid.Empty)
                     {
-                        resultCheckActivity.Add(nameClient, true);
+                        resultCheckActivity.TryAdd(nameClient, true);
                     }
                     else
                     {
-                        resultCheckActivity.Add(nameClient, false);
+                        resultCheckActivity.TryAdd(nameClient, false);
                     }
                 }
             }

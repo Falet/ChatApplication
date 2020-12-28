@@ -10,7 +10,7 @@ namespace Client.Model
 
         public string NameOfClientCreator { get; }
 
-        public List<string> NameOfClientsForAdd { get; }
+        public Dictionary<string, bool> NameOfClientsForAdd { get; }
 
         public int NumberChat { get; }
 
@@ -18,7 +18,7 @@ namespace Client.Model
 
         #region Constructors
 
-        public AddedChatEventArgs(string nameofClientCreator, List<string> nameOfClients, int numberChat)
+        public AddedChatEventArgs(string nameofClientCreator, Dictionary<string, bool> nameOfClients, int numberChat)
         {
             NameOfClientCreator = nameofClientCreator;
             NameOfClientsForAdd = nameOfClients;

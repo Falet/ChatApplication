@@ -1,4 +1,5 @@
 ﻿using Common.Network;
+using Common.Network.Packets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,11 @@ namespace Client.Model
         public event EventHandler<RemovedClientsFromChatEventArgs> RemovedClientsFromChat;
         public event EventHandler<ClientDisconnectedEventArgs> ClientDisconnected;
         public event EventHandler<ClientRequestedNumbersChatEventArgs> RequestNumbersChats;
+
+        public void ParsePacket(MessageContainer message)
+        {
+            throw new NotImplementedException();
+        }
 
         public void SendMessage(string message)
         {

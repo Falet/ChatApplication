@@ -8,7 +8,7 @@
 		mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="1000" WindowStartupLocation="CenterScreen">
 	<Grid>
-		<view:LoginMenu Visibility="{Binding VisibilityLoginMenu}"></view:LoginMenu>
-		<view:ControlChatMenu Visibility="{Binding VisibilityChatMenu}"></view:ControlChatMenu>
+		<view:LoginMenu></view:LoginMenu>
+		<view:ControlChatMenu></view:ControlChatMenu>
 	</Grid>
 </Window>

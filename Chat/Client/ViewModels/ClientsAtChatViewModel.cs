@@ -12,14 +12,17 @@ namespace Client.ViewModels
 {
     public class ClientsAtChatViewModel : BindableBase
     {
-        private Visibility _visibilityViewClientsAtChat = Visibility.Hidden; 
-        //private ObservableCollection<string> 
+        private Visibility _visibilityViewClientsAtChat;
         public Visibility VisibilityClientsAtChat
         {
             get => _visibilityViewClientsAtChat;
             set => SetProperty(ref _visibilityViewClientsAtChat, value);
         }
-        public ClientsAtChatViewModel(IHandlerConnection handlerConnection, IHandlerChats handlerChats)
+        public ClientsAtChatViewModel(IHandlerConnection handlerConnection, IHandlerChats handlerChats, int numberChat, Dictionary<string, bool> clientForAdd)
+        {
+
+        }
+        public void OnClientAddedToChat(object sender, )
         {
 
         }

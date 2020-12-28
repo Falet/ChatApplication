@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Common.Network;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Client.Model
 {
-    using Common.Network;
-    public interface IHandlerChats
+    public class HandlerChats : IHandlerChats
     {
         public event EventHandler<AddedChatEventArgs> AddedChat;
         public event EventHandler<RemovedChatEventArgs> RemovedChat;
@@ -13,6 +13,9 @@ namespace Client.Model
         public event EventHandler<RemovedClientsFromChatEventArgs> RemovedClientsFromChat;
         public event EventHandler<NumbersOfChatsReceivedEventArgs> ResponseNumbersChats;
 
-        public void Send();
+        public void Send()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

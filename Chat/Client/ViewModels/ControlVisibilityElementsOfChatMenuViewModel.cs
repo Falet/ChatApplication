@@ -10,23 +10,23 @@ namespace Client.ViewModels
 {
     public class ControlVisibilityElementsOfChatMenuViewModel
     {
-        public ControlNavigationChatsViewModel VisibilityControlNavigationChatsViewModel
+        public ControlNavigationChatsViewModel ControlNavigationChatsViewModel
         {
             get;
             private set;
         }
-        public CreateChatViewModel VisibilityCreateChat
+        public CreateChatViewModel CreateChat
         {
             get;
             private set;
         }
 
-        public ControlVisibilityElementsOfChatMenuViewModel(IHandlerConnection handlerConnection, IHandlerMessages handlerMessages, IHandlerChats handlerChats)
+        public ControlVisibilityElementsOfChatMenuViewModel(AllClientViewModel allClientViewModel, IHandlerConnection handlerConnection, IHandlerMessages handlerMessages, IHandlerChats handlerChats)
         {
-            VisibilityControlNavigationChatsViewModel = new ControlNavigationChatsViewModel(handlerConnection, handlerMessages, handlerChats);
-            VisibilityCreateChat = new CreateChatViewModel(handlerConnection, handlerChats); 
-            VisibilityControlNavigationChatsViewModel.VisibilityNavigationChat = Visibility.Visible;
-            VisibilityCreateChat.VisibilityCreateChat = Visibility.Hidden;
+            ControlNavigationChatsViewModel = new ControlNavigationChatsViewModel(allClientViewModel, handlerConnection, handlerMessages, handlerChats);
+            CreateChat = new CreateChatViewModel(allClientViewModel, handlerConnection, handlerChats);
+            CreateChat.VisibilityCreateChat = Visibility.Hidden;
+            ControlNavigationChatsViewModel.VisibilityNavigationChat = Visibility.Visible;
         }
     }
 }

@@ -1,16 +1,23 @@
-﻿using System;
+﻿using Common.Network;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Client.Model
 {
-    using Common.Network.Packets;
-    using Common.Network;
-    public interface IHandlerMessages
+    public class HandlerMessages : IHandlerMessages
     {
         public event EventHandler<MessageReceivedEventArgs> MessageReceived;
         public event EventHandler<ConnectionToChatEventArgs> ConnectedToChat;
-        public void Send(string message, int numberChat);
-        public void ConnectToChat(int numberChat);
+
+        public void ConnectToChat(int numberChat)
+        {
+
+        }
+
+        public void Send(string message, int numberChat)
+        {
+
+        }
     }
 }
