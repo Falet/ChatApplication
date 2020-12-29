@@ -17,20 +17,5 @@
         }
 
         #endregion Constructors
-
-        #region Methods
-
-        public MessageContainer GetContainer()
-        {
-            var container = new MessageContainer
-            {
-                Identifier = nameof(RemoveChatResponse),
-                Payload = this
-            };
-
-            return container;
-        }
-
-        #endregion Methods
     }
 }

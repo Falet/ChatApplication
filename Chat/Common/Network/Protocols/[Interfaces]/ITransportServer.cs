@@ -21,15 +21,11 @@
 
         #region Methods
 
-        public void Start();
-
-        public void Stop();
-
         public void FreeConnection(Guid ClientId);
 
         public void Send(List<Guid> ListClientId, MessageContainer message);
 
-        public void SendAll(MessageContainer message);
+        public void SendAll(Guid clientGuid, MessageContainer message);
 
         #endregion Methods
     }

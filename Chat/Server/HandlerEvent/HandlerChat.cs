@@ -39,7 +39,7 @@ namespace Server.Network
             _server.RemovedChat += OnRemovedChat;
             _server.AddedClientsToChat += OnAddedClientsToChat;
             _server.RemovedClientsFromChat += OnRemovedClientsFromChat;
-            _server.RequestNumbersChats += OnRequestNumbersChats;
+            //_server.RequestNumbersChats += OnRequestNumbersChats;
 
             _data = data;
             _cachedClientProperies = _data.GetInfoAboutLinkClientToChat();
@@ -65,7 +65,7 @@ namespace Server.Network
                         idClientsForSendMessage.Add(clientCreatorGuid);
                     }
 
-                    var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage, new AddNewChatResponse(numberChat, container.NameOfClientsForAdd).GetContainer()));
+                    var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage, Container.GetContainer(nameof(AddNewChatResponse),new AddNewChatResponse(numberChat, container.NameOfClientsForAdd))));
                     InfoChats.TryAdd(numberChat, new InfoChat { OwnerChat = container.NameOfClientSender, NameOfClients = container.NameOfClientsForAdd });
                     if(!await _data.AddClientToChat(new AddClientToChat { NumberChat = numberChat, NameOfClients = NameForChange }))
                     {
@@ -93,7 +93,7 @@ namespace Server.Network
                     List<string> NameForChange = infoChat.NameOfClients;
                     await Task.Run(() => CreateUserListForChangeInfoChat(ref NameForChange, container.NumberChat, ref idClientsForSendMessage));
 
-                    var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage, new RemoveChatResponse(container.NumberChat).GetContainer()));
+                    var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage,Container.GetContainer(nameof(RemoveChatResponse), new RemoveChatResponse(container.NumberChat))));
 
                     if (!InfoChats.TryRemove(container.NumberChat, out InfoChat infoRemovedChat))
                     {
@@ -128,7 +128,7 @@ namespace Server.Network
                     infoChat.NameOfClients.Union(NameForChange);
                     await Task.Run(() => AddNamesForMail(infoChat.NameOfClients, ref idClientsForSendMessage));
 
-                    var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage, new AddNewClientToChatResponse(container.NameOfClientSender, NameForChange, container.NumberChat).GetContainer()));
+                    var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage, Container.GetContainer(nameof(AddNewClientToChatResponse),new AddNewClientToChatResponse(container.NameOfClientSender, NameForChange, container.NumberChat))));
 
                     InfoChats.TryUpdate(container.NumberChat, infoChat, buffer);
 
@@ -158,7 +158,7 @@ namespace Server.Network
                     infoChat.NameOfClients.Except(container.NameOfClients);
                     await Task.Run(() => AddNamesForMail(infoChat.NameOfClients, ref idClientsForSendMessage));
 
-                    var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage, new RemoveClientFromChatResponse(container.NameOfRemover, container.NameOfClients, container.NumberChat).GetContainer()));
+                    var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage, Container.GetContainer(nameof(RemoveClientFromChatResponse),new RemoveClientFromChatResponse(container.NameOfRemover, container.NameOfClients, container.NumberChat))));
 
                     InfoChats.TryUpdate(container.NumberChat, infoChat, buffer);
 
@@ -173,8 +173,8 @@ namespace Server.Network
                 //Ошибка
             }
         }
-
-        public void OnRequestNumbersChats(object sender, ClientRequestedNumbersChatEventArgs container)
+        //Переделать  - разделить функцию на две. Одна уйдет в Connectionhandler, вторая тут, но без активности пользователей
+        /*public void OnRequestNumbersChats(object sender, ClientRequestedNumbersChatEventArgs container)
         {
             if(_connection.cachedClientName.TryGetValue(container.NameOfClientSender,out Guid clientGuid))
             {
@@ -208,10 +208,10 @@ namespace Server.Network
                     (
                     () => _server.Send(new List<Guid> { clientGuid },
                                  Container.GetContainer(nameof(GetNumbersAccessibleChatsResponse),
-                                 new GetNumbersAccessibleChatsResponse(activityClient, infoAboutChats)))
+                                 new GetNumbersAccessibleChatsResponse(infoAboutChats)))
                     );
             }
-        }
+        }*/
 
         private void CreateUserListForChangeInfoChat(ref List<string> namesClientForCreat,int numberChat,ref List<Guid> namesForMail)
         {

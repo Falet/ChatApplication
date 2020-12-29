@@ -52,11 +52,11 @@
             var buf = message.Payload.GetType();
         }
 
-
-        public void SendAll(MessageContainer message)
+        public void SendAll(Guid clientGuid, MessageContainer message)
         {
-
+            throw new NotImplementedException();
         }
+
         #endregion Methods
     }
 }

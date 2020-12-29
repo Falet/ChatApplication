@@ -17,16 +17,14 @@ namespace Client.ViewModels
     {
         private string _textMessages;
         private ControlVisibilityViewClientsViewModel _controlVisibilityViewClients;
-        private AllClientViewModel _allClientsViewModel;
+        private AccessClientForAddViewModel _allClientsViewModel;
         private ClientsAtChatViewModel _clientsAtChatViewModel;
         private string _textButtonChangeViewClients;
         private bool IsViewClientsChanged;
         private ObservableCollection<string> _messagesCollection;
         private string _textToolTip;
-        private readonly IClientInfo _clientInfo;
         private IHandlerMessages _handlerMessages;
         private Visibility _visibilityView;
-        private Visibility _visibilityAddClientButton;
         public Visibility VisibilityChat
         {
             get => _visibilityView;
@@ -41,11 +39,6 @@ namespace Client.ViewModels
         {
             get => _controlVisibilityViewClients;
             set => SetProperty(ref _controlVisibilityViewClients, value);
-        }
-        public Visibility VisibilityAddClientButton
-        {
-            get => _visibilityAddClientButton;
-            set => SetProperty(ref _visibilityAddClientButton, value);
         }
         public string TextButtonChangeViewClients
         {
@@ -66,11 +59,8 @@ namespace Client.ViewModels
         public DelegateCommand SendMessage { get; }
         public DelegateCommand ChangeVisibilityViewClients { get; }
 
-
-        public ChatViewModel(AllClientViewModel allClientsViewModel, ClientsAtChatViewModel clientsAtChatViewModel, IHandlerMessages handlerMessages, int numberChat)
+        public ChatViewModel(AccessClientForAddViewModel allClientsViewModel, ClientsAtChatViewModel clientsAtChatViewModel, IHandlerMessages handlerMessages, int numberChat)
         {
-            _clientInfo = new ClientInfo();
-
             _clientsAtChatViewModel = clientsAtChatViewModel;
             _allClientsViewModel = allClientsViewModel;
             _controlVisibilityViewClients = new ControlVisibilityViewClientsViewModel(_allClientsViewModel, clientsAtChatViewModel);
@@ -78,7 +68,6 @@ namespace Client.ViewModels
             _messagesCollection = new ObservableCollection<string>();
             _textToolTip = "Добавить клиентов в чат из общего списка";
             IsViewClientsChanged = true;
-            _visibilityAddClientButton = Visibility.Hidden;
 
             _handlerMessages = handlerMessages;
             _handlerMessages.MessageReceived += OnMessageReceived;
@@ -86,16 +75,13 @@ namespace Client.ViewModels
 
             NumberChat = numberChat;
 
- 
             SendMessage = new DelegateCommand(ExecuteSendMessage, IsMessageNotEmpty).ObservesProperty(() => CurrentTextMessage);
             ChangeVisibilityViewClients = new DelegateCommand(ChangeViewClients).ObservesProperty(() => TextButtonChangeViewClients);
             ChangeVisibilityViewClients.ObservesProperty(() => TextToolTip);
         }
-
         private void ExecuteSendMessage()
         {
-            MessagesCollection.Add(string.Format("Sender: {0}\nMessage: {1}", _clientInfo.Login, CurrentTextMessage));
-
+            _handlerMessages.SendMessage(CurrentTextMessage, NumberChat);
             CurrentTextMessage = null;
         }
         private bool IsMessageNotEmpty()
@@ -108,23 +94,21 @@ namespace Client.ViewModels
             if (IsViewClientsChanged)
             {
                 TextButtonChangeViewClients = "Добавить";
-                ControlVisibilityViewClients.AllClientViewModel.VisibilityOfControlAllClient = Visibility.Hidden;
+                ControlVisibilityViewClients.AccessClientForAddViewModel.VisibilityOfControlAllClient = Visibility.Hidden;
                 ControlVisibilityViewClients.ClientsAtChatViewModel.VisibilityClientsAtChat = Visibility.Visible;
-                VisibilityAddClientButton = Visibility.Hidden;
                 TextToolTip = "Добавить клиентов в чат из общего списка";
             }
             else
             {
                 TextButtonChangeViewClients = "Назад";
                 ControlVisibilityViewClients.ClientsAtChatViewModel.VisibilityClientsAtChat = Visibility.Hidden;
-                ControlVisibilityViewClients.AllClientViewModel.VisibilityOfControlAllClient = Visibility.Visible;
-                VisibilityAddClientButton = Visibility.Visible;
+                ControlVisibilityViewClients.AccessClientForAddViewModel.VisibilityOfControlAllClient = Visibility.Visible;
                 TextToolTip = "Назад к списку клиентов в чате";
             }
         }
         private void OnMessageReceived(object sender, MessageReceivedEventArgs container)
         {
-
+            MessagesCollection.Add(string.Format("Sender: {0}\nMessage: {1}", container.NameOfClient, container.Message));
         }
         private void OnConnectedToChat(object sender, ConnectionToChatEventArgs container)
         {

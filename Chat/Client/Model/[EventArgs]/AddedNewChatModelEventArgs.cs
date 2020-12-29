@@ -1,7 +1,10 @@
-﻿namespace Common.Network.Packets
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Client.Model
 {
-    using System.Collections.Generic;
-    public class AddNewChatResponse
+    public class AddedNewChatModelEventArgs
     {
         #region Properties
 
@@ -13,7 +16,7 @@
 
         #region Constructors
 
-        public AddNewChatResponse(int numberChat, List<string> clients)
+        public AddedNewChatModelEventArgs(int numberChat, List<string> clients)
         {
             NumberChat = numberChat;
             Clients = clients;

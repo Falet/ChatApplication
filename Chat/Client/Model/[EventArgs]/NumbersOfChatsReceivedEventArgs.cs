@@ -9,15 +9,15 @@ namespace Client.Model
         #region Properties
 
         public Dictionary<int, string> NumbersChatsForClient { get; }
-        public Dictionary<string, bool> InfoClientsAtChat { get; }
+        public List<string> ClientsAtChat { get; }
 
         #endregion Properties
 
         #region Constructors
 
-        public NumbersOfChatsReceivedEventArgs(Dictionary<string, bool> infoClientsAtChat, Dictionary<int, string> numbersChatsForClient)
+        public NumbersOfChatsReceivedEventArgs(Dictionary<int, string> numbersChatsForClient, List<string> clientsAtChat)
         {
-            InfoClientsAtChat = infoClientsAtChat;
+            ClientsAtChat = clientsAtChat;
             NumbersChatsForClient = numbersChatsForClient;
         }
 

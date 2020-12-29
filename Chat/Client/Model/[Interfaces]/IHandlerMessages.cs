@@ -10,7 +10,7 @@ namespace Client.Model
     {
         public event EventHandler<MessageReceivedEventArgs> MessageReceived;
         public event EventHandler<ConnectionToChatEventArgs> ConnectedToChat;
-        public void Send(string message, int numberChat);
+        public void SendMessage(string message, int numberChat);
         public void ConnectToChat(int numberChat);
     }
 }

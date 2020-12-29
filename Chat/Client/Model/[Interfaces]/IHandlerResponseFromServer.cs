@@ -11,6 +11,6 @@ namespace Client.Model
 {
     public interface IHandlerResponseFromServer
     {
-        public void ParsePacket(MessageContainer message);
+        public void ParsePacket(MessageContainer container);
     }
 }

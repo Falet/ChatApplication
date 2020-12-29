@@ -8,11 +8,12 @@ namespace Client.Model
     public interface IHandlerChats
     {
         public event EventHandler<AddedChatEventArgs> AddedChat;
-        public event EventHandler<RemovedChatEventArgs> RemovedChat;
-        public event EventHandler<AddedClientsToChatEventArgs> AddedClientsToChat;
+        public event EventHandler<AddedClientsToChatClientEvenArgs> AddedClientsToChat;
         public event EventHandler<RemovedClientsFromChatEventArgs> RemovedClientsFromChat;
         public event EventHandler<NumbersOfChatsReceivedEventArgs> ResponseNumbersChats;
 
-        public void Send();
+        public void AddChat(List<string> namesClientForAdd);
+        public void AddClientToChat(int numberChat, List<string> namesOfClients);
+        public void RemoveClientFromChat(int numberChat, List<string> namesOfClients);
     }
 }

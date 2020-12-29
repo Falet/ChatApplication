@@ -33,8 +33,8 @@
 		<view:ControlNavigationChats Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="2"
 								DataContext="{Binding ControlVisibilityElements.ControlNavigationChatsViewModel}"
 								/>
-		<!--<view:CreateChat Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="2"
+		<view:CreateChat Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="2"
 								DataContext="{Binding ControlVisibilityElements.CreateChat}"
-								/>-->
+								/>
 	</Grid>
 </UserControl>

@@ -15,7 +15,7 @@ namespace Client.ViewModels
     {
         private ControlVisibilityElementsOfChatMenuViewModel _controlVisibilityElements;
         private IHandlerConnection _handlerConnection;
-        private AllClientViewModel _allClientViewModel;
+        private AccessClientForAddViewModel _allClientViewModel;
         private string _textButtonChangeViewClients;
         private string _textToolTip;
         private bool IsViewClientsChanged;
@@ -42,6 +42,7 @@ namespace Client.ViewModels
             set => SetProperty(ref _textToolTip, value);
         }
         public DelegateCommand CreateChat { get; }
+
         public ControlChatMenuViewModel(IHandlerConnection handlerConnection, IHandlerMessages handlerMessages, IHandlerChats handlerChats)
         {
             _visibilityView = Visibility.Visible;
@@ -49,9 +50,7 @@ namespace Client.ViewModels
             _handlerConnection = handlerConnection;
             _handlerConnection.ClientConnected += OnConnectToServer;
 
-            _allClientViewModel = new AllClientViewModel(handlerConnection, handlerChats);
-
-            _controlVisibilityElements = new ControlVisibilityElementsOfChatMenuViewModel(_allClientViewModel, handlerConnection, handlerMessages, handlerChats);
+            _controlVisibilityElements = new ControlVisibilityElementsOfChatMenuViewModel(handlerConnection, handlerMessages, handlerChats);
 
             _textButtonChangeViewClients = "Создать";
             _textToolTip = "Создать чат";
@@ -66,13 +65,13 @@ namespace Client.ViewModels
             if (IsViewClientsChanged)
             {
                 TextButtonChangeViewChatMenu = "Назад";
-                //ControlVisibilityElements.ControlNavigationChatsViewModel.VisibilityNavigationChat = Visibility.Hidden;
-                //ControlVisibilityElements.CreateChat.VisibilityCreateChat = Visibility.Visible;
+                ControlVisibilityElements.ControlNavigationChatsViewModel.VisibilityNavigationChat = Visibility.Hidden;
+                ControlVisibilityElements.CreateChat.VisibilityCreateChat = Visibility.Visible;
                 TextToolTip = "Назад к списку чатов";
             }
             else
             {
-                TextButtonChangeViewChatMenu = "Добавить";
+                TextButtonChangeViewChatMenu = "Создать";
                 ControlVisibilityElements.ControlNavigationChatsViewModel.VisibilityNavigationChat = Visibility.Visible;
                 ControlVisibilityElements.CreateChat.VisibilityCreateChat = Visibility.Hidden;
                 TextToolTip = "Создать чат";

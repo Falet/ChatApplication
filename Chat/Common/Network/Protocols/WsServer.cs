@@ -40,14 +40,6 @@
         {
             _listenAddress = IPendPoint;
             _connections = new ConcurrentDictionary<Guid, WsConnection>();
-        }
-
-        #endregion Constructors
-
-        #region Methods
-
-        public void Start()
-        {
             _server = new WebSocketServer(_listenAddress.Address, _listenAddress.Port, false);
             _server.AddWebSocketService<WsConnection>("/",
                 client =>
@@ -57,19 +49,9 @@
             _server.Start();
         }
 
-        public void Stop()
-        {
-            _server?.Stop();
-            _server = null;
+        #endregion Constructors
 
-            var connections = _connections.Select(item => item.Value).ToArray();
-            foreach (var connection in connections)
-            {
-                connection.Close();
-            }
-
-            _connections.Clear();
-        }
+        #region Methods
 
         public void AddConnection(WsConnection connection)
         {
@@ -87,12 +69,6 @@
                 {
                     var connectionRequest = ((JObject)container.Payload).ToObject(typeof(ConnectionRequest)) as ConnectionRequest;
                     ClientConnected?.Invoke(this, new ClientConnectedEventArgs(connection.Login, clientId));
-                    break;
-                }
-                case nameof(DisconnectNotice):
-                {
-                    var connectionRequest = ((JObject)container.Payload).ToObject(typeof(DisconnectNotice)) as DisconnectNotice;
-                    ClientDisconnected?.Invoke(this, new ClientDisconnectedEventArgs(connection.Login));
                     break;
                 }
                 case nameof(MessageRequest):
@@ -161,11 +137,14 @@
                 connection.Send(message);
             }
         }
-        public void SendAll(MessageContainer message)
+        public void SendAll(Guid clientGuid, MessageContainer message)
         {
             foreach (var connection in _connections)
             {
-                connection.Value.Send(message);
+                if(connection.Key != clientGuid)
+                {
+                    connection.Value.Send(message);
+                }
             }
         }
         #endregion Methods

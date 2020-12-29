@@ -50,9 +50,13 @@ namespace Server.Network
 			{
 				if (clientGuid == Guid.Empty)
 				{
-					clientGuid = container.ClientId;
-					var SendMessageToServer = Task.Run(() =>
-					_server.SendAll(Container.GetContainer(nameof(ConnectionNoticeForClients), new ConnectionNoticeForClients(container.ClientName)))
+					cachedClientName.TryUpdate(container.ClientName, clientGuid, Guid.Empty);
+
+					var SendMessage = Task.Run(() =>
+					_server.Send(new List<Guid> { container.ClientId },Container.GetContainer(nameof(ConnectionResponse), new ConnectionResponse(ResultRequest.Ok,container.ClientName)))
+					);
+					var SendMessageAll = Task.Run(() =>
+					_server.SendAll(container.ClientId, Container.GetContainer(nameof(ConnectionNoticeForClients), new ConnectionNoticeForClients(container.ClientName)))
 					);
 				}
 				else
@@ -69,8 +73,11 @@ namespace Server.Network
 			{
 				cachedClientName.TryAdd(container.ClientName,  container.ClientId);
 
-				var SendMessageToServer = Task.Run(() =>
-					_server.SendAll(Container.GetContainer(nameof(ConnectionNoticeForClients), new ConnectionNoticeForClients(container.ClientName)))
+				var SendMessage = Task.Run(() =>
+					_server.Send(new List<Guid> { container.ClientId }, Container.GetContainer(nameof(ConnectionResponse), new ConnectionResponse(ResultRequest.Ok, container.ClientName)))
+					);
+				var SendMessageAll = Task.Run(() =>
+					_server.SendAll(container.ClientId, Container.GetContainer(nameof(ConnectionNoticeForClients), new ConnectionNoticeForClients(container.ClientName)))
 				);
 
 				if (!await Task.Run(() => _data.AddNewClient(new ClientInfo { NameOfClient = container.ClientName })))
@@ -86,7 +93,7 @@ namespace Server.Network
 				var SendMessageDisconnectToServer = Task.Run(() => _server.FreeConnection(clientGuid));
 
 				var SendMessageToServer = Task.Run(() =>
-					_server.SendAll(Container.GetContainer(nameof(DisconnectNotice), new DisconnectNotice(container.NameOfClient)))
+					_server.SendAll(clientGuid, Container.GetContainer(nameof(DisconnectNotice), new DisconnectNotice(container.NameOfClient)))
 				);
 
 				cachedClientName.TryUpdate(container.NameOfClient, Guid.Empty, clientGuid);

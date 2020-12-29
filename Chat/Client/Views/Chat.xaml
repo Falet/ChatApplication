@@ -34,11 +34,13 @@
 				</ToolTip>
 			</Button.ToolTip>
 		</Button>
-		<view:ClientsAtChat Grid.Row="0" Grid.Column="1"
+		
+
+		<view:ClientsAtChat Grid.Row="0"  Grid.Column="1"
 							   DataContext="{Binding ControlVisibilityViewClients.ClientsAtChatViewModel}"
 							   />
-		<view:AllClient Grid.Row="0" Grid.Column="1"
-							   DataContext="{Binding ControlVisibilityViewClients.AllClientViewModel}"
+		<view:AccessClientForAdd Grid.Row="0" Grid.Column="1"
+							   DataContext="{Binding ControlVisibilityViewClients.AccessClientForAddViewModel}"
 							   />
 	</Grid>
 </UserControl>

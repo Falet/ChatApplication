@@ -18,9 +18,9 @@ namespace Client.Views
     /// <summary>
     /// Interaction logic for AddClientsToChat.xaml
     /// </summary>
-    public partial class AllClient : UserControl
+    public partial class AccessClientForAdd : UserControl
     {
-        public AllClient()
+        public AccessClientForAdd()
         {
             InitializeComponent();
         }

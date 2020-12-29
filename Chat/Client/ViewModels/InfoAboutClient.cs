@@ -9,7 +9,7 @@ namespace Client.ViewModels
     {
         private bool _isSelectedClient;
         public string NameClient { get; }
-        public bool ActivityClient { get; }
+        public bool ActivityClient { get; set; }
         public bool IsSelectedClient
         {
             get => _isSelectedClient;
@@ -17,8 +17,11 @@ namespace Client.ViewModels
         }
         public InfoAboutClient(string nameClient, bool activityClient)
         {
+            IsSelectedClient = false;
+
             NameClient = nameClient;
             ActivityClient = activityClient;
         }
+
     }
 }

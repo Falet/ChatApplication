@@ -20,9 +20,26 @@
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="90*"/>
 		</Grid.ColumnDefinitions>
-		<view:AllClient DataContext="{Binding AllClientViewModel}" Grid.Row="0" Grid.Column="0"/>
+		<ListBox ItemsSource="{Binding ClientsCollection}" SelectionMode="Multiple">
+			<ListBox.ItemContainerStyle>
+				<Style TargetType="ListBoxItem">
+					<Setter Property="IsSelected" Value="{Binding IsSelectedClient}" />
+				</Style>
+			</ListBox.ItemContainerStyle>
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<ListBoxItem>
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Margin="3" Text="{Binding NameClient}"/>
+							<TextBlock Margin="3" Text="{Binding ActivityClient}"/>
+						</StackPanel>
+					</ListBoxItem>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
 
 		<Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="Создать чат"
+				Command="{Binding CreateChatButton}"
                  ToolTipService.InitialShowDelay="0">
 		</Button>
 		<TextBlock  Grid.Row="2" Grid.Column="0" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center">

@@ -1,8 +1,11 @@
-﻿namespace Common.Network.Packets
-{
-    using System.Collections.Generic;
+﻿using Common.Network;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-    public class ConnectToChatResponse
+namespace Client.Model
+{
+    public class ClientConnectedToChatEventArgs
     {
         #region Properties
 
@@ -11,12 +14,13 @@
 
         #endregion Properties
 
+
         #region Constructors
 
-        public ConnectToChatResponse(int numberChat, List<MessageInfo> allMessageFromChat)
+        public ClientConnectedToChatEventArgs(List<MessageInfo> allMessageFromChat, int numberChat)
         {
-            NumberChat = numberChat;
             AllMessageFromChat = allMessageFromChat;
+            NumberChat = numberChat;
         }
 
         #endregion Constructors

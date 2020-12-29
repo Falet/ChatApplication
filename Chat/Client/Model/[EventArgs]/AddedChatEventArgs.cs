@@ -14,14 +14,17 @@ namespace Client.Model
 
         public int NumberChat { get; }
 
+        public Dictionary<string, bool> AccessNameClientForAdd { get; }
+
         #endregion Properties
 
         #region Constructors
 
-        public AddedChatEventArgs(string nameofClientCreator, Dictionary<string, bool> nameOfClients, int numberChat)
+        public AddedChatEventArgs(string nameofClientCreator, Dictionary<string, bool> nameOfClients, Dictionary<string, bool> accessNameClientForAdd, int numberChat)
         {
             NameOfClientCreator = nameofClientCreator;
             NameOfClientsForAdd = nameOfClients;
+            AccessNameClientForAdd = accessNameClientForAdd;
             NumberChat = numberChat;
         }
 
