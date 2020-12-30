@@ -46,6 +46,7 @@ namespace Server.Network
 		}
 		public async void OnConnect(object sender, ClientConnectedEventArgs container)
 		{
+			Console.WriteLine(container.ClientName);
 			if (cachedClientName.TryGetValue(container.ClientName, out Guid clientGuid))
 			{
 				if (clientGuid == Guid.Empty)
@@ -88,15 +89,15 @@ namespace Server.Network
 		}
 		public void OnDisconnect(object sender, ClientDisconnectedEventArgs container)
 		{
-			if (cachedClientName.TryGetValue(container.NameOfClient, out Guid clientGuid) && clientGuid != Guid.Empty)
+			if (cachedClientName.TryGetValue(container.NameClient, out Guid clientGuid) && clientGuid != Guid.Empty)
 			{
 				var SendMessageDisconnectToServer = Task.Run(() => _server.FreeConnection(clientGuid));
 
 				var SendMessageToServer = Task.Run(() =>
-					_server.SendAll(clientGuid, Container.GetContainer(nameof(DisconnectNotice), new DisconnectNotice(container.NameOfClient)))
+					_server.SendAll(clientGuid, Container.GetContainer(nameof(DisconnectNotice), new DisconnectNotice(container.NameClient)))
 				);
 
-				cachedClientName.TryUpdate(container.NameOfClient, Guid.Empty, clientGuid);
+				cachedClientName.TryUpdate(container.NameClient, Guid.Empty, clientGuid);
 			}
 		}
 	}

@@ -47,6 +47,7 @@
                     client.AddServer(this);
                 });
             _server.Start();
+            Console.WriteLine("Start");
         }
 
         #endregion Constructors
@@ -68,7 +69,7 @@
                 case nameof(ConnectionRequest):
                 {
                     var connectionRequest = ((JObject)container.Payload).ToObject(typeof(ConnectionRequest)) as ConnectionRequest;
-                    ClientConnected?.Invoke(this, new ClientConnectedEventArgs(connection.Login, clientId));
+                    ClientConnected?.Invoke(this, new ClientConnectedEventArgs(connectionRequest.ClientName, clientId));
                     break;
                 }
                 case nameof(MessageRequest):

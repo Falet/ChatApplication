@@ -4,7 +4,7 @@
     {
         #region Properties
 
-        public string NameOfClient { get; }
+        public string NameClient { get; }
 
         #endregion Properties
 
@@ -12,7 +12,7 @@
 
         public ClientDisconnectedEventArgs(string nameOfClient)
         {
-            NameOfClient = nameOfClient;
+            NameClient = nameOfClient;
         }
 
         #endregion Constructors

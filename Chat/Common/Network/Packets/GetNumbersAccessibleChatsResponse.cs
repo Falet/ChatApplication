@@ -5,17 +5,16 @@
     {
         #region Properties
 
-        public Dictionary<int, string> NumbersChatsForClient { get; }
-        public List<string> ClientsAtChat { get; }
-        
+        public Dictionary<LinkNumberChatCreator, List<string>> AllInfoAboutChat { get; }
+
+
         #endregion Properties
 
         #region Constructors
 
-        public GetNumbersAccessibleChatsResponse( Dictionary<int, string> numbersChatsForClient, List<string> clientsAtChat)
+        public GetNumbersAccessibleChatsResponse(Dictionary<LinkNumberChatCreator, List<string>> allInfoAboutChat)
         {
-            ClientsAtChat = clientsAtChat;
-            NumbersChatsForClient = numbersChatsForClient;
+            AllInfoAboutChat = allInfoAboutChat;
         }
 
         #endregion Constructors

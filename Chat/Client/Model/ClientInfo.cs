@@ -8,14 +8,6 @@ namespace Client.Model
 {
     public class ClientInfo : IClientInfo
     {
-        public string Login { get; private set; }
-        public ClientInfo()
-        {
-            Login = "Ivar";
-        }
-        public void SetLogin(string nameClient)
-        {
-            Login = nameClient;
-        }
+        public string Login { get; set; }
     }
 }

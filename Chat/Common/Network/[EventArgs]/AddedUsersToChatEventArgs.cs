@@ -7,7 +7,7 @@
 
         public string NameOfClientSender { get; }
 
-        public List<string> NameOfClients { get; }
+        public List<string> Clients { get; }
 
         public int NumberChat { get; }
 
@@ -18,7 +18,7 @@
         public AddedClientsToChatEventArgs(string nameClient, int numberChat, List<string> nameOfClients)
         {
             NameOfClientSender = nameClient;
-            NameOfClients = nameOfClients;
+            Clients = nameOfClients;
             NumberChat = numberChat;
         }
 

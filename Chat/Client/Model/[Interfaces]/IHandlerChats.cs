@@ -9,7 +9,7 @@ namespace Client.Model
     {
         public event EventHandler<AddedChatEventArgs> AddedChat;
         public event EventHandler<AddedClientsToChatClientEvenArgs> AddedClientsToChat;
-        public event EventHandler<RemovedClientsFromChatEventArgs> RemovedClientsFromChat;
+        public event EventHandler<RemovedClientsFromChatForVMEventArgs> RemovedClientsFromChat;
         public event EventHandler<NumbersOfChatsReceivedEventArgs> ResponseNumbersChats;
 
         public void AddChat(List<string> namesClientForAdd);

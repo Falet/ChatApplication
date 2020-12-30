@@ -35,7 +35,7 @@ namespace Client.ViewModels
             _handlerChats = handlerChats;
             _clientsCollection = new ObservableCollection<InfoAboutClient>();
             handlerConnection.AnotherClientConnected += OnConnectAnotherClient;
-            handlerConnection.ClientDisconnected += OnDisconnectClient;
+            handlerConnection.AnotherClientDisconnected += OnDisconnectClient;
             SetStartCollection(accessNameClientForAdd);
             AddClientToChatButton = new DelegateCommand(AddClientToChat);
         }
@@ -64,7 +64,7 @@ namespace Client.ViewModels
         {
             foreach (var item in ClientsCollection)
             {
-                if (item.NameClient == container.NameOfClient)
+                if (item.NameClient == container.NameClient)
                 {
                     item.ActivityClient = false;
                 }

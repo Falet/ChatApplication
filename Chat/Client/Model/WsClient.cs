@@ -9,11 +9,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using WebSocketSharp;
-using WebSocketSharp.Server;
 
 namespace Client.Model
 {
-    public class WsClient: WebSocketBehavior, ITransportClient
+    public class WsClient: ITransportClient
     {
         #region Fields
 
@@ -24,11 +23,7 @@ namespace Client.Model
 
         #endregion Fields
 
-        #region Properties
-
-        public bool IsConnected => Context.WebSocket?.ReadyState == WebSocketState.Open;
-
-        #endregion Properties
+        public bool IsConnected => _socket?.ReadyState == WebSocketState.Open;
 
         #region Constructors
 
@@ -36,6 +31,7 @@ namespace Client.Model
         {
             _sendQueue = new ConcurrentQueue<MessageContainer>();
             _sending = 0;
+            _socket = new WebSocket($"ws://192.168.37.106:35");
         }
 
         #endregion Constructors
@@ -49,27 +45,30 @@ namespace Client.Model
         public void Connect(string ip, int port)
         {
             _socket = new WebSocket($"ws://{ip}:{port}");
+            _socket.OnOpen += OnOpen;
+            _socket.OnClose += OnClose;
+            _socket.OnMessage += OnMessage;
+            _socket.Connect();
         }
         public void Send(MessageContainer container)
         {
-            if (!IsConnected)
-                return;
-
-            _sendQueue.Enqueue(container);
-            if (Interlocked.CompareExchange(ref _sending, 1, 0) == 0)
-                SendImpl();
+            var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+            string serializedMessages = JsonConvert.SerializeObject(container, settings);
+            _socket.Send(serializedMessages);
+            /*_sendQueue.Enqueue(container);
+            SendImpl();*/
         }
-        protected override void OnOpen()
+        protected void OnOpen(object sender, EventArgs e)
         {
             
         }
 
-        protected override void OnClose(CloseEventArgs e)
+        protected void OnClose(object sender, CloseEventArgs e)
         {
             
         }
 
-        protected override void OnMessage(MessageEventArgs e)
+        protected void OnMessage(object sender, MessageEventArgs e)
         {
             if (e.IsText)
             {
@@ -82,10 +81,9 @@ namespace Client.Model
             // При отправке произошла ошибка.
             if (!completed)
             {
-                Context.WebSocket.CloseAsync();
+                _socket.CloseAsync();
                 return;
             }
-
             SendImpl();
         }
 
@@ -94,15 +92,13 @@ namespace Client.Model
             if (!IsConnected)
                 return;
 
-            if (!_sendQueue.TryDequeue(out var message) && Interlocked.CompareExchange(ref _sending, 0, 1) == 1)
+            if (!_sendQueue.TryDequeue(out var message))
                 return;
 
             var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
             string serializedMessages = JsonConvert.SerializeObject(message, settings);
-            SendAsync(serializedMessages, SendCompleted);
+            _socket.Send(serializedMessages);
         }
-
-
         #endregion Methods
     }
 

@@ -106,13 +106,22 @@ namespace Client.ViewModels
                 TextToolTip = "Назад к списку клиентов в чате";
             }
         }
-        private void OnMessageReceived(object sender, MessageReceivedEventArgs container)
+        private void OnMessageReceived(object sender, MessageReceivedForVMEventArgs container)
         {
-            MessagesCollection.Add(string.Format("Sender: {0}\nMessage: {1}", container.NameOfClient, container.Message));
+            if(container.NumberChat == NumberChat)
+            {
+                MessagesCollection.Add(string.Format("Sender: {0}\nMessage: {1}\nTime: {2}", container.Message.FromMessage, container.Message.Text, container.Message.Time));
+            }
         }
-        private void OnConnectedToChat(object sender, ConnectionToChatEventArgs container)
+        private void OnConnectedToChat(object sender, ClientConnectedToChatEventArgs container)
         {
-
+            if (container.NumberChat == NumberChat)
+            {
+                foreach(var item in container.AllMessageFromChat)
+                {
+                    MessagesCollection.Add(string.Format("Sender: {0}\nMessage: {1}\nTime: {2}", item.FromMessage, item.Text, item.Time));
+                }
+            }
         }
     }
 }

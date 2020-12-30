@@ -65,7 +65,7 @@ namespace Server.Network
                         idClientsForSendMessage.Add(clientCreatorGuid);
                     }
 
-                    var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage, Container.GetContainer(nameof(AddNewChatResponse),new AddNewChatResponse(numberChat, container.NameOfClientsForAdd))));
+                    var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage, Container.GetContainer(nameof(AddNewChatResponse),new AddNewChatResponse(container.NameOfClientSender,numberChat, container.NameOfClientsForAdd))));
                     InfoChats.TryAdd(numberChat, new InfoChat { OwnerChat = container.NameOfClientSender, NameOfClients = container.NameOfClientsForAdd });
                     if(!await _data.AddClientToChat(new AddClientToChat { NumberChat = numberChat, NameOfClients = NameForChange }))
                     {
@@ -121,7 +121,7 @@ namespace Server.Network
                 {
                     
                     List<Guid> idClientsForSendMessage = new List<Guid>();//Создание списка id для рассылки им сообщений
-                    List<string> NameForChange = container.NameOfClients;
+                    List<string> NameForChange = container.Clients;
                     await Task.Run(() => CreateUserListForChangeInfoChat(ref NameForChange, container.NumberChat, ref idClientsForSendMessage));
 
                     InfoChat buffer = infoChat;
@@ -151,18 +151,18 @@ namespace Server.Network
                 if (container.NameOfRemover == infoChat.OwnerChat)
                 {
                     List<Guid> idClientsForSendMessage = new List<Guid>();//Создание списка id для рассылки им сообщений
-                    List<string> NameForChange = container.NameOfClients;
+                    List<string> NameForChange = container.Clients;
                     await Task.Run(() => CreateUserListForChangeInfoChat(ref NameForChange, container.NumberChat, ref idClientsForSendMessage));
 
                     InfoChat buffer = infoChat;
-                    infoChat.NameOfClients.Except(container.NameOfClients);
+                    infoChat.NameOfClients.Except(container.Clients);
                     await Task.Run(() => AddNamesForMail(infoChat.NameOfClients, ref idClientsForSendMessage));
 
-                    var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage, Container.GetContainer(nameof(RemoveClientFromChatResponse),new RemoveClientFromChatResponse(container.NameOfRemover, container.NameOfClients, container.NumberChat))));
+                    var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage, Container.GetContainer(nameof(RemoveClientFromChatResponse),new RemoveClientFromChatResponse(container.NameOfRemover, container.Clients, container.NumberChat))));
 
                     InfoChats.TryUpdate(container.NumberChat, infoChat, buffer);
 
-                    if (!await Task.Run(() => _data.RemoveClientFromChat(new RemoveClientFromChat { NumberChat = container.NumberChat, NameOfClients = container.NameOfClients })))
+                    if (!await Task.Run(() => _data.RemoveClientFromChat(new RemoveClientFromChat { NumberChat = container.NumberChat, NameOfClients = container.Clients })))
                     {
                         //Ошибка на удаление в БД
                     }

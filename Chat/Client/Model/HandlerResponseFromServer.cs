@@ -13,13 +13,14 @@ namespace Client.Model
     {
         public event EventHandler<ClientConnectedToServerEventArgs> ClientConnected;
         public event EventHandler<AnotherClientConnectedEventArgs> AnotherClientConnected;
-        public event EventHandler<MessageReceivedEventArgs> MessageReceived;
+        public event EventHandler<MessageReceivedForVMEventArgs> MessageReceived;
         public event EventHandler<ClientConnectedToChatEventArgs> ConnectedToChat;
         public event EventHandler<AddedNewChatModelEventArgs> AddedChat;
         public event EventHandler<AddedClientsToChatEventArgs> AddedClientsToChat;
         public event EventHandler<RemovedClientsFromChatEventArgs> RemovedClientsFromChat;
-        public event EventHandler<ClientDisconnectedEventArgs> ClientDisconnected;
-        public event EventHandler<NumbersOfChatsReceivedEventArgs> RequestNumbersChats;
+        public event EventHandler<ClientDisconnectedEventArgs> AnotherClientDisconnected;
+        public event EventHandler<NumbersOfChatsReceivedEventArgs> ResponseNumbersChats;
+        public event EventHandler<ReceivedInfoAboutAllClientsEventArgs> ReceivedInfoAboutAllClients;
 
         public void ParsePacket(MessageContainer container)
         {
@@ -40,13 +41,13 @@ namespace Client.Model
                 case nameof(DisconnectNotice):
                     {
                         var disconnectionResponse = ((JObject)container.Payload).ToObject(typeof(DisconnectNotice)) as DisconnectNotice;
-                        ClientDisconnected?.Invoke(this, new ClientDisconnectedEventArgs(disconnectionResponse.NameOfClient));
+                        AnotherClientDisconnected?.Invoke(this, new ClientDisconnectedEventArgs(disconnectionResponse.NameOfClient));
                         break;
                     }
                 case nameof(MessageResponse):
                     {
                         var messageResponse = ((JObject)container.Payload).ToObject(typeof(MessageResponse)) as MessageResponse;
-                        MessageReceived?.Invoke(this, new MessageReceivedEventArgs(messageResponse.FromClientName, messageResponse.Message, messageResponse.NumberChat));
+                        MessageReceived?.Invoke(this, new MessageReceivedForVMEventArgs(messageResponse.Message, messageResponse.NumberChat));
                         break;
                     }
                 case nameof(ConnectToChatResponse):
@@ -58,7 +59,7 @@ namespace Client.Model
                 case nameof(AddNewChatResponse):
                     {
                         var addNewChatResponse = ((JObject)container.Payload).ToObject(typeof(AddNewChatResponse)) as AddNewChatResponse;
-                        AddedChat?.Invoke(this, new AddedNewChatModelEventArgs(addNewChatResponse.NumberChat, addNewChatResponse.Clients));
+                        AddedChat?.Invoke(this, new AddedNewChatModelEventArgs(addNewChatResponse.ClientCreator, addNewChatResponse.NumberChat, addNewChatResponse.Clients));
                         break;
                     }
                 case nameof(AddNewClientToChatResponse):
@@ -83,8 +84,14 @@ namespace Client.Model
                     {
                         var responseNumbersChats = ((JObject)container.Payload)
                                                         .ToObject(typeof(GetNumbersAccessibleChatsResponse)) as GetNumbersAccessibleChatsResponse;
-                        RequestNumbersChats?.Invoke(this, new NumbersOfChatsReceivedEventArgs(responseNumbersChats.NumbersChatsForClient, 
-                                                                                              responseNumbersChats.ClientsAtChat));
+                        ResponseNumbersChats?.Invoke(this, new NumbersOfChatsReceivedEventArgs(responseNumbersChats.AllInfoAboutChat));
+                        break;
+                    }
+                case nameof(InfoAboutAllClientsResponse):
+                    {
+                        var responseInfoAboutClients = ((JObject)container.Payload)
+                                                        .ToObject(typeof(InfoAboutAllClientsResponse)) as InfoAboutAllClientsResponse;
+                        ReceivedInfoAboutAllClients?.Invoke(this, new ReceivedInfoAboutAllClientsEventArgs(responseInfoAboutClients.InfoAboutAllClients));
                         break;
                     }
             }

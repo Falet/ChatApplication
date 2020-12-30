@@ -16,6 +16,7 @@ namespace Client.ViewModels
     using Common.Network;
     using Common.Network.Packets;
     using System.Net;
+    using System.Threading;
 
     public class LoginMenuViewModel : BindableBase
     {
@@ -28,7 +29,7 @@ namespace Client.ViewModels
         private IHandlerConnection _handlerConnection;
         private Regex regexIP;
         private Regex regexLogin;
-
+        IClientInfo _clientInfo;
         public Visibility VisibilityLoginMenu
         {
             get => _visibilityView;
@@ -61,9 +62,11 @@ namespace Client.ViewModels
             get => _comboBoxItemSelected;
             set => SetProperty(ref _comboBoxItemSelected, value);
         }
-        public LoginMenuViewModel(IHandlerConnection handlerConnection)
+        public LoginMenuViewModel(IHandlerConnection handlerConnection, IClientInfo clientInfo)
         {
-            _visibilityView = Visibility.Hidden;
+            _clientInfo = clientInfo;
+
+            _visibilityView = Visibility.Visible;
 
             _textError = null;
             regexIP = new Regex(@"^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
@@ -80,7 +83,9 @@ namespace Client.ViewModels
         private void ConnectToServer()
         {
             _handlerConnection.Connect(IP, Port, Protocol);
+            Thread.Sleep(100);
             _handlerConnection.Send(Login);
+            Login = _clientInfo.Login;
         }
         private bool IsTrueDataForSignIn()
         {

@@ -8,6 +8,6 @@ namespace Client.Model
 {
     public interface IClientInfo
     {
-        string Login { get; }
+        string Login { get; set; }
     }
 }

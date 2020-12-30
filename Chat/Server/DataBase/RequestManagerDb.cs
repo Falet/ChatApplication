@@ -74,7 +74,7 @@
                                          .Where(Client => Client.ChatID == item.ChatID);
                     foreach (var message in MessagesOfChats)
                     {
-                        messages.Add(new MessageInfo { FromMessage = message.From, Text = message.Text, Time = DateTime.Parse(message.Time) });
+                        messages.Add(new MessageInfo(message.From, message.Text, DateTime.Parse(message.Time)));
                     }
                     allMessage.TryAdd(item.ChatID, messages);
                 }

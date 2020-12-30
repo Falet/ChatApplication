@@ -58,22 +58,21 @@
             if (Interlocked.CompareExchange(ref _sending, 1, 0) == 0)
                 SendImpl();
         }
-        public void Close()
-        {
-            Context.WebSocket.Close();
-        }
         protected override void OnOpen()
         {
+            Console.WriteLine("Connect");
             _server.AddConnection(this);
         }
 
         protected override void OnClose(CloseEventArgs e)
         {
+            Console.WriteLine("Disconnect");
             _server.FreeConnection(Id);
         }
 
         protected override void OnMessage(MessageEventArgs e)
         {
+            Console.WriteLine("Message");
             if (e.IsText)
             {
                 var message = JsonConvert.DeserializeObject<MessageContainer>(e.Data);

@@ -8,6 +8,7 @@ namespace Client.Model
     {
         #region Properties
 
+        public string ClientCreator { get; }
         public int NumberChat { get; }
         public List<string> Clients { get; }
 
@@ -16,8 +17,9 @@ namespace Client.Model
 
         #region Constructors
 
-        public AddedNewChatModelEventArgs(int numberChat, List<string> clients)
+        public AddedNewChatModelEventArgs(string clientCreator, int numberChat, List<string> clients)
         {
+            ClientCreator = clientCreator;
             NumberChat = numberChat;
             Clients = clients;
         }

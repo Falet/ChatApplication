@@ -32,7 +32,7 @@ namespace Client.ViewModels
             _collectionClientsAtChat = new ObservableCollection<InfoAboutClient>();
             handlerChats.AddedClientsToChat += OnClientAddedToChat;
             handlerConnection.AnotherClientConnected += OnConnectAnotherClient;
-            handlerConnection.ClientDisconnected += OnDisconnectClient;
+            handlerConnection.AnotherClientDisconnected += OnDisconnectClient;
             AddClientsToCollection(clientForAdd);
         }
         public void OnClientAddedToChat(object sender, AddedClientsToChatClientEvenArgs container)
@@ -63,7 +63,7 @@ namespace Client.ViewModels
         {
             foreach (var item in CollectionClientsAtChat)
             {
-                if (item.NameClient == container.NameOfClient)
+                if (item.NameClient == container.NameClient)
                 {
                     item.ActivityClient = false;
                 }

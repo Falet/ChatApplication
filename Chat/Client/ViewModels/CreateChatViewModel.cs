@@ -78,7 +78,7 @@ namespace Client.ViewModels
         {
             foreach (var item in ClientsCollection)
             {
-                if (item.NameClient == container.NameOfClient)
+                if (item.NameClient == container.NameClient)
                 {
                     item.ActivityClient = false;
                 }

@@ -11,21 +11,30 @@ namespace Client.Model
         private ITransportClient _transportClient;
         private ClientInfo _clientInfo;
 
-        public event EventHandler<MessageReceivedEventArgs> MessageReceived;
-        public event EventHandler<ConnectionToChatEventArgs> ConnectedToChat;
+        public event EventHandler<MessageReceivedForVMEventArgs> MessageReceived;
+        public event EventHandler<ClientConnectedToChatEventArgs> ConnectedToChat;
         public HandlerMessages(ITransportClient transportClient, IHandlerResponseFromServer handlerResponseFromServer, ClientInfo clientInfo)
         {
             _transportClient = transportClient;
             _clientInfo = clientInfo;
+            handlerResponseFromServer.MessageReceived += OnMessageReceived;
+            handlerResponseFromServer.ConnectedToChat += OnConnectedToChat;
         }
         public void ConnectToChat(int numberChat)
         {
             _transportClient.Send(Container.GetContainer(nameof(ConnectToChatRequest),new ConnectToChatRequest(_clientInfo.Login, numberChat)));
         }
-
         public void SendMessage(string message, int numberChat)
         {
             _transportClient.Send(Container.GetContainer(nameof(MessageRequest),new MessageRequest(_clientInfo.Login, message, numberChat)));
+        }
+        private void OnMessageReceived(object sender, MessageReceivedForVMEventArgs container)
+        {
+            MessageReceived?.Invoke(this, new MessageReceivedForVMEventArgs(container.Message, container.NumberChat));
+        }
+        private void OnConnectedToChat(object sender, ClientConnectedToChatEventArgs container)
+        {
+            ConnectedToChat?.Invoke(this, new ClientConnectedToChatEventArgs(container.AllMessageFromChat, container.NumberChat));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common.Network;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,17 +9,16 @@ namespace Client.Model
     {
         #region Properties
 
-        public Dictionary<int, string> NumbersChatsForClient { get; }
-        public List<string> ClientsAtChat { get; }
+        public Dictionary<LinkNumberChatCreator, List<string>> AllInfoAboutChat { get; }
+ 
 
         #endregion Properties
 
         #region Constructors
 
-        public NumbersOfChatsReceivedEventArgs(Dictionary<int, string> numbersChatsForClient, List<string> clientsAtChat)
+        public NumbersOfChatsReceivedEventArgs(Dictionary<LinkNumberChatCreator, List<string>> allInfoAboutChat)
         {
-            ClientsAtChat = clientsAtChat;
-            NumbersChatsForClient = numbersChatsForClient;
+            AllInfoAboutChat = allInfoAboutChat;
         }
 
         #endregion Constructors

@@ -1,13 +1,16 @@
-﻿namespace Common.Network
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Client.Model
 {
-    using System.Collections.Generic;
-    public class RemovedClientsFromChatEventArgs
+    public class RemovedClientsFromChatForVMEventArgs
     {
         #region Properties
 
         public string NameOfRemover { get; }
 
-        public List<string> Clients { get; }
+        public Dictionary<string, bool> Clients { get; }
 
         public int NumberChat { get; }
 
@@ -15,7 +18,7 @@
 
         #region Constructors
 
-        public RemovedClientsFromChatEventArgs(string clientName, int numberChat, List<string> clients)
+        public RemovedClientsFromChatForVMEventArgs(string clientName, int numberChat, Dictionary<string, bool> clients)
         {
             NameOfRemover = clientName;
             Clients = clients;
@@ -25,4 +28,3 @@
         #endregion Constructors
     }
 }
-

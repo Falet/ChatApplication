@@ -15,7 +15,6 @@ namespace Client.ViewModels
     {
         private ControlVisibilityElementsOfChatMenuViewModel _controlVisibilityElements;
         private IHandlerConnection _handlerConnection;
-        private AccessClientForAddViewModel _allClientViewModel;
         private string _textButtonChangeViewClients;
         private string _textToolTip;
         private bool IsViewClientsChanged;
@@ -45,7 +44,7 @@ namespace Client.ViewModels
 
         public ControlChatMenuViewModel(IHandlerConnection handlerConnection, IHandlerMessages handlerMessages, IHandlerChats handlerChats)
         {
-            _visibilityView = Visibility.Visible;
+            _visibilityView = Visibility.Hidden;
 
             _handlerConnection = handlerConnection;
             _handlerConnection.ClientConnected += OnConnectToServer;

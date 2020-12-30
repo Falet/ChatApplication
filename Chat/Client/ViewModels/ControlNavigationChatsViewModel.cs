@@ -64,7 +64,6 @@ namespace Client.ViewModels
                                                                               123, new Dictionary<string, bool>());
             ChatViewModel newChat = new ChatViewModel(allClientViewModel, clientsAtChat, _handlerMessages, 123);
             ChatCollection.Add(newChat);
-            SelectedChat = newChat;
         }
         private void ChangeViewModelOfViewChat()
         {

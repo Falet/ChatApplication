@@ -5,11 +5,17 @@
     {
         #region Properties
 
-        public string FromMessage { get; set; }
-        public string Text { get; set; }
-        public DateTime Time { get; set; }
+        public string FromMessage { get; }
+        public string Text { get; }
+        public DateTime Time { get; }
 
         #endregion Properties
 
+        public MessageInfo(string fromMessage, string text, DateTime time)
+        {
+            FromMessage = fromMessage;
+            Text = text;
+            Time = time;
+        }
     }
 }
