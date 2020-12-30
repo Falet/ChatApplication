@@ -27,21 +27,17 @@ namespace Client.Model
 
         #region Constructors
 
-        public WsClient()
+        public WsClient(IHandlerResponseFromServer handlerResponseFromServer)
         {
             _sendQueue = new ConcurrentQueue<MessageContainer>();
             _sending = 0;
             _socket = new WebSocket($"ws://192.168.37.106:35");
+            _handlerResponseFromServer = handlerResponseFromServer;
         }
 
         #endregion Constructors
 
         #region Methods
-
-        public void AddHandlerMessage(IHandlerResponseFromServer handlerResponseFromServer)
-        {
-            _handlerResponseFromServer = handlerResponseFromServer;
-        }
         public void Connect(string ip, int port)
         {
             _socket = new WebSocket($"ws://{ip}:{port}");
@@ -52,11 +48,12 @@ namespace Client.Model
         }
         public void Send(MessageContainer container)
         {
-            var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+            /*var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
             string serializedMessages = JsonConvert.SerializeObject(container, settings);
-            _socket.Send(serializedMessages);
-            /*_sendQueue.Enqueue(container);
-            SendImpl();*/
+            _socket.Send(serializedMessages);*/
+            _sendQueue.Enqueue(container);
+            if (Interlocked.CompareExchange(ref _sending, 1, 0) == 0)
+                SendImpl();
         }
         protected void OnOpen(object sender, EventArgs e)
         {
@@ -84,6 +81,7 @@ namespace Client.Model
                 _socket.CloseAsync();
                 return;
             }
+
             SendImpl();
         }
 
@@ -92,12 +90,12 @@ namespace Client.Model
             if (!IsConnected)
                 return;
 
-            if (!_sendQueue.TryDequeue(out var message))
+            if (!_sendQueue.TryDequeue(out var message) && Interlocked.CompareExchange(ref _sending, 0, 1) == 1)
                 return;
 
             var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
             string serializedMessages = JsonConvert.SerializeObject(message, settings);
-            _socket.Send(serializedMessages);
+            _socket.SendAsync(serializedMessages, SendCompleted);
         }
         #endregion Methods
     }

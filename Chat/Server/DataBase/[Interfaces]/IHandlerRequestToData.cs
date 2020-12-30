@@ -10,16 +10,16 @@
     {
         #region Methods
 
-        public ConcurrentDictionary<string, Guid> GetInfoAboutAllClient();
-        public ConcurrentDictionary<string, ClientProperties> GetInfoAboutLinkClientToChat();
-        public ConcurrentDictionary<int, InfoChat> GetInfoAboutAllChat();
-        public ConcurrentDictionary<int, List<MessageInfo>> GetAllMessageFromChats();
-        public Task<bool> AddNewClient(ClientInfo container);
-        public Task<bool> AddNewMessage(MessageInfoForDataBase container);
-        public int CreatNewChat(CreatingChatInfo container);
-        public Task<bool> RemoveChat(int numberChat);
-        public Task<bool> AddClientToChat(AddClientToChat container);
-        public Task<bool> RemoveClientFromChat(RemoveClientFromChat container);
+        ConcurrentDictionary<string, Guid> GetInfoAboutAllClient();
+        ConcurrentDictionary<string, ClientProperties> GetInfoAboutLinkClientToChat();
+        ConcurrentDictionary<int, InfoChat> GetInfoAboutAllChat();
+        ConcurrentDictionary<int, List<MessageInfo>> GetAllMessageFromChats();
+        Task<bool> AddNewClient(ClientInfo container);
+        Task<bool> AddNewMessage(MessageInfoForDataBase container);
+        int CreatNewChat(CreatingChatInfo container);
+        Task<bool> RemoveChat(int numberChat);
+        Task<bool> AddClientToChat(AddClientToChat container);
+        Task<bool> RemoveClientFromChat(RemoveClientFromChat container);
 
         #endregion Methods
     }

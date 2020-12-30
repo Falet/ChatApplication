@@ -9,12 +9,12 @@ namespace Client.Model
     using Common.Network;
     public interface IHandlerConnection
     {
-        public Dictionary<string, bool> InfoClientsAtChat { get; }
-        public event EventHandler<ClientConnectedToServerEventArgs> ClientConnected;
-        public event EventHandler<AnotherClientConnectedEventArgs> AnotherClientConnected;
-        public event EventHandler<ClientDisconnectedEventArgs> AnotherClientDisconnected;
-        public event EventHandler<ReceivedInfoAboutAllClientsEventArgs> ReceivedInfoAboutAllClients;
-        public void Connect(string ip, string port, string protocol);
-        public void Send(string login);
+        Dictionary<string, bool> InfoClientsAtChat { get; }
+        event EventHandler<ClientConnectedToServerEventArgs> ClientConnected;
+        event EventHandler<AnotherClientConnectedEventArgs> AnotherClientConnected;
+        event EventHandler<ClientDisconnectedEventArgs> AnotherClientDisconnected;
+        event EventHandler<ReceivedInfoAboutAllClientsEventArgs> ReceivedInfoAboutAllClients;
+        void Connect(string ip, string port, string protocol);
+        void Send(string login);
     }
 }

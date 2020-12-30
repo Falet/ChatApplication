@@ -8,9 +8,9 @@ namespace Client.Model
     using Common.Network;
     public interface IHandlerMessages
     {
-        public event EventHandler<MessageReceivedForVMEventArgs> MessageReceived;
-        public event EventHandler<ClientConnectedToChatEventArgs> ConnectedToChat;
-        public void SendMessage(string message, int numberChat);
-        public void ConnectToChat(int numberChat);
+        event EventHandler<MessageReceivedForVMEventArgs> MessageReceived;
+        event EventHandler<ClientConnectedToChatEventArgs> ConnectedToChat;
+        void SendMessage(string message, int numberChat);
+        void ConnectToChat(int numberChat);
     }
 }

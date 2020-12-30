@@ -7,7 +7,7 @@
     {
         #region Properties
 
-        [Key]
+        [KeyAttribute]
         [Column(Order = 1)]
         public string ClientID { get; set; }
         [Key]

@@ -57,13 +57,6 @@ namespace Client.ViewModels
             _handlerChats.AddedChat += OnCreateChat;
             _handlerConnection = handlerConnection;
             _handlerMessages = handlerMessages;
-
-            AccessClientForAddViewModel allClientViewModel = new AccessClientForAddViewModel(_handlerConnection, _handlerChats, 
-                                                                                             new Dictionary<string, bool>(), 123);
-            ClientsAtChatViewModel clientsAtChat = new ClientsAtChatViewModel(_handlerConnection, _handlerChats,
-                                                                              123, new Dictionary<string, bool>());
-            ChatViewModel newChat = new ChatViewModel(allClientViewModel, clientsAtChat, _handlerMessages, 123);
-            ChatCollection.Add(newChat);
         }
         private void ChangeViewModelOfViewChat()
         {

@@ -253,11 +253,11 @@ namespace Server.Network
                 {
                     if (clientAtChat != Guid.Empty)
                     {
-                        resultCheckActivity.TryAdd(nameClient, true);
+                        resultCheckActivity.Add(nameClient, true);
                     }
                     else
                     {
-                        resultCheckActivity.TryAdd(nameClient, false);
+                        resultCheckActivity.Add(nameClient, false);
                     }
                 }
             }

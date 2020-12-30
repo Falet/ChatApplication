@@ -85,7 +85,6 @@ namespace Client.ViewModels
             _handlerConnection.Connect(IP, Port, Protocol);
             Thread.Sleep(100);
             _handlerConnection.Send(Login);
-            Login = _clientInfo.Login;
         }
         private bool IsTrueDataForSignIn()
         {

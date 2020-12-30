@@ -10,7 +10,7 @@ namespace Client.Model
 {
     public interface ITransportClient
     {
-        public void Connect(string ip, int port);
-        public void Send(MessageContainer message);
+        void Connect(string ip, int port);
+        void Send(MessageContainer message);
     }
 }

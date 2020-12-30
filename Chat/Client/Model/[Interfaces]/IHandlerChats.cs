@@ -7,13 +7,13 @@ namespace Client.Model
     using Common.Network;
     public interface IHandlerChats
     {
-        public event EventHandler<AddedChatEventArgs> AddedChat;
-        public event EventHandler<AddedClientsToChatClientEvenArgs> AddedClientsToChat;
-        public event EventHandler<RemovedClientsFromChatForVMEventArgs> RemovedClientsFromChat;
-        public event EventHandler<NumbersOfChatsReceivedEventArgs> ResponseNumbersChats;
+        event EventHandler<AddedChatEventArgs> AddedChat;
+        event EventHandler<AddedClientsToChatClientEvenArgs> AddedClientsToChat;
+        event EventHandler<RemovedClientsFromChatForVMEventArgs> RemovedClientsFromChat;
+        event EventHandler<NumbersOfChatsReceivedEventArgs> ResponseNumbersChats;
 
-        public void AddChat(List<string> namesClientForAdd);
-        public void AddClientToChat(int numberChat, List<string> namesOfClients);
-        public void RemoveClientFromChat(int numberChat, List<string> namesOfClients);
+        void AddChat(List<string> namesClientForAdd);
+        void AddClientToChat(int numberChat, List<string> namesOfClients);
+        void RemoveClientFromChat(int numberChat, List<string> namesOfClients);
     }
 }

@@ -11,16 +11,16 @@ namespace Client.Model
 {
     public interface IHandlerResponseFromServer
     {
-        public event EventHandler<ClientConnectedToServerEventArgs> ClientConnected;
-        public event EventHandler<AnotherClientConnectedEventArgs> AnotherClientConnected;
-        public event EventHandler<MessageReceivedForVMEventArgs> MessageReceived;
-        public event EventHandler<ClientConnectedToChatEventArgs> ConnectedToChat;
-        public event EventHandler<AddedNewChatModelEventArgs> AddedChat;
-        public event EventHandler<AddedClientsToChatEventArgs> AddedClientsToChat;
-        public event EventHandler<RemovedClientsFromChatEventArgs> RemovedClientsFromChat;
-        public event EventHandler<ClientDisconnectedEventArgs> AnotherClientDisconnected;
-        public event EventHandler<NumbersOfChatsReceivedEventArgs> ResponseNumbersChats;
-        public event EventHandler<ReceivedInfoAboutAllClientsEventArgs> ReceivedInfoAboutAllClients;
-        public void ParsePacket(MessageContainer container);
+        event EventHandler<ClientConnectedToServerEventArgs> ClientConnected;
+        event EventHandler<AnotherClientConnectedEventArgs> AnotherClientConnected;
+        event EventHandler<MessageReceivedForVMEventArgs> MessageReceived;
+        event EventHandler<ClientConnectedToChatEventArgs> ConnectedToChat;
+        event EventHandler<AddedNewChatModelEventArgs> AddedChat;
+        event EventHandler<AddedClientsToChatEventArgs> AddedClientsToChat;
+        event EventHandler<RemovedClientsFromChatEventArgs> RemovedClientsFromChat;
+        event EventHandler<ClientDisconnectedEventArgs> AnotherClientDisconnected;
+        event EventHandler<NumbersOfChatsReceivedEventArgs> ResponseNumbersChats;
+        event EventHandler<ReceivedInfoAboutAllClientsEventArgs> ReceivedInfoAboutAllClients;
+        void ParsePacket(MessageContainer container);
     }
 }

@@ -8,24 +8,24 @@
     {
         #region Events
 
-        public event EventHandler<ClientConnectedEventArgs> ClientConnected;
-        public event EventHandler<ClientDisconnectedEventArgs> ClientDisconnected;
-        public event EventHandler<MessageReceivedEventArgs> MessageReceived;
-        public event EventHandler<ConnectionToChatEventArgs> ConnectedToChat;
-        public event EventHandler<AddedNewChatEventArgs> AddedChat;
-        public event EventHandler<RemovedChatEventArgs> RemovedChat;
-        public event EventHandler<AddedClientsToChatEventArgs> AddedClientsToChat;
-        public event EventHandler<RemovedClientsFromChatEventArgs> RemovedClientsFromChat; 
-        public event EventHandler<ClientRequestedNumbersChatEventArgs> RequestNumbersChats;
+        event EventHandler<ClientConnectedEventArgs> ClientConnected;
+        event EventHandler<ClientDisconnectedEventArgs> ClientDisconnected;
+        event EventHandler<MessageReceivedEventArgs> MessageReceived;
+        event EventHandler<ConnectionToChatEventArgs> ConnectedToChat;
+        event EventHandler<AddedNewChatEventArgs> AddedChat;
+        event EventHandler<RemovedChatEventArgs> RemovedChat;
+        event EventHandler<AddedClientsToChatEventArgs> AddedClientsToChat;
+        event EventHandler<RemovedClientsFromChatEventArgs> RemovedClientsFromChat; 
+        event EventHandler<ClientRequestedNumbersChatEventArgs> RequestNumbersChats;
         #endregion Events
 
         #region Methods
 
-        public void FreeConnection(Guid ClientId);
+        void FreeConnection(Guid ClientId);
 
-        public void Send(List<Guid> ListClientId, MessageContainer message);
+        void Send(List<Guid> ListClientId, MessageContainer message);
 
-        public void SendAll(Guid clientGuid, MessageContainer message);
+        void SendAll(Guid clientGuid, MessageContainer message);
 
         #endregion Methods
     }
