@@ -36,11 +36,12 @@ namespace Server.Network
 
             _server.ClientConnected += OnConnect;
             _server.ClientDisconnected += OnDisconnect;
+			_server.RequestInfoAllClient += OnClientInfo;
 
             _data = data;
             cachedClientName = _data.GetInfoAboutAllClient();
 		}
-		public void AddChats(HandlerChat chats)
+		public void AddChatHandler(HandlerChat chats)
         {
 			_chats = chats;
 		}
@@ -100,5 +101,30 @@ namespace Server.Network
 				cachedClientName.TryUpdate(container.NameClient, Guid.Empty, clientGuid);
 			}
 		}
+		public void OnClientInfo(object sender, InfoAboutAllClientsEventArgs container)
+        {
+			if(cachedClientName.TryGetValue(container.NameClient, out Guid clientGuid))
+			{
+				Dictionary<string, bool> ActivityClient = new Dictionary<string, bool>();
+				foreach (var item in cachedClientName)
+				{
+					if(item.Value == Guid.Empty)
+                    {
+						ActivityClient.Add(item.Key,false);
+					}
+                    else
+                    {
+						ActivityClient.Add(item.Key, true);
+					}
+				}
+				if(clientGuid != Guid.Empty)
+                {
+					var SendMessage = Task.Run(() =>
+					_server.Send(new List<Guid> { clientGuid }, Container.GetContainer(nameof(InfoAboutAllClientsResponse), 
+																					   new InfoAboutAllClientsResponse(ActivityClient)))
+					);
+				}
+			}
+        }
 	}
 }

@@ -65,7 +65,7 @@ namespace Client.ViewModels
         }
         private void OnCreateChat(object sender, AddedChatEventArgs container)
         {
-            AccessClientForAddViewModel allClientViewModel = new AccessClientForAddViewModel(_handlerConnection, _handlerChats, 
+            AccessableClientForAddViewModel allClientViewModel = new AccessableClientForAddViewModel(_handlerConnection, _handlerChats, 
                                                                                        container.AccessNameClientForAdd, container.NumberChat);
             ClientsAtChatViewModel clientsAtChat = new ClientsAtChatViewModel(_handlerConnection, _handlerChats,
                                                                               container.NumberChat, container.NameOfClientsForAdd);

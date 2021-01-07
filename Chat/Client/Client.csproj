@@ -108,7 +108,7 @@
     <Compile Include="Model\[Interfaces]\IHandlerMessages.cs" />
     <Compile Include="Model\[Interfaces]\IHandlerResponseFromServer.cs" />
     <Compile Include="Model\[Interfaces]\ITransportClient.cs" />
-    <Compile Include="ViewModels\AccessClientForAddViewModel.cs" />
+    <Compile Include="ViewModels\AccessableClientForAddViewModel.cs" />
     <Compile Include="ViewModels\ChatViewModel.cs" />
     <Compile Include="ViewModels\ClientsAtChatViewModel.cs" />
     <Compile Include="ViewModels\ControlChatMenuViewModel.cs" />

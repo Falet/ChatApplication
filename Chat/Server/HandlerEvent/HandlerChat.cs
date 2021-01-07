@@ -45,7 +45,7 @@ namespace Server.Network
             _cachedClientProperies = _data.GetInfoAboutLinkClientToChat();
             InfoChats = _data.GetInfoAboutAllChat();
             _connection = connection;
-            _connection.AddChats(this);
+            _connection.AddChatHandler(this);
         }
 
         #region Methods

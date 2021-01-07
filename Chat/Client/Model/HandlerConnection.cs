@@ -18,7 +18,6 @@ namespace Client.Model
         public event EventHandler<ClientConnectedToServerEventArgs> ClientConnected;
         public event EventHandler<ReceivedInfoAboutAllClientsEventArgs> ReceivedInfoAboutAllClients;
         public event EventHandler<AnotherClientConnectedEventArgs> AnotherClientConnected;
-        public event EventHandler ClientIsReady;
 
         public HandlerConnection(IClientInfo clientInfo, ITransportClient transportClient, IHandlerResponseFromServer handlerResponseFromServer)
         {
@@ -40,7 +39,6 @@ namespace Client.Model
         {
             _clientInfo.Login = login;
             string serializedMessages = JsonConvert.SerializeObject(Container.GetContainer(nameof(ConnectionRequest), new ConnectionRequest(login)));
-            _clientInfo.Login = serializedMessages;
             _transportClient.Send(Container.GetContainer(nameof(ConnectionRequest),new ConnectionRequest(login)));
         }
 

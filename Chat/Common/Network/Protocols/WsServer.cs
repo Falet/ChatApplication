@@ -31,6 +31,7 @@
         public event EventHandler<RemovedClientsFromChatEventArgs> RemovedClientsFromChat;
         public event EventHandler<ClientDisconnectedEventArgs> ClientDisconnected;
         public event EventHandler<ClientRequestedNumbersChatEventArgs> RequestNumbersChats;
+        public event EventHandler<InfoAboutAllClientsEventArgs> RequestInfoAllClient;
 
         #endregion Event
 
@@ -70,6 +71,12 @@
                 {
                     var connectionRequest = ((JObject)container.Payload).ToObject(typeof(ConnectionRequest)) as ConnectionRequest;
                     ClientConnected?.Invoke(this, new ClientConnectedEventArgs(connectionRequest.ClientName, clientId));
+                    break;
+                }
+                case nameof(InfoAboutAllClientsRequest):
+                {
+                    var infoClientRequest = ((JObject)container.Payload).ToObject(typeof(InfoAboutAllClientsRequest)) as InfoAboutAllClientsRequest;
+                    RequestInfoAllClient?.Invoke(this, new InfoAboutAllClientsEventArgs(infoClientRequest.NameClient));
                     break;
                 }
                 case nameof(MessageRequest):

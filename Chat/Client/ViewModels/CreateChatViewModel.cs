@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace Client.ViewModels
 {
@@ -17,6 +18,9 @@ namespace Client.ViewModels
         private Visibility _visibilityView;
         private ObservableCollection<InfoAboutClient> _clientsCollection;
         private IHandlerChats _handlerChats;
+        private IHandlerConnection _handlerConnection;
+        private Dispatcher _dispatcher;
+        private ReceivedInfoAboutAllClientsEventArgs _container;
         public Visibility VisibilityCreateChat
         {
             get => _visibilityView;
@@ -33,7 +37,10 @@ namespace Client.ViewModels
             VisibilityCreateChat = Visibility.Hidden;
             _handlerChats = handlerChats;
             _handlerChats.AddedChat += OnCreatedChat;
-            handlerConnection.ReceivedInfoAboutAllClients += OnReceivedInfoAboutAllClients;
+            _handlerConnection = handlerConnection;
+            _handlerConnection.ReceivedInfoAboutAllClients += OnReceivedInfoAboutAllClients;
+            _clientsCollection = new ObservableCollection<InfoAboutClient>();
+            _dispatcher = Dispatcher.CurrentDispatcher;
             CreateChatButton = new DelegateCommand(CreateChat);
         }
         private void CreateChat()
@@ -55,7 +62,12 @@ namespace Client.ViewModels
         }
         private void OnReceivedInfoAboutAllClients(object sender, ReceivedInfoAboutAllClientsEventArgs container)
         {
-            foreach (var KeyValue in container.InfoClientsAtChat)
+            _container = container;
+            _dispatcher.Invoke(AddClientToCollection);
+        }
+        private void AddClientToCollection()
+        {
+            foreach (var KeyValue in _container.InfoClientsAtChat)
             {
                 ClientsCollection.Add(new InfoAboutClient(KeyValue.Key, KeyValue.Value));
             }

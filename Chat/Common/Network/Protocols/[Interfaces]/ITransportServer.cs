@@ -17,6 +17,7 @@
         event EventHandler<AddedClientsToChatEventArgs> AddedClientsToChat;
         event EventHandler<RemovedClientsFromChatEventArgs> RemovedClientsFromChat; 
         event EventHandler<ClientRequestedNumbersChatEventArgs> RequestNumbersChats;
+        event EventHandler<InfoAboutAllClientsEventArgs> RequestInfoAllClient;
         #endregion Events
 
         #region Methods

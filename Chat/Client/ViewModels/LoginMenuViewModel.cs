@@ -68,6 +68,8 @@ namespace Client.ViewModels
 
             _visibilityView = Visibility.Visible;
 
+            IP = "192.168.0.106";
+
             _textError = null;
             regexIP = new Regex(@"^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
             regexLogin = new Regex(@"^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$");

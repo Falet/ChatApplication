@@ -48,12 +48,9 @@ namespace Client.Model
         }
         public void Send(MessageContainer container)
         {
-            /*var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+            var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
             string serializedMessages = JsonConvert.SerializeObject(container, settings);
-            _socket.Send(serializedMessages);*/
-            _sendQueue.Enqueue(container);
-            if (Interlocked.CompareExchange(ref _sending, 1, 0) == 0)
-                SendImpl();
+            _socket.Send(serializedMessages);
         }
         protected void OnOpen(object sender, EventArgs e)
         {
@@ -78,7 +75,7 @@ namespace Client.Model
             // При отправке произошла ошибка.
             if (!completed)
             {
-                _socket.CloseAsync();
+                _socket.Close();
                 return;
             }
 
@@ -90,12 +87,6 @@ namespace Client.Model
             if (!IsConnected)
                 return;
 
-            if (!_sendQueue.TryDequeue(out var message) && Interlocked.CompareExchange(ref _sending, 0, 1) == 1)
-                return;
-
-            var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
-            string serializedMessages = JsonConvert.SerializeObject(message, settings);
-            _socket.SendAsync(serializedMessages, SendCompleted);
         }
         #endregion Methods
     }

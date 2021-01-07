@@ -12,7 +12,7 @@ using System.Windows;
 
 namespace Client.ViewModels
 {
-    public class AccessClientForAddViewModel : BindableBase
+    public class AccessableClientForAddViewModel : BindableBase
     {
         private Visibility _visibilityViewAllClient;
         private ObservableCollection<InfoAboutClient> _clientsCollection;
@@ -23,13 +23,13 @@ namespace Client.ViewModels
             get => _visibilityViewAllClient;
             set => SetProperty(ref _visibilityViewAllClient, value);
         }
-        public ObservableCollection<InfoAboutClient> ClientsCollection
+        public ObservableCollection<InfoAboutClient> ClientsAccessableCollection
         {
             get => _clientsCollection;
             set => SetProperty(ref _clientsCollection, value);
         }
         public DelegateCommand AddClientToChatButton { get; }
-        public AccessClientForAddViewModel(IHandlerConnection handlerConnection, IHandlerChats handlerChats, Dictionary<string, bool> accessNameClientForAdd, int numberChat)
+        public AccessableClientForAddViewModel(IHandlerConnection handlerConnection, IHandlerChats handlerChats, Dictionary<string, bool> accessNameClientForAdd, int numberChat)
         {
             _numberChat = numberChat;
             _handlerChats = handlerChats;
@@ -43,12 +43,12 @@ namespace Client.ViewModels
         {
             foreach (var KeyValue in accessNameClientForAdd)
             {
-                ClientsCollection.Add(new InfoAboutClient(KeyValue.Key, KeyValue.Value));
+                ClientsAccessableCollection.Add(new InfoAboutClient(KeyValue.Key, KeyValue.Value));
             }
         }
         public void OnConnectAnotherClient(object sender, AnotherClientConnectedEventArgs container)
         {
-            foreach (var item in ClientsCollection.ToList())
+            foreach (var item in ClientsAccessableCollection.ToList())
             {
                 if(item.NameClient == container.NameClient)
                 {
@@ -56,13 +56,13 @@ namespace Client.ViewModels
                 }
                 else
                 {
-                    ClientsCollection.Add(new InfoAboutClient(container.NameClient, true));
+                    ClientsAccessableCollection.Add(new InfoAboutClient(container.NameClient, true));
                 }
             }
         }
         public void OnDisconnectClient(object sender, ClientDisconnectedEventArgs container)
         {
-            foreach (var item in ClientsCollection)
+            foreach (var item in ClientsAccessableCollection)
             {
                 if (item.NameClient == container.NameClient)
                 {
@@ -73,7 +73,7 @@ namespace Client.ViewModels
         public void AddClientToChat()
         {
             List<string> ClientForAdd = new List<string>();
-            foreach(var item in ClientsCollection.ToList())
+            foreach(var item in ClientsAccessableCollection.ToList())
             {
                 if(item.IsSelectedClient)
                 {

@@ -101,6 +101,7 @@
     <Compile Include="Network\[EventArgs]\AddedUsersToChatEventArgs.cs" />
     <Compile Include="Network\[EventArgs]\ClientRequestedNumbersChatEventArgs.cs" />
     <Compile Include="Network\[EventArgs]\ConnectionToChatEventArgs.cs" />
+    <Compile Include="Network\[EventArgs]\InfoAboutAllClientsEventArgs.cs" />
     <Compile Include="Network\[EventArgs]\LinkNumberChatCreator.cs" />
     <Compile Include="Network\[EventArgs]\MessageReceivedEventArgs.cs" />
     <Compile Include="Network\[EventArgs]\RemovedChatEventArgs.cs" />

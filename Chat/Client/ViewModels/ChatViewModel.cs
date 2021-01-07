@@ -17,7 +17,7 @@ namespace Client.ViewModels
     {
         private string _textMessages;
         private ControlVisibilityViewClientsViewModel _controlVisibilityViewClients;
-        private AccessClientForAddViewModel _allClientsViewModel;
+        private AccessableClientForAddViewModel _allClientsViewModel;
         private ClientsAtChatViewModel _clientsAtChatViewModel;
         private string _textButtonChangeViewClients;
         private bool IsViewClientsChanged;
@@ -59,7 +59,7 @@ namespace Client.ViewModels
         public DelegateCommand SendMessage { get; }
         public DelegateCommand ChangeVisibilityViewClients { get; }
 
-        public ChatViewModel(AccessClientForAddViewModel allClientsViewModel, ClientsAtChatViewModel clientsAtChatViewModel, IHandlerMessages handlerMessages, int numberChat)
+        public ChatViewModel(AccessableClientForAddViewModel allClientsViewModel, ClientsAtChatViewModel clientsAtChatViewModel, IHandlerMessages handlerMessages, int numberChat)
         {
             _clientsAtChatViewModel = clientsAtChatViewModel;
             _allClientsViewModel = allClientsViewModel;
