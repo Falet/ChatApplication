@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{69930BAD-84CD-4E2D-BAE0-54D92A2E233C}</ProjectGuid>
+    <ProjectGuid>{1FB61344-E1A0-41E7-B5D2-09F8ECDBFDD2}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Client</RootNamespace>
     <AssemblyName>Client</AssemblyName>
@@ -86,28 +86,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Model\ClientInfo.cs" />
-    <Compile Include="Model\HandlerChats.cs" />
-    <Compile Include="Model\HandlerConnection.cs" />
-    <Compile Include="Model\HandlerMessages.cs" />
-    <Compile Include="Model\HandlerResponseFromServer.cs" />
-    <Compile Include="Model\WsClient.cs" />
-    <Compile Include="Model\[EventArgs]\AddedChatEventArgs.cs" />
-    <Compile Include="Model\[EventArgs]\AddedClientsToChatClientEvenArgs.cs" />
-    <Compile Include="Model\[EventArgs]\AddedNewChatModelEventArgs.cs" />
-    <Compile Include="Model\[EventArgs]\AnotherClientConnectedEventArgs.cs" />
-    <Compile Include="Model\[EventArgs]\ClientConnectedToChatEventArgs.cs" />
-    <Compile Include="Model\[EventArgs]\ClientConnectedToServerEventArgs.cs" />
-    <Compile Include="Model\[EventArgs]\MessageReceivedForVMEventArgs.cs" />
-    <Compile Include="Model\[EventArgs]\NumbersOfChatsReceivedEventArgs.cs" />
-    <Compile Include="Model\[EventArgs]\ReceivedInfoAboutAllClientsEventArgs.cs" />
-    <Compile Include="Model\[EventArgs]\RemovedClientsFromChatForVMEventArgs.cs" />
-    <Compile Include="Model\[Interfaces]\IClientInfo.cs" />
-    <Compile Include="Model\[Interfaces]\IHandlerChats.cs" />
-    <Compile Include="Model\[Interfaces]\IHandlerConnection.cs" />
-    <Compile Include="Model\[Interfaces]\IHandlerMessages.cs" />
-    <Compile Include="Model\[Interfaces]\IHandlerResponseFromServer.cs" />
-    <Compile Include="Model\[Interfaces]\ITransportClient.cs" />
     <Compile Include="ViewModels\AccessableClientForAddViewModel.cs" />
     <Compile Include="ViewModels\ChatViewModel.cs" />
     <Compile Include="ViewModels\ClientsAtChatViewModel.cs" />
@@ -182,6 +160,28 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\ClientInfo.cs" />
+    <Compile Include="Model\HandlerChats.cs" />
+    <Compile Include="Model\HandlerConnection.cs" />
+    <Compile Include="Model\HandlerMessages.cs" />
+    <Compile Include="Model\HandlerResponseFromServer.cs" />
+    <Compile Include="Model\WsClient.cs" />
+    <Compile Include="Model\[EventArgs]\AddedChatEventArgs.cs" />
+    <Compile Include="Model\[EventArgs]\AddedClientsToChatClientEvenArgs.cs" />
+    <Compile Include="Model\[EventArgs]\AddedNewChatModelEventArgs.cs" />
+    <Compile Include="Model\[EventArgs]\AnotherClientConnectedEventArgs.cs" />
+    <Compile Include="Model\[EventArgs]\ClientConnectedToChatEventArgs.cs" />
+    <Compile Include="Model\[EventArgs]\ClientConnectedToServerEventArgs.cs" />
+    <Compile Include="Model\[EventArgs]\MessageReceivedForVMEventArgs.cs" />
+    <Compile Include="Model\[EventArgs]\NumbersOfChatsReceivedEventArgs.cs" />
+    <Compile Include="Model\[EventArgs]\ReceivedInfoAboutAllClientsEventArgs.cs" />
+    <Compile Include="Model\[EventArgs]\RemovedClientsFromChatForVMEventArgs.cs" />
+    <Compile Include="Model\[Interfaces]\IClientInfo.cs" />
+    <Compile Include="Model\[Interfaces]\IHandlerChats.cs" />
+    <Compile Include="Model\[Interfaces]\IHandlerConnection.cs" />
+    <Compile Include="Model\[Interfaces]\IHandlerMessages.cs" />
+    <Compile Include="Model\[Interfaces]\IHandlerResponseFromServer.cs" />
+    <Compile Include="Model\[Interfaces]\ITransportClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -210,7 +210,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{1a9b2a2d-f32c-46fe-bb58-295963977bd1}</Project>
+      <Project>{ea008a83-88cf-4e35-a8ef-0ddb78ccd286}</Project>
       <Name>Common</Name>
     </ProjectReference>
   </ItemGroup>

@@ -2,35 +2,35 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-// General Information about an assembly is controlled through the following
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
+// Общие сведения об этой сборке предоставляются следующим набором
+// набора атрибутов. Измените значения этих атрибутов для изменения сведений,
+// связанные с этой сборкой.
 [assembly: AssemblyTitle("Common")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Common")]
-[assembly: AssemblyCopyright("Copyright ©  2020")]
+[assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-// Setting ComVisible to false makes the types in this assembly not visible
-// to COM components.  If you need to access a type in this assembly from
-// COM, set the ComVisible attribute to true on that type.
+// Установка значения False для параметра ComVisible делает типы в этой сборке невидимыми
+// для компонентов COM. Если необходимо обратиться к типу в этой сборке через
+// из модели COM задайте для атрибута ComVisible этого типа значение true.
 [assembly: ComVisible(false)]
 
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("1a9b2a2d-f32c-46fe-bb58-295963977bd1")]
+// Следующий GUID представляет идентификатор typelib, если этот проект доступен из модели COM
+[assembly: Guid("ea008a83-88cf-4e35-a8ef-0ddb78ccd286")]
 
-// Version information for an assembly consists of the following four values:
+// Сведения о версии сборки состоят из указанных ниже четырех значений:
 //
-//      Major Version
-//      Minor Version
-//      Build Number
-//      Revision
+//      Основной номер версии
+//      Дополнительный номер версии
+//      Номер сборки
+//      Номер редакции
 //
-// You can specify all the values or you can default the Build and Revision Numbers
-// by using the '*' as shown below:
+// Можно задать все значения или принять номера сборки и редакции по умолчанию 
+// используя "*", как показано ниже:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
