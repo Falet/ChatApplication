@@ -82,32 +82,32 @@
                 case nameof(MessageRequest):
                 {
                     var messageRequest = ((JObject)container.Payload).ToObject(typeof(MessageRequest)) as MessageRequest;
-                    MessageReceived?.Invoke(this, new MessageReceivedEventArgs(connection.Login, messageRequest.Message, messageRequest.NumberChat));
+                    MessageReceived?.Invoke(this, new MessageReceivedEventArgs(messageRequest.ClientName, messageRequest.Message, messageRequest.NumberChat));
                     break;
                 }
                 case nameof(ConnectToChatRequest):
                 {
                     var connectionToChat = ((JObject)container.Payload).ToObject(typeof(ConnectToChatRequest)) as ConnectToChatRequest;
-                    ConnectedToChat?.Invoke(this, new ConnectionToChatEventArgs(connection.Login, connectionToChat.NumberChat));
+                    ConnectedToChat?.Invoke(this, new ConnectionToChatEventArgs(connectionToChat.ClientName, connectionToChat.NumberChat));
                     break;
                 }
                 case nameof(AddNewChatRequest):
                 {
                     var addNewChatRequest = ((JObject)container.Payload).ToObject(typeof(AddNewChatRequest)) as AddNewChatRequest;
-                    AddedChat?.Invoke(this, new AddedNewChatEventArgs(connection.Login, addNewChatRequest.Clients));
+                    AddedChat?.Invoke(this, new AddedNewChatEventArgs(addNewChatRequest.NameClientSender, addNewChatRequest.Clients));
                     break;
                 }
                 case nameof(RemoveChatRequest):
                 {
                     var removeChatRequest = ((JObject)container.Payload).ToObject(typeof(RemoveChatRequest)) as RemoveChatRequest;
-                    RemovedChat?.Invoke(this, new RemovedChatEventArgs(connection.Login, removeChatRequest.NumberChat));
+                    RemovedChat?.Invoke(this, new RemovedChatEventArgs(removeChatRequest.NameOfRemover, removeChatRequest.NumberChat));
                     break;
                 }
                 case nameof(AddNewClientToChatRequest):
                 {
                     var addNewClientToChatRequest = ((JObject)container.Payload)
                                                 .ToObject(typeof(AddNewClientToChatRequest)) as AddNewClientToChatRequest;
-                    AddedClientsToChat?.Invoke(this, new AddedClientsToChatEventArgs(connection.Login,
+                    AddedClientsToChat?.Invoke(this, new AddedClientsToChatEventArgs(addNewClientToChatRequest.ClientName,
                                                                                  addNewClientToChatRequest.NumberChat,
                                                                                  addNewClientToChatRequest.Clients));
                     break;
@@ -116,7 +116,7 @@
                 {
                     var removeClientFromChatRequest = ((JObject)container.Payload)
                                                     .ToObject(typeof(RemoveClientFromChatRequest)) as RemoveClientFromChatRequest;
-                    RemovedClientsFromChat?.Invoke(this, new RemovedClientsFromChatEventArgs(connection.Login,
+                    RemovedClientsFromChat?.Invoke(this, new RemovedClientsFromChatEventArgs(removeClientFromChatRequest.ClientName,
                                                                                          removeClientFromChatRequest.NumberChat,
                                                                                          removeClientFromChatRequest.Clients));
                     break;

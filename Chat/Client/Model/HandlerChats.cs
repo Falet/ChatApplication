@@ -10,13 +10,13 @@ namespace Client.Model
     {
         private ITransportClient _transportClient;
         private IHandlerConnection _handlerConnection;
-        private ClientInfo _clientInfo;
+        private IClientInfo _clientInfo;
         public event EventHandler<AddedChatEventArgs> AddedChat;
         public event EventHandler<AddedClientsToChatClientEvenArgs> AddedClientsToChat;
         public event EventHandler<RemovedClientsFromChatForVMEventArgs> RemovedClientsFromChat;
         public event EventHandler<NumbersOfChatsReceivedEventArgs> ResponseNumbersChats;
 
-        public HandlerChats(ITransportClient transportClient,IHandlerConnection handlerConnection, IHandlerResponseFromServer handlerResponseFromServer, ClientInfo clientInfo)
+        public HandlerChats(ITransportClient transportClient,IHandlerConnection handlerConnection, IHandlerResponseFromServer handlerResponseFromServer, IClientInfo clientInfo)
         {
             _handlerConnection = handlerConnection;
             _clientInfo = clientInfo;
@@ -30,7 +30,7 @@ namespace Client.Model
         public void AddChat(List<string> namesOfClients)
         {
             namesOfClients.Insert(0, _clientInfo.Login);
-            _transportClient.Send(Container.GetContainer(nameof(AddNewChatRequest),new AddNewChatRequest(namesOfClients)));
+            _transportClient.Send(Container.GetContainer(nameof(AddNewChatRequest),new AddNewChatRequest(_clientInfo.Login, namesOfClients)));
         }
 
         public void AddClientToChat(int numberChat, List<string> namesOfClients)
@@ -91,9 +91,12 @@ namespace Client.Model
         {
             if(_handlerConnection.InfoClientsAtChat.Count != 0)
             {
-                foreach (var item in container.AllInfoAboutChat)
+                if(container.AllInfoAboutChat.Count != 0)
                 {
-                    OnAddedChat(this, new AddedNewChatModelEventArgs(item.Key.NameCreator, item.Key.NumberChat, item.Value));
+                    foreach (var item in container.AllInfoAboutChat)
+                    {
+                        OnAddedChat(this, new AddedNewChatModelEventArgs(item.Key.NameCreator, item.Key.NumberChat, item.Value.NamesOfClients));
+                    }
                 }
             }
             else

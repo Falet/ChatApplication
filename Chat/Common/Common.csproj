@@ -58,6 +58,7 @@
     <Compile Include="Network\Packets\AddNewChatResponse.cs" />
     <Compile Include="Network\Packets\AddNewUserToCharResponse.cs" />
     <Compile Include="Network\Packets\AddNewUserToChatRequest.cs" />
+    <Compile Include="Network\Packets\ClientsAtChat.cs" />
     <Compile Include="Network\Packets\ConnectionNoticeForClients.cs" />
     <Compile Include="Network\Packets\ConnectionRequest.cs" />
     <Compile Include="Network\Packets\ConnectionResponse.cs" />

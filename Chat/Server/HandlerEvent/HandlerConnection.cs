@@ -47,7 +47,6 @@ namespace Server.Network
 		}
 		public async void OnConnect(object sender, ClientConnectedEventArgs container)
 		{
-			Console.WriteLine(container.ClientName);
 			if (cachedClientName.TryGetValue(container.ClientName, out Guid clientGuid))
 			{
 				if (clientGuid == Guid.Empty)

@@ -34,18 +34,18 @@ namespace Server.Network
         public HandlerChat(ITransportServer server, IHandlerRequestToData data, HandlerConnection connection)
         {
             _server = server;
-            
+
             _server.AddedChat += OnAddedChat;
             _server.RemovedChat += OnRemovedChat;
             _server.AddedClientsToChat += OnAddedClientsToChat;
             _server.RemovedClientsFromChat += OnRemovedClientsFromChat;
-            //_server.RequestNumbersChats += OnRequestNumbersChats;
+            _server.RequestNumbersChats += OnRequestNumbersChats;
 
             _data = data;
             _cachedClientProperies = _data.GetInfoAboutLinkClientToChat();
             InfoChats = _data.GetInfoAboutAllChat();
             _connection = connection;
-            _connection.AddChatHandler(this);
+
         }
 
         #region Methods
@@ -173,13 +173,11 @@ namespace Server.Network
                 //Ошибка
             }
         }
-        //Переделать  - разделить функцию на две. Одна уйдет в Connectionhandler, вторая тут, но без активности пользователей
-        /*public void OnRequestNumbersChats(object sender, ClientRequestedNumbersChatEventArgs container)
+        public void OnRequestNumbersChats(object sender, ClientRequestedNumbersChatEventArgs container)
         {
             if(_connection.cachedClientName.TryGetValue(container.NameOfClientSender,out Guid clientGuid))
             {
-                Dictionary<string, bool> activityClient = new Dictionary<string, bool>();
-                Dictionary<int, string> infoAboutChats = new Dictionary<int, string>();
+                Dictionary<LinkNumberChatCreator, ClientsAtChat> AllInfoAboutChat = new Dictionary<LinkNumberChatCreator, ClientsAtChat>();
 
                 if (_cachedClientProperies.TryGetValue(container.NameOfClientSender, out ClientProperties clientProperties))
                 {
@@ -187,31 +185,33 @@ namespace Server.Network
                     {
                         if (InfoChats.TryGetValue(numberChat, out InfoChat infoChat))
                         {
-                            GetActivityClient(infoChat.NameOfClients, out activityClient);
-                            infoAboutChats.Add(numberChat, infoChat.OwnerChat);
+                            AllInfoAboutChat.Add(new LinkNumberChatCreator(numberChat, infoChat.OwnerChat), new ClientsAtChat { NamesOfClients = infoChat.NameOfClients });
                         }
                     }
                 }
                 else
                 {
-                    if(_cachedClientProperies.TryAdd(container.NameOfClientSender,
-                                                  new ClientProperties{ NumbersChat = new List<int> { NumberGeneralChat } }))
+                    _cachedClientProperies.TryAdd(container.NameOfClientSender,
+                                                    new ClientProperties() { NumbersChat = new List<int>() { NumberGeneralChat } });
+                    if (InfoChats.TryGetValue(NumberGeneralChat, out InfoChat infoChat))
                     {
-                        if (InfoChats.TryGetValue(NumberGeneralChat, out InfoChat infoChat))
-                        {
-                            GetActivityClient(infoChat.NameOfClients, out activityClient);
-                            infoAboutChats.Add(NumberGeneralChat, infoChat.OwnerChat);
-                        }
+                        InfoChat lastValue = infoChat;
+                        infoChat.NameOfClients.Add(container.NameOfClientSender);
+                        InfoChats.TryUpdate(NumberGeneralChat, infoChat, lastValue);
+                    }
+                    if (InfoChats.TryGetValue(NumberGeneralChat, out InfoChat infoChat1))
+                    {
+                        AllInfoAboutChat.Add(new LinkNumberChatCreator(NumberGeneralChat, infoChat1.OwnerChat), new ClientsAtChat { NamesOfClients = infoChat1.NameOfClients });
                     }
                 }
                 var SendMessageToServer = Task.Run
                     (
                     () => _server.Send(new List<Guid> { clientGuid },
                                  Container.GetContainer(nameof(GetNumbersAccessibleChatsResponse),
-                                 new GetNumbersAccessibleChatsResponse(infoAboutChats)))
+                                 new GetNumbersAccessibleChatsResponse(AllInfoAboutChat)))
                     );
             }
-        }*/
+        }
 
         private void CreateUserListForChangeInfoChat(ref List<string> namesClientForCreat,int numberChat,ref List<Guid> namesForMail)
         {
@@ -241,24 +241,6 @@ namespace Server.Network
                 if (_connection.cachedClientName.TryGetValue(nameClientAtChat, out Guid clientGuid) && clientGuid != Guid.Empty)
                 {
                     namesForMail.Add(clientGuid);
-                }
-            }
-        }
-        private void GetActivityClient(List<string> namesClient,out Dictionary<string, bool> resultCheckActivity)
-        {
-            resultCheckActivity = new Dictionary<string, bool>();
-            foreach (var nameClient in namesClient)
-            {
-                if (_connection.cachedClientName.TryGetValue(nameClient, out Guid clientAtChat))
-                {
-                    if (clientAtChat != Guid.Empty)
-                    {
-                        resultCheckActivity.Add(nameClient, true);
-                    }
-                    else
-                    {
-                        resultCheckActivity.Add(nameClient, false);
-                    }
                 }
             }
         }
