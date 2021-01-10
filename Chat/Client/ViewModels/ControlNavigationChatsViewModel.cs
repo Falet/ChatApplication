@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace Client.ViewModels
 {
@@ -57,6 +58,7 @@ namespace Client.ViewModels
             _handlerChats.AddedChat += OnCreateChat;
             _handlerConnection = handlerConnection;
             _handlerMessages = handlerMessages;
+
         }
         private void ChangeViewModelOfViewChat()
         {
@@ -65,13 +67,20 @@ namespace Client.ViewModels
         }
         private void OnCreateChat(object sender, AddedChatEventArgs container)
         {
-            AccessableClientForAddViewModel allClientViewModel = new AccessableClientForAddViewModel(_handlerConnection, _handlerChats, 
+            App.Current.Dispatcher.Invoke(delegate
+            {
+                AccessableClientForAddViewModel allClientViewModel = new AccessableClientForAddViewModel(_handlerConnection, _handlerChats, 
                                                                                        container.AccessNameClientForAdd, container.NumberChat);
-            ClientsAtChatViewModel clientsAtChat = new ClientsAtChatViewModel(_handlerConnection, _handlerChats,
-                                                                              container.NumberChat, container.NameOfClientsForAdd);
-            ChatViewModel newChat = new ChatViewModel(allClientViewModel, clientsAtChat, _handlerMessages, container.NumberChat);
-            ChatCollection.Add(newChat);
-            SelectedChat = newChat;
+                ClientsAtChatViewModel clientsAtChat = new ClientsAtChatViewModel(_handlerConnection, _handlerChats,
+                                                                                  container.NumberChat, container.NameOfClientsForAdd);
+                ChatViewModel newChat = new ChatViewModel(allClientViewModel, clientsAtChat, _handlerMessages, container.NumberChat);
+
+            
+                ChatCollection.Add(newChat);
+
+                SelectedChat = newChat;
+            });
+            
         }
     }
 }

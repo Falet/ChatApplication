@@ -52,16 +52,16 @@ namespace Client.Model
         private void OnAddedChat(object sender, AddedNewChatModelEventArgs container)
         {
             Dictionary<string, bool> infoClientsForAdd = _handlerConnection.InfoClientsAtChat;
-            Dictionary<string, bool> infoClientsAtChatForVM = new Dictionary<string, bool>();
+            Dictionary<string, bool> infoClientsAtChat = new Dictionary<string, bool>();
             foreach(var item in container.Clients)
             {
                 if(_handlerConnection.InfoClientsAtChat.TryGetValue(item,out bool activityClient))
                 {
-                    infoClientsAtChatForVM.Add(item, activityClient);
+                    infoClientsAtChat.Add(item, activityClient);
                     infoClientsForAdd.Remove(item);
                 }
             }
-            AddedChat?.Invoke(this, new AddedChatEventArgs(container.ClientCreator, infoClientsAtChatForVM, infoClientsForAdd, container.NumberChat));
+            AddedChat?.Invoke(this, new AddedChatEventArgs(container.ClientCreator, infoClientsAtChat, infoClientsForAdd, container.NumberChat));
         }
         private void OnAddedClientsToChat(object sender, AddedClientsToChatEventArgs container)
         {
@@ -95,7 +95,7 @@ namespace Client.Model
                 {
                     foreach (var item in container.AllInfoAboutChat)
                     {
-                        OnAddedChat(this, new AddedNewChatModelEventArgs(item.Key.NameCreator, item.Key.NumberChat, item.Value.NamesOfClients));
+                        OnAddedChat(this, new AddedNewChatModelEventArgs(item.NameCreator, item.NumberChat, item.NamesOfClients));
                     }
                 }
             }

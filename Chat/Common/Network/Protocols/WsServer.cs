@@ -134,6 +134,10 @@
         public void FreeConnection(Guid ClientId)
         {
             _connections.TryRemove(ClientId, out WsConnection connection);
+            if(connection.Login != null)
+            {
+                ClientDisconnected.Invoke(this, new ClientDisconnectedEventArgs(ClientId, connection.Login));
+            }
         }
 
         public void Send(List<Guid> ListClientId, MessageContainer message)
@@ -153,6 +157,13 @@
                 {
                     connection.Value.Send(message);
                 }
+            }
+        }
+        public void SetLoginConnection(Guid clientGuid, string nameClient)
+        {
+            if(_connections.TryGetValue(clientGuid, out WsConnection wsConnection))
+            {
+                wsConnection.Login = nameClient;
             }
         }
         #endregion Methods

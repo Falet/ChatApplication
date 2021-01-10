@@ -12,7 +12,7 @@ namespace Client.Model
         Dictionary<string, bool> InfoClientsAtChat { get; }
         event EventHandler<ClientConnectedToServerEventArgs> ClientConnected;
         event EventHandler<AnotherClientConnectedEventArgs> AnotherClientConnected;
-        event EventHandler<ClientDisconnectedEventArgs> AnotherClientDisconnected;
+        event EventHandler<AnotherClientDisconnectedEventArgs> AnotherClientDisconnected;
         event EventHandler<ReceivedInfoAboutAllClientsEventArgs> ReceivedInfoAboutAllClients;
         void Connect(string ip, string port, string protocol);
         void Send(string login);

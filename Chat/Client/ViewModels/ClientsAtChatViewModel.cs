@@ -59,7 +59,7 @@ namespace Client.ViewModels
                 }
             }
         }
-        public void OnDisconnectClient(object sender, ClientDisconnectedEventArgs container)
+        public void OnDisconnectClient(object sender, AnotherClientDisconnectedEventArgs container)
         {
             foreach (var item in CollectionClientsAtChat)
             {

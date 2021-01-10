@@ -18,7 +18,7 @@ namespace Client.Model
         event EventHandler<AddedNewChatModelEventArgs> AddedChat;
         event EventHandler<AddedClientsToChatEventArgs> AddedClientsToChat;
         event EventHandler<RemovedClientsFromChatEventArgs> RemovedClientsFromChat;
-        event EventHandler<ClientDisconnectedEventArgs> AnotherClientDisconnected;
+        event EventHandler<AnotherClientDisconnectedEventArgs> AnotherClientDisconnected;
         event EventHandler<NumbersOfChatsReceivedEventArgs> ResponseNumbersChats;
         event EventHandler<ReceivedInfoAboutAllClientsEventArgs> ReceivedInfoAboutAllClients;
         void ParsePacket(MessageContainer container);

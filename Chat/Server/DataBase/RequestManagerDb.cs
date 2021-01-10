@@ -7,6 +7,8 @@
     using System.Collections.Concurrent;
     using Common.Network;
     using Network;
+    using System.Data.Entity.Validation;
+
     public class RequestManagerDb : IHandlerRequestToData
     {
         #region Methods
@@ -114,12 +116,19 @@
                     Time = container.Time.ToString(),
                 };
                 db.Messages.Add(message);
-
-                int taskDb = await db.SaveChangesAsync();
-                if (taskDb == 0)
+                try
                 {
-                    return false;
+                    int taskDb = await db.SaveChangesAsync();
+                    if (taskDb == 0)
+                    {
+                        return false;
+                    }
                 }
+                catch(Exception e)
+                {
+                   
+                }
+                
             }
             return true;
         }

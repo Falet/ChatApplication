@@ -60,11 +60,6 @@ namespace Server.Network
                     List<string> NameForChange = container.NameOfClientsForAdd;
                     await Task.Run(() => CreateUserListForChangeInfoChat(ref NameForChange, numberChat, ref idClientsForSendMessage));
 
-                    if (clientCreatorGuid != Guid.Empty)
-                    {
-                        idClientsForSendMessage.Add(clientCreatorGuid);
-                    }
-
                     var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage, Container.GetContainer(nameof(AddNewChatResponse),new AddNewChatResponse(container.NameOfClientSender,numberChat, container.NameOfClientsForAdd))));
                     InfoChats.TryAdd(numberChat, new InfoChat { OwnerChat = container.NameOfClientSender, NameOfClients = container.NameOfClientsForAdd });
                     if(!await _data.AddClientToChat(new AddClientToChat { NumberChat = numberChat, NameOfClients = NameForChange }))
@@ -173,11 +168,11 @@ namespace Server.Network
                 //Ошибка
             }
         }
-        public void OnRequestNumbersChats(object sender, ClientRequestedNumbersChatEventArgs container)
+        public async void OnRequestNumbersChats(object sender, ClientRequestedNumbersChatEventArgs container)
         {
             if(_connection.cachedClientName.TryGetValue(container.NameOfClientSender,out Guid clientGuid))
             {
-                Dictionary<LinkNumberChatCreator, ClientsAtChat> AllInfoAboutChat = new Dictionary<LinkNumberChatCreator, ClientsAtChat>();
+                List<InfoAboutChat> AllInfoAboutChat = new List<InfoAboutChat>();
 
                 if (_cachedClientProperies.TryGetValue(container.NameOfClientSender, out ClientProperties clientProperties))
                 {
@@ -185,7 +180,7 @@ namespace Server.Network
                     {
                         if (InfoChats.TryGetValue(numberChat, out InfoChat infoChat))
                         {
-                            AllInfoAboutChat.Add(new LinkNumberChatCreator(numberChat, infoChat.OwnerChat), new ClientsAtChat { NamesOfClients = infoChat.NameOfClients });
+                            AllInfoAboutChat.Add(new InfoAboutChat(numberChat, infoChat.OwnerChat, infoChat.NameOfClients));
                         }
                     }
                 }
@@ -201,7 +196,12 @@ namespace Server.Network
                     }
                     if (InfoChats.TryGetValue(NumberGeneralChat, out InfoChat infoChat1))
                     {
-                        AllInfoAboutChat.Add(new LinkNumberChatCreator(NumberGeneralChat, infoChat1.OwnerChat), new ClientsAtChat { NamesOfClients = infoChat1.NameOfClients });
+                        AllInfoAboutChat.Add(new InfoAboutChat(NumberGeneralChat, infoChat1.OwnerChat, infoChat1.NameOfClients));
+                    }
+                    if (!await Task.Run(() => _data.AddClientToChat(new AddClientToChat { NumberChat = NumberGeneralChat, 
+                                                                      NameOfClients = new List<string> { container.NameOfClientSender } })))
+                    {
+
                     }
                 }
                 var SendMessageToServer = Task.Run

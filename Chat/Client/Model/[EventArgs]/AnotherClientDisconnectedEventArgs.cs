@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Common.Network
+namespace Client.Model
 {
-    public class ClientDisconnectedEventArgs
+    public class AnotherClientDisconnectedEventArgs
     {
         #region Properties
-
-        public Guid NameGuid { get; }
 
         public string NameClient { get; }
 
@@ -14,9 +16,8 @@ namespace Common.Network
 
         #region Constructors
 
-        public ClientDisconnectedEventArgs(Guid nameGuid, string nameClient)
+        public AnotherClientDisconnectedEventArgs(string nameClient)
         {
-            NameGuid = nameGuid;
             NameClient = nameClient;
         }
 

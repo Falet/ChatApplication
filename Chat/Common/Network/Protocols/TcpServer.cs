@@ -58,6 +58,11 @@
             throw new NotImplementedException();
         }
 
+        public void SetLoginConnection(Guid clientGuid, string nameClient)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion Methods
     }
 }

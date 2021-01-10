@@ -14,7 +14,7 @@
 			<RowDefinition Height="0.1*"/>
 			<RowDefinition Height="0.1*"/>
 		</Grid.RowDefinitions>
-		<ListBox ItemsSource="{Binding ClientsCollection}" SelectionMode="Multiple">
+		<ListBox ItemsSource="{Binding ClientsAccessableCollection}" SelectionMode="Multiple">
 			<ListBox.ItemContainerStyle>
 				<Style TargetType="ListBoxItem">
 					<Setter Property="IsSelected" Value="{Binding IsSelectedClient}"/>

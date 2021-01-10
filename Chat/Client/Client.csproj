@@ -86,6 +86,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\[EventArgs]\AnotherClientDisconnectedEventArgs.cs" />
     <Compile Include="ViewModels\AccessableClientForAddViewModel.cs" />
     <Compile Include="ViewModels\ChatViewModel.cs" />
     <Compile Include="ViewModels\ClientsAtChatViewModel.cs" />

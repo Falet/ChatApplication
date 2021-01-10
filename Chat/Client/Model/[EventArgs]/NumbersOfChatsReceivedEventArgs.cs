@@ -9,14 +9,14 @@ namespace Client.Model
     {
         #region Properties
 
-        public Dictionary<LinkNumberChatCreator, ClientsAtChat> AllInfoAboutChat { get; }
+        public List<InfoAboutChat> AllInfoAboutChat { get; }
  
 
         #endregion Properties
 
         #region Constructors
 
-        public NumbersOfChatsReceivedEventArgs(Dictionary<LinkNumberChatCreator, ClientsAtChat> allInfoAboutChat)
+        public NumbersOfChatsReceivedEventArgs(List<InfoAboutChat> allInfoAboutChat)
         {
             AllInfoAboutChat = allInfoAboutChat;
         }

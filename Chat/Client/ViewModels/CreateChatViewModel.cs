@@ -19,8 +19,6 @@ namespace Client.ViewModels
         private ObservableCollection<InfoAboutClient> _clientsCollection;
         private IHandlerChats _handlerChats;
         private IHandlerConnection _handlerConnection;
-        private Dispatcher _dispatcher;
-        private ReceivedInfoAboutAllClientsEventArgs _container;
         public Visibility VisibilityCreateChat
         {
             get => _visibilityView;
@@ -40,7 +38,6 @@ namespace Client.ViewModels
             _handlerConnection = handlerConnection;
             _handlerConnection.ReceivedInfoAboutAllClients += OnReceivedInfoAboutAllClients;
             _clientsCollection = new ObservableCollection<InfoAboutClient>();
-            _dispatcher = Dispatcher.CurrentDispatcher;
             CreateChatButton = new DelegateCommand(CreateChat);
         }
         private void CreateChat()
@@ -62,15 +59,13 @@ namespace Client.ViewModels
         }
         private void OnReceivedInfoAboutAllClients(object sender, ReceivedInfoAboutAllClientsEventArgs container)
         {
-            _container = container;
-            _dispatcher.Invoke(AddClientToCollection);
-        }
-        private void AddClientToCollection()
-        {
-            foreach (var KeyValue in _container.InfoClientsAtChat)
+            App.Current.Dispatcher.Invoke(delegate
             {
-                ClientsCollection.Add(new InfoAboutClient(KeyValue.Key, KeyValue.Value));
-            }
+                foreach (var KeyValue in container.InfoClientsAtChat)
+                {
+                    ClientsCollection.Add(new InfoAboutClient(KeyValue.Key, KeyValue.Value));
+                }
+            });
         }
         public void OnConnectAnotherClient(object sender, AnotherClientConnectedEventArgs container)
         {

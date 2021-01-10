@@ -14,7 +14,7 @@ namespace Client.Model
         private IClientInfo _clientInfo;
 
         public Dictionary<string, bool> InfoClientsAtChat { get; private set; }
-        public event EventHandler<ClientDisconnectedEventArgs> AnotherClientDisconnected;
+        public event EventHandler<AnotherClientDisconnectedEventArgs> AnotherClientDisconnected;
         public event EventHandler<ClientConnectedToServerEventArgs> ClientConnected;
         public event EventHandler<ReceivedInfoAboutAllClientsEventArgs> ReceivedInfoAboutAllClients;
         public event EventHandler<AnotherClientConnectedEventArgs> AnotherClientConnected;
@@ -54,13 +54,13 @@ namespace Client.Model
                 ClientConnected?.Invoke(this, new ClientConnectedToServerEventArgs(container.Result, container.Reason));
             }
         }
-        private void OnAnotherClientDisconnected(object sender, ClientDisconnectedEventArgs container)
+        private void OnAnotherClientDisconnected(object sender, AnotherClientDisconnectedEventArgs container)
         {
             if (InfoClientsAtChat.TryGetValue(container.NameClient, out bool activityClient) && activityClient == true)
             {
                 InfoClientsAtChat[container.NameClient] = false;
             }
-            AnotherClientDisconnected?.Invoke(this, new ClientDisconnectedEventArgs(container.NameClient));
+            AnotherClientDisconnected?.Invoke(this, new AnotherClientDisconnectedEventArgs(container.NameClient));
         }
         private void OnAnotherClientConnected(object sender, AnotherClientConnectedEventArgs container)
         {

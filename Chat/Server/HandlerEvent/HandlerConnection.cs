@@ -51,7 +51,7 @@ namespace Server.Network
 			{
 				if (clientGuid == Guid.Empty)
 				{
-					cachedClientName.TryUpdate(container.ClientName, clientGuid, Guid.Empty);
+					cachedClientName.TryUpdate(container.ClientName, container.ClientId, Guid.Empty);
 
 					var SendMessage = Task.Run(() =>
 					_server.Send(new List<Guid> { container.ClientId },Container.GetContainer(nameof(ConnectionResponse), new ConnectionResponse(ResultRequest.Ok,container.ClientName)))
@@ -59,6 +59,8 @@ namespace Server.Network
 					var SendMessageAll = Task.Run(() =>
 					_server.SendAll(container.ClientId, Container.GetContainer(nameof(ConnectionNoticeForClients), new ConnectionNoticeForClients(container.ClientName)))
 					);
+
+					_server.SetLoginConnection(container.ClientId, container.ClientName);
 				}
 				else
 				{
@@ -81,6 +83,8 @@ namespace Server.Network
 					_server.SendAll(container.ClientId, Container.GetContainer(nameof(ConnectionNoticeForClients), new ConnectionNoticeForClients(container.ClientName)))
 				);
 
+				_server.SetLoginConnection(container.ClientId, container.ClientName);
+
 				if (!await Task.Run(() => _data.AddNewClient(new ClientInfo { NameOfClient = container.ClientName })))
 				{
 					//Ошибка, не получилось записать
@@ -89,10 +93,8 @@ namespace Server.Network
 		}
 		public void OnDisconnect(object sender, ClientDisconnectedEventArgs container)
 		{
-			if (cachedClientName.TryGetValue(container.NameClient, out Guid clientGuid) && clientGuid != Guid.Empty)
+			if (cachedClientName.TryGetValue(container.NameClient, out Guid clientGuid))
 			{
-				var SendMessageDisconnectToServer = Task.Run(() => _server.FreeConnection(clientGuid));
-
 				var SendMessageToServer = Task.Run(() =>
 					_server.SendAll(clientGuid, Container.GetContainer(nameof(DisconnectNotice), new DisconnectNotice(container.NameClient)))
 				);
@@ -116,13 +118,11 @@ namespace Server.Network
 						ActivityClient.Add(item.Key, true);
 					}
 				}
-				if(clientGuid != Guid.Empty)
-                {
-					var SendMessage = Task.Run(() =>
-					_server.Send(new List<Guid> { clientGuid }, Container.GetContainer(nameof(InfoAboutAllClientsResponse), 
-																					   new InfoAboutAllClientsResponse(ActivityClient)))
-					);
-				}
+				ActivityClient.Remove(container.NameClient);
+				var SendMessage = Task.Run(() =>
+				_server.Send(new List<Guid> { clientGuid }, Container.GetContainer(nameof(InfoAboutAllClientsResponse), 
+																					new InfoAboutAllClientsResponse(ActivityClient)))
+				);
 			}
         }
 	}

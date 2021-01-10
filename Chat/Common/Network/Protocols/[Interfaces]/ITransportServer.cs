@@ -28,6 +28,8 @@
 
         void SendAll(Guid clientGuid, MessageContainer message);
 
+        void SetLoginConnection(Guid clientGuid,string nameClient);
+
         #endregion Methods
     }
 }

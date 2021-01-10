@@ -18,7 +18,6 @@ namespace Client.Model
 
         private readonly ConcurrentQueue<MessageContainer> _sendQueue;
         private IHandlerResponseFromServer _handlerResponseFromServer;
-        private int _sending;
         private WebSocket _socket;
 
         #endregion Fields
@@ -30,7 +29,6 @@ namespace Client.Model
         public WsClient(IHandlerResponseFromServer handlerResponseFromServer)
         {
             _sendQueue = new ConcurrentQueue<MessageContainer>();
-            _sending = 0;
             _socket = new WebSocket($"ws://192.168.37.106:35");
             _handlerResponseFromServer = handlerResponseFromServer;
         }
@@ -69,24 +67,6 @@ namespace Client.Model
                 var message = JsonConvert.DeserializeObject<MessageContainer>(e.Data);
                 _handlerResponseFromServer.ParsePacket(message);
             }
-        }
-        private void SendCompleted(bool completed)
-        {
-            // При отправке произошла ошибка.
-            if (!completed)
-            {
-                _socket.Close();
-                return;
-            }
-
-            SendImpl();
-        }
-
-        private void SendImpl()
-        {
-            if (!IsConnected)
-                return;
-
         }
         #endregion Methods
     }

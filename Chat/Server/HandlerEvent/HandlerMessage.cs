@@ -75,7 +75,7 @@
                     }
                 }
                 var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage,
-                                                                      Container.GetContainer(nameof(ConnectToChatResponse),
+                                                                      Container.GetContainer(nameof(MessageResponse),
                                                                       new MessageResponse(new MessageInfo(container.NameOfClient, container.Message, DateTime.Now), container.NumberChat)))
                                                     );
 

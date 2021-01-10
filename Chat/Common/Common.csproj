@@ -58,7 +58,6 @@
     <Compile Include="Network\Packets\AddNewChatResponse.cs" />
     <Compile Include="Network\Packets\AddNewUserToCharResponse.cs" />
     <Compile Include="Network\Packets\AddNewUserToChatRequest.cs" />
-    <Compile Include="Network\Packets\ClientsAtChat.cs" />
     <Compile Include="Network\Packets\ConnectionNoticeForClients.cs" />
     <Compile Include="Network\Packets\ConnectionRequest.cs" />
     <Compile Include="Network\Packets\ConnectionResponse.cs" />
@@ -90,7 +89,7 @@
     <Compile Include="Network\[EventArgs]\ClientRequestedNumbersChatEventArgs.cs" />
     <Compile Include="Network\[EventArgs]\ConnectionToChatEventArgs.cs" />
     <Compile Include="Network\[EventArgs]\InfoAboutAllClientsEventArgs.cs" />
-    <Compile Include="Network\[EventArgs]\LinkNumberChatCreator.cs" />
+    <Compile Include="Network\[EventArgs]\InfoAboutChat.cs" />
     <Compile Include="Network\[EventArgs]\MessageReceivedEventArgs.cs" />
     <Compile Include="Network\[EventArgs]\RemovedChatEventArgs.cs" />
     <Compile Include="Network\[EventArgs]\RemovedUsersFromChatEventArgs.cs" />

@@ -6,7 +6,7 @@
         #region Properties
 
         [Key]
-        public string MessageID { get; set; }
+        public int MessageID { get; set; }
         public int ChatID { get; set; }
         public string From { get; set; }
         public string Text { get; set; }

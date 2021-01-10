@@ -18,7 +18,7 @@ namespace Client.Model
         public event EventHandler<AddedNewChatModelEventArgs> AddedChat;
         public event EventHandler<AddedClientsToChatEventArgs> AddedClientsToChat;
         public event EventHandler<RemovedClientsFromChatEventArgs> RemovedClientsFromChat;
-        public event EventHandler<ClientDisconnectedEventArgs> AnotherClientDisconnected;
+        public event EventHandler<AnotherClientDisconnectedEventArgs> AnotherClientDisconnected;
         public event EventHandler<NumbersOfChatsReceivedEventArgs> ResponseNumbersChats;
         public event EventHandler<ReceivedInfoAboutAllClientsEventArgs> ReceivedInfoAboutAllClients;
 
@@ -41,7 +41,7 @@ namespace Client.Model
                 case nameof(DisconnectNotice):
                     {
                         var disconnectionResponse = ((JObject)container.Payload).ToObject(typeof(DisconnectNotice)) as DisconnectNotice;
-                        AnotherClientDisconnected?.Invoke(this, new ClientDisconnectedEventArgs(disconnectionResponse.NameOfClient));
+                        AnotherClientDisconnected?.Invoke(this, new AnotherClientDisconnectedEventArgs(disconnectionResponse.NameOfClient));
                         break;
                     }
                 case nameof(MessageResponse):

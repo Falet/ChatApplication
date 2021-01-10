@@ -9,11 +9,11 @@ namespace Client.Model
     public class HandlerMessages : IHandlerMessages
     {
         private ITransportClient _transportClient;
-        private ClientInfo _clientInfo;
+        private IClientInfo _clientInfo;
 
         public event EventHandler<MessageReceivedForVMEventArgs> MessageReceived;
         public event EventHandler<ClientConnectedToChatEventArgs> ConnectedToChat;
-        public HandlerMessages(ITransportClient transportClient, IHandlerResponseFromServer handlerResponseFromServer, ClientInfo clientInfo)
+        public HandlerMessages(ITransportClient transportClient, IHandlerResponseFromServer handlerResponseFromServer, IClientInfo clientInfo)
         {
             _transportClient = transportClient;
             _clientInfo = clientInfo;

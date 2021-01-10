@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace Client.ViewModels
 {
@@ -61,6 +62,7 @@ namespace Client.ViewModels
 
         public ChatViewModel(AccessableClientForAddViewModel allClientsViewModel, ClientsAtChatViewModel clientsAtChatViewModel, IHandlerMessages handlerMessages, int numberChat)
         {
+
             _clientsAtChatViewModel = clientsAtChatViewModel;
             _allClientsViewModel = allClientsViewModel;
             _controlVisibilityViewClients = new ControlVisibilityViewClientsViewModel(_allClientsViewModel, clientsAtChatViewModel);
@@ -68,6 +70,8 @@ namespace Client.ViewModels
             _messagesCollection = new ObservableCollection<string>();
             _textToolTip = "Добавить клиентов в чат из общего списка";
             IsViewClientsChanged = true;
+
+            
 
             _handlerMessages = handlerMessages;
             _handlerMessages.MessageReceived += OnMessageReceived;
@@ -108,19 +112,25 @@ namespace Client.ViewModels
         }
         private void OnMessageReceived(object sender, MessageReceivedForVMEventArgs container)
         {
-            if(container.NumberChat == NumberChat)
+            if (container.NumberChat == NumberChat)
             {
-                MessagesCollection.Add(string.Format("Sender: {0}\nMessage: {1}\nTime: {2}", container.Message.FromMessage, container.Message.Text, container.Message.Time));
+                App.Current.Dispatcher.Invoke(delegate
+                {
+                    MessagesCollection.Add(string.Format("Sender: {0}\nMessage: {1}\nTime: {2}", container.Message.FromMessage, container.Message.Text, container.Message.Time));
+                });
             }
         }
         private void OnConnectedToChat(object sender, ClientConnectedToChatEventArgs container)
         {
-            if (container.NumberChat == NumberChat)
+            if (container.AllMessageFromChat != null && container.NumberChat == NumberChat)
             {
-                foreach(var item in container.AllMessageFromChat)
+                App.Current.Dispatcher.Invoke(delegate
                 {
-                    MessagesCollection.Add(string.Format("Sender: {0}\nMessage: {1}\nTime: {2}", item.FromMessage, item.Text, item.Time));
-                }
+                    foreach (var item in container.AllMessageFromChat)
+                    {
+                        MessagesCollection.Add(string.Format("Sender: {0}\nMessage: {1}\nTime: {2}", item.FromMessage, item.Text, item.Time));
+                    }
+                });
             }
         }
     }
