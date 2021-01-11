@@ -1,5 +1,6 @@
 ﻿using Client.Model;
 using Common.Network;
+using Prism.Commands;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace Client.ViewModels
         private Visibility _visibilityViewClientsAtChat;
         private ObservableCollection<InfoAboutClient> _collectionClientsAtChat;
         private int _numberChat;
+        private IHandlerChats _handlerChats;
         public ObservableCollection<InfoAboutClient> CollectionClientsAtChat
         {
             get => _collectionClientsAtChat;
@@ -26,14 +28,31 @@ namespace Client.ViewModels
             get => _visibilityViewClientsAtChat;
             set => SetProperty(ref _visibilityViewClientsAtChat, value);
         }
+        public DelegateCommand RemoveButton { get; }
         public ClientsAtChatViewModel(IHandlerConnection handlerConnection, IHandlerChats handlerChats, int numberChat, Dictionary<string, bool> clientForAdd)
         {
             _numberChat = numberChat;
             _collectionClientsAtChat = new ObservableCollection<InfoAboutClient>();
-            handlerChats.AddedClientsToChat += OnClientAddedToChat;
-            handlerConnection.AnotherClientConnected += OnConnectAnotherClient;
-            handlerConnection.AnotherClientDisconnected += OnDisconnectClient;
+            _handlerChats = handlerChats;
+            _handlerChats.AddedClientsToChat += OnClientAddedToChat;
+            _handlerChats.RemovedClientsFromChat += OnClientRemovedFromChat;
+            handlerConnection.AnotherClientConnected += OnConnectedAnotherClient;
+            handlerConnection.AnotherClientDisconnected += OnDisconnectedClient;
             AddClientsToCollection(clientForAdd);
+            RemoveButton = new DelegateCommand(RemoveClientFromChat);
+        }
+        private void RemoveClientFromChat()
+        {
+            List<string> ClientForRemove = new List<string>();
+            foreach (var item in CollectionClientsAtChat.ToList())
+            {
+                if (item.IsSelectedClient)
+                {
+                    ClientForRemove.Add(item.NameClient);
+                    CollectionClientsAtChat.Remove(item);
+                }
+            }
+            _handlerChats.RemoveClientFromChat(_numberChat, ClientForRemove);
         }
         public void OnClientAddedToChat(object sender, AddedClientsToChatClientEvenArgs container)
         {
@@ -44,30 +63,49 @@ namespace Client.ViewModels
         }
         private void AddClientsToCollection(Dictionary<string, bool> clientForAdd)
         {
-            foreach (var KeyValue in clientForAdd)
+            App.Current.Dispatcher.Invoke(delegate
             {
-                CollectionClientsAtChat.Add(new InfoAboutClient(KeyValue.Key, KeyValue.Value));
-            }
-        }
-        public void OnConnectAnotherClient(object sender, AnotherClientConnectedEventArgs container)
-        {
-            foreach (var item in CollectionClientsAtChat)
-            {
-                if (item.NameClient == container.NameClient)
+                foreach (var KeyValue in clientForAdd)
                 {
-                    item.ActivityClient = true;
+                    CollectionClientsAtChat.Add(new InfoAboutClient(KeyValue.Key, KeyValue.Value));
                 }
-            }
+            });
         }
-        public void OnDisconnectClient(object sender, AnotherClientDisconnectedEventArgs container)
+        private void OnClientRemovedFromChat(object sender, RemovedClientsFromChatForVMEventArgs container)
         {
-            foreach (var item in CollectionClientsAtChat)
+            App.Current.Dispatcher.Invoke(delegate
             {
-                if (item.NameClient == container.NameClient)
+                foreach (var KeyValue in container.Clients)
                 {
-                    item.ActivityClient = false;
+                    CollectionClientsAtChat.Remove(new InfoAboutClient(KeyValue.Key, KeyValue.Value));
                 }
-            }
+            });
+        }
+        public void OnConnectedAnotherClient(object sender, AnotherClientConnectedEventArgs container)
+        {
+            App.Current.Dispatcher.Invoke(delegate
+            {
+                foreach (var item in CollectionClientsAtChat.ToList())
+                {
+                    if (item.NameClient == container.NameClient)
+                    {
+                        item.ActivityClient = true;
+                    }
+                }
+            });
+        }
+        public void OnDisconnectedClient(object sender, AnotherClientDisconnectedEventArgs container)
+        {
+            App.Current.Dispatcher.Invoke(delegate
+            {
+                foreach (var item in CollectionClientsAtChat)
+                {
+                    if (item.NameClient == container.NameClient)
+                    {
+                        item.ActivityClient = false;
+                    }
+                }
+            });
         }
     }
 }

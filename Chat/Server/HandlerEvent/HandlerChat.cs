@@ -120,12 +120,18 @@ namespace Server.Network
                     await Task.Run(() => CreateUserListForChangeInfoChat(ref NameForChange, container.NumberChat, ref idClientsForSendMessage));
 
                     InfoChat buffer = infoChat;
-                    infoChat.NameOfClients.Union(NameForChange);
+                    foreach(var item in NameForChange)
+                    {
+                        infoChat.NameOfClients.Add(item);
+                    }
                     await Task.Run(() => AddNamesForMail(infoChat.NameOfClients, ref idClientsForSendMessage));
 
                     var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage, Container.GetContainer(nameof(AddNewClientToChatResponse),new AddNewClientToChatResponse(container.NameOfClientSender, NameForChange, container.NumberChat))));
 
-                    InfoChats.TryUpdate(container.NumberChat, infoChat, buffer);
+                    if(InfoChats.TryUpdate(container.NumberChat, infoChat, buffer))
+                    {
+                        Console.WriteLine("Обновил");
+                    }
 
                     if (!await Task.Run(() => _data.AddClientToChat(new AddClientToChat { NumberChat = container.NumberChat, NameOfClients = NameForChange })))
                     {
@@ -150,9 +156,11 @@ namespace Server.Network
                     await Task.Run(() => CreateUserListForChangeInfoChat(ref NameForChange, container.NumberChat, ref idClientsForSendMessage));
 
                     InfoChat buffer = infoChat;
-                    infoChat.NameOfClients.Except(container.Clients);
+                    foreach (var item in container.Clients)
+                    {
+                        infoChat.NameOfClients.Remove(item);
+                    }
                     await Task.Run(() => AddNamesForMail(infoChat.NameOfClients, ref idClientsForSendMessage));
-
                     var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage, Container.GetContainer(nameof(RemoveClientFromChatResponse),new RemoveClientFromChatResponse(container.NameOfRemover, container.Clients, container.NumberChat))));
 
                     InfoChats.TryUpdate(container.NumberChat, infoChat, buffer);
@@ -198,12 +206,19 @@ namespace Server.Network
                     {
                         AllInfoAboutChat.Add(new InfoAboutChat(NumberGeneralChat, infoChat1.OwnerChat, infoChat1.NameOfClients));
                     }
+
                     if (!await Task.Run(() => _data.AddClientToChat(new AddClientToChat { NumberChat = NumberGeneralChat, 
                                                                       NameOfClients = new List<string> { container.NameOfClientSender } })))
                     {
 
                     }
                 }
+                var SendMessageAboutConnectNewClient = Task.Run
+                    (
+                    () => _server.SendAll(clientGuid ,
+                                 Container.GetContainer(nameof(AddNewClientToChatResponse),
+                                 new AddNewClientToChatResponse("Server",new List<string> { container.NameOfClientSender }, NumberGeneralChat)))
+                    );
                 var SendMessageToServer = Task.Run
                     (
                     () => _server.Send(new List<Guid> { clientGuid },

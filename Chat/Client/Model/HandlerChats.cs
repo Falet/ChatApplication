@@ -51,7 +51,7 @@ namespace Client.Model
         }
         private void OnAddedChat(object sender, AddedNewChatModelEventArgs container)
         {
-            Dictionary<string, bool> infoClientsForAdd = _handlerConnection.InfoClientsAtChat;
+            Dictionary<string, bool> infoClientsForAdd = new Dictionary<string, bool>(_handlerConnection.InfoClientsAtChat);
             Dictionary<string, bool> infoClientsAtChat = new Dictionary<string, bool>();
             foreach(var item in container.Clients)
             {
@@ -89,14 +89,11 @@ namespace Client.Model
         }
         private void OnResponseNumbersChats(object sender, NumbersOfChatsReceivedEventArgs container)
         {
-            if(_handlerConnection.InfoClientsAtChat.Count != 0)
+            if(container.AllInfoAboutChat.Count != 0)
             {
-                if(container.AllInfoAboutChat.Count != 0)
+                foreach (var item in container.AllInfoAboutChat)
                 {
-                    foreach (var item in container.AllInfoAboutChat)
-                    {
-                        OnAddedChat(this, new AddedNewChatModelEventArgs(item.NameCreator, item.NumberChat, item.NamesOfClients));
-                    }
+                    OnAddedChat(this, new AddedNewChatModelEventArgs(item.NameCreator, item.NumberChat, item.NamesOfClients));
                 }
             }
             else

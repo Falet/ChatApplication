@@ -26,7 +26,6 @@ namespace Server.Network
 
 		private IHandlerRequestToData _data;
         private ITransportServer _server;
-		private HandlerChat _chats;
 
 		#endregion Fields
 
@@ -40,10 +39,6 @@ namespace Server.Network
 
             _data = data;
             cachedClientName = _data.GetInfoAboutAllClient();
-		}
-		public void AddChatHandler(HandlerChat chats)
-        {
-			_chats = chats;
 		}
 		public async void OnConnect(object sender, ClientConnectedEventArgs container)
 		{

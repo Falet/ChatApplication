@@ -69,27 +69,33 @@ namespace Client.ViewModels
         }
         public void OnConnectAnotherClient(object sender, AnotherClientConnectedEventArgs container)
         {
-            foreach (var item in ClientsCollection)
+            App.Current.Dispatcher.Invoke(delegate
             {
-                if (item.NameClient == container.NameClient)
+                foreach (var item in ClientsCollection)
                 {
-                    item.ActivityClient = true;
+                    if (item.NameClient == container.NameClient)
+                    {
+                        item.ActivityClient = true;
+                    }
+                    else
+                    {
+                        ClientsCollection.Add(new InfoAboutClient(container.NameClient, true));
+                    }
                 }
-                else
-                {
-                    ClientsCollection.Add(new InfoAboutClient(container.NameClient, true));
-                }
-            }
+            });
         }
         public void OnDisconnectClient(object sender, ClientDisconnectedEventArgs container)
         {
-            foreach (var item in ClientsCollection)
+            App.Current.Dispatcher.Invoke(delegate
             {
-                if (item.NameClient == container.NameClient)
+                foreach (var item in ClientsCollection)
                 {
-                    item.ActivityClient = false;
+                    if (item.NameClient == container.NameClient)
+                    {
+                        item.ActivityClient = false;
+                    }
                 }
-            }
+            });
         }
     }
 }

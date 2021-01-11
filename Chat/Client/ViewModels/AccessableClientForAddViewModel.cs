@@ -32,8 +32,10 @@ namespace Client.ViewModels
         public AccessableClientForAddViewModel(IHandlerConnection handlerConnection, IHandlerChats handlerChats, Dictionary<string, bool> accessNameClientForAdd, int numberChat)
         {
             _numberChat = numberChat;
-            _handlerChats = handlerChats;
+            
             _clientsCollection = new ObservableCollection<InfoAboutClient>();
+            _handlerChats = handlerChats;
+            _handlerChats.RemovedClientsFromChat += OnRemovedClientFormChat;
             handlerConnection.AnotherClientConnected += OnConnectAnotherClient;
             handlerConnection.AnotherClientDisconnected += OnDisconnectClient;
             SetStartCollection(accessNameClientForAdd);
@@ -41,47 +43,70 @@ namespace Client.ViewModels
         }
         private void SetStartCollection(Dictionary<string, bool> accessNameClientForAdd)
         {
-            foreach (var KeyValue in accessNameClientForAdd)
+            App.Current.Dispatcher.Invoke(delegate
             {
-                ClientsAccessableCollection.Add(new InfoAboutClient(KeyValue.Key, KeyValue.Value));
-            }
+                foreach (var KeyValue in accessNameClientForAdd)
+                {
+                    ClientsAccessableCollection.Add(new InfoAboutClient(KeyValue.Key, KeyValue.Value));
+                }
+            });
         }
-        public void OnConnectAnotherClient(object sender, AnotherClientConnectedEventArgs container)
+        private void OnConnectAnotherClient(object sender, AnotherClientConnectedEventArgs container)
         {
-            foreach (var item in ClientsAccessableCollection.ToList())
+            App.Current.Dispatcher.Invoke(delegate
             {
-                if(item.NameClient == container.NameClient)
+                foreach (var item in ClientsAccessableCollection.ToList())
                 {
-                    item.ActivityClient = true;
+                    if (item.NameClient == container.NameClient)
+                    {
+                        item.ActivityClient = true;
+                    }
+                    else
+                    {
+                        ClientsAccessableCollection.Add(new InfoAboutClient(container.NameClient, true));
+                    }
                 }
-                else
-                {
-                    ClientsAccessableCollection.Add(new InfoAboutClient(container.NameClient, true));
-                }
-            }
+            });
         }
-        public void OnDisconnectClient(object sender, AnotherClientDisconnectedEventArgs container)
+        private void OnDisconnectClient(object sender, AnotherClientDisconnectedEventArgs container)
         {
-            foreach (var item in ClientsAccessableCollection)
+            App.Current.Dispatcher.Invoke(delegate
             {
-                if (item.NameClient == container.NameClient)
+                foreach (var item in ClientsAccessableCollection)
                 {
-                    item.ActivityClient = false;
+                    if (item.NameClient == container.NameClient)
+                    {
+                        item.ActivityClient = false;
+                    }
                 }
-            }
+            });
         }
-        public void AddClientToChat()
+        private void OnRemovedClientFormChat(object sender, RemovedClientsFromChatForVMEventArgs container)
         {
-            List<string> ClientForAdd = new List<string>();
-            foreach(var item in ClientsAccessableCollection.ToList())
+            App.Current.Dispatcher.Invoke(delegate
             {
-                if(item.IsSelectedClient)
+                foreach (var KeyValue in container.Clients)
                 {
-                    ClientForAdd.Add(item.NameClient);
-                    item.IsSelectedClient = false;
+                    ClientsAccessableCollection.Add(new InfoAboutClient(KeyValue.Key, KeyValue.Value));
                 }
-            }
-            _handlerChats.AddClientToChat(_numberChat, ClientForAdd);
+            });
+        }
+        private void AddClientToChat()
+        {
+            App.Current.Dispatcher.Invoke(delegate
+            {
+                List<string> ClientForAdd = new List<string>();
+                foreach (var item in ClientsAccessableCollection.ToList())
+                {
+                    if (item.IsSelectedClient)
+                    {
+                        ClientForAdd.Add(item.NameClient);
+                        item.IsSelectedClient = false;
+                        ClientsAccessableCollection.Remove(item);
+                    }
+                }
+                _handlerChats.AddClientToChat(_numberChat, ClientForAdd);
+            });
         }
     }
 }

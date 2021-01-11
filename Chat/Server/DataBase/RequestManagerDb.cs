@@ -163,6 +163,7 @@
                 {
                     ChatID = numberChat,
                 };
+                db.PoolChat.Attach(chat);
                 db.PoolChat.Remove(chat);
 
                 int taskDb = await db.SaveChangesAsync();
@@ -206,6 +207,7 @@
                         ClientID = client,
                         ChatID = container.NumberChat,
                     };
+                    db.ClientsInChats.Attach(clientInChat);
                     db.ClientsInChats.Remove(clientInChat);
                 }
 

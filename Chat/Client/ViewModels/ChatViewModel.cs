@@ -26,6 +26,7 @@ namespace Client.ViewModels
         private string _textToolTip;
         private IHandlerMessages _handlerMessages;
         private Visibility _visibilityView;
+        public bool _chatIsLoad { get; private set; }
         public Visibility VisibilityChat
         {
             get => _visibilityView;
@@ -62,7 +63,6 @@ namespace Client.ViewModels
 
         public ChatViewModel(AccessableClientForAddViewModel allClientsViewModel, ClientsAtChatViewModel clientsAtChatViewModel, IHandlerMessages handlerMessages, int numberChat)
         {
-
             _clientsAtChatViewModel = clientsAtChatViewModel;
             _allClientsViewModel = allClientsViewModel;
             _controlVisibilityViewClients = new ControlVisibilityViewClientsViewModel(_allClientsViewModel, clientsAtChatViewModel);
@@ -71,7 +71,8 @@ namespace Client.ViewModels
             _textToolTip = "Добавить клиентов в чат из общего списка";
             IsViewClientsChanged = true;
 
-            
+            _chatIsLoad = false;
+
 
             _handlerMessages = handlerMessages;
             _handlerMessages.MessageReceived += OnMessageReceived;
@@ -130,6 +131,7 @@ namespace Client.ViewModels
                     {
                         MessagesCollection.Add(string.Format("Sender: {0}\nMessage: {1}\nTime: {2}", item.FromMessage, item.Text, item.Time));
                     }
+                    _chatIsLoad = true;
                 });
             }
         }

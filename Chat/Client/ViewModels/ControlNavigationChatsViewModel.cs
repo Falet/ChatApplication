@@ -58,12 +58,14 @@ namespace Client.ViewModels
             _handlerChats.AddedChat += OnCreateChat;
             _handlerConnection = handlerConnection;
             _handlerMessages = handlerMessages;
-
         }
         private void ChangeViewModelOfViewChat()
         {
             CurrentViewModelChat = _selectedItemChat;
-            _handlerMessages.ConnectToChat(CurrentViewModelChat.NumberChat);
+            if (!CurrentViewModelChat._chatIsLoad)
+            {
+                _handlerMessages.ConnectToChat(CurrentViewModelChat.NumberChat);
+            }
         }
         private void OnCreateChat(object sender, AddedChatEventArgs container)
         {
@@ -75,10 +77,7 @@ namespace Client.ViewModels
                                                                                   container.NumberChat, container.NameOfClientsForAdd);
                 ChatViewModel newChat = new ChatViewModel(allClientViewModel, clientsAtChat, _handlerMessages, container.NumberChat);
 
-            
                 ChatCollection.Add(newChat);
-
-                SelectedChat = newChat;
             });
             
         }
