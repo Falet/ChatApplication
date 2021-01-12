@@ -176,7 +176,7 @@
     <Compile Include="Model\[EventArgs]\MessageReceivedForVMEventArgs.cs" />
     <Compile Include="Model\[EventArgs]\NumbersOfChatsReceivedEventArgs.cs" />
     <Compile Include="Model\[EventArgs]\ReceivedInfoAboutAllClientsEventArgs.cs" />
-    <Compile Include="Model\[EventArgs]\RemovedClientsFromChatForVMEventArgs.cs" />
+    <Compile Include="Model\[EventArgs]\RemovedClientsFromChatForVmEventArgs.cs" />
     <Compile Include="Model\[Interfaces]\IClientInfo.cs" />
     <Compile Include="Model\[Interfaces]\IHandlerChats.cs" />
     <Compile Include="Model\[Interfaces]\IHandlerConnection.cs" />

@@ -35,8 +35,10 @@ namespace Client.ViewModels
             
             _clientsCollection = new ObservableCollection<InfoAboutClient>();
             _handlerChats = handlerChats;
+            _handlerChats.AddedClientsToChat += OnAddedClientsToChat;
             _handlerChats.RemovedClientsFromChat += OnRemovedClientFormChat;
             handlerConnection.AnotherClientConnected += OnConnectAnotherClient;
+            handlerConnection.AnotherNewClientConnected += OnAnotherNewClientConnected;
             handlerConnection.AnotherClientDisconnected += OnDisconnectClient;
             SetStartCollection(accessNameClientForAdd);
             AddClientToChatButton = new DelegateCommand(AddClientToChat);
@@ -68,6 +70,13 @@ namespace Client.ViewModels
                 }
             });
         }
+        private void OnAnotherNewClientConnected(object sender, AnotherClientConnectedEventArgs container)
+        {
+            App.Current.Dispatcher.Invoke(delegate
+            {
+                 ClientsAccessableCollection.Add(new InfoAboutClient(container.NameClient, true));
+            });
+        }
         private void OnDisconnectClient(object sender, AnotherClientDisconnectedEventArgs container)
         {
             App.Current.Dispatcher.Invoke(delegate
@@ -91,6 +100,16 @@ namespace Client.ViewModels
                 }
             });
         }
+        private void OnAddedClientsToChat(object sender, AddedClientsToChatClientEvenArgs container)
+        {
+            App.Current.Dispatcher.Invoke(delegate
+            {
+                foreach (var KeyValue in container.NameOfClients)
+                {
+                    ClientsAccessableCollection.Remove(new InfoAboutClient(KeyValue.Key, KeyValue.Value));
+                }
+            });
+        }
         private void AddClientToChat()
         {
             App.Current.Dispatcher.Invoke(delegate
@@ -102,11 +121,11 @@ namespace Client.ViewModels
                     {
                         ClientForAdd.Add(item.NameClient);
                         item.IsSelectedClient = false;
-                        ClientsAccessableCollection.Remove(item);
                     }
                 }
                 _handlerChats.AddClientToChat(_numberChat, ClientForAdd);
             });
         }
+
     }
 }

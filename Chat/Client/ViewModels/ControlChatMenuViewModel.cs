@@ -49,6 +49,8 @@ namespace Client.ViewModels
             _handlerConnection = handlerConnection;
             _handlerConnection.ClientConnected += OnConnectToServer;
 
+            handlerChats.AddedChat += OnAddedChat;
+
             _controlVisibilityElements = new ControlVisibilityElementsOfChatMenuViewModel(handlerConnection, handlerMessages, handlerChats);
 
             _textButtonChangeViewClients = "Создать";
@@ -57,6 +59,13 @@ namespace Client.ViewModels
 
             CreateChat = new DelegateCommand(ChangeViewClients).ObservesProperty(() => TextButtonChangeViewChatMenu);
             CreateChat.ObservesProperty(() => TextToolTip);
+        }
+        private void OnAddedChat(object sender, AddedChatEventArgs container)
+        {
+            TextButtonChangeViewChatMenu = "Создать";
+            ControlVisibilityElements.ControlNavigationChatsViewModel.VisibilityNavigationChat = Visibility.Visible;
+            ControlVisibilityElements.CreateChat.VisibilityCreateChat = Visibility.Hidden;
+            TextToolTip = "Создать чат";
         }
         private void ChangeViewClients()
         {

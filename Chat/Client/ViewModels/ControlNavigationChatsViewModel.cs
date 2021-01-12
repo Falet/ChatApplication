@@ -22,6 +22,7 @@ namespace Client.ViewModels
         private IHandlerConnection _handlerConnection;
         private ChatViewModel _selectedItemChat;
         private string _textButtonChangeViewClients;
+        private ChatViewModel _currentViewModelChat;
         public Visibility VisibilityNavigationChat
         {
             get => _visibilityView;
@@ -42,7 +43,7 @@ namespace Client.ViewModels
             get => _textButtonChangeViewClients;
             set => SetProperty(ref _textButtonChangeViewClients, value);
         }
-        private ChatViewModel _currentViewModelChat;
+        
         public ChatViewModel CurrentViewModelChat
         {
             get => _currentViewModelChat;
@@ -56,12 +57,20 @@ namespace Client.ViewModels
 
             _handlerChats = handlerChats;
             _handlerChats.AddedChat += OnCreateChat;
+            _handlerChats.RemovedChat += OnRemovedChat;
             _handlerConnection = handlerConnection;
             _handlerMessages = handlerMessages;
         }
         private void ChangeViewModelOfViewChat()
         {
-            CurrentViewModelChat = _selectedItemChat;
+            if (SelectedChat != null)
+            {
+                CurrentViewModelChat = SelectedChat;
+            }
+            else
+            {
+                return;
+            }
             if (!CurrentViewModelChat._chatIsLoad)
             {
                 _handlerMessages.ConnectToChat(CurrentViewModelChat.NumberChat);
@@ -79,7 +88,19 @@ namespace Client.ViewModels
 
                 ChatCollection.Add(newChat);
             });
-            
+        }
+        private void OnRemovedChat(object sender, RemovedChatEventArgs container)
+        {
+            App.Current.Dispatcher.Invoke(delegate
+            {
+                foreach(var item in ChatCollection.ToList())
+                {
+                    if(item.NumberChat == container.NumberChat)
+                    {
+                        ChatCollection.Remove(item);
+                    }
+                }
+            });
         }
     }
 }

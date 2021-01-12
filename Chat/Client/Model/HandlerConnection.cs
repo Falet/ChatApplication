@@ -18,6 +18,7 @@ namespace Client.Model
         public event EventHandler<ClientConnectedToServerEventArgs> ClientConnected;
         public event EventHandler<ReceivedInfoAboutAllClientsEventArgs> ReceivedInfoAboutAllClients;
         public event EventHandler<AnotherClientConnectedEventArgs> AnotherClientConnected;
+        public event EventHandler<AnotherClientConnectedEventArgs> AnotherNewClientConnected;
 
         public HandlerConnection(IClientInfo clientInfo, ITransportClient transportClient, IHandlerResponseFromServer handlerResponseFromServer)
         {
@@ -70,12 +71,14 @@ namespace Client.Model
                 {
                     InfoClientsAtChat[container.NameClient] = true;
                 }
+                AnotherClientConnected?.Invoke(this, new AnotherClientConnectedEventArgs(container.NameClient));
             }
             else
             {
                 InfoClientsAtChat.Add(container.NameClient, true);
+                AnotherNewClientConnected?.Invoke(this, new AnotherClientConnectedEventArgs(container.NameClient));
             }
-            AnotherClientConnected?.Invoke(this, new AnotherClientConnectedEventArgs(container.NameClient));
+            
         }
         private void OnReceivedInfoAboutAllClients(object sender, ReceivedInfoAboutAllClientsEventArgs container)
         {

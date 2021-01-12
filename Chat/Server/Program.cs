@@ -15,7 +15,6 @@
         {
             try
             {
-                //var networkManager = new NetworkManager(TypeReceivedConfig.File);
                 IUnityContainer container = new UnityContainer();
 
                 ConfigServer _ConfigServer = ConfigurationServer.ReadConfigFromFile("user.json");

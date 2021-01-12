@@ -4,6 +4,7 @@
     {
         #region Properties
 
+        public string NameOfClient { get; }
         public int NumberChat { get; }
 
         #endregion Properties
@@ -11,8 +12,9 @@
 
         #region Constructors
 
-        public RemoveChatResponse(int numberChat)
+        public RemoveChatResponse(string nameOfClient, int numberChat)
         {
+            NameOfClient = nameOfClient;
             NumberChat = numberChat;
         }
 

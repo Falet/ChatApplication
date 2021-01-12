@@ -14,6 +14,7 @@ namespace Client.Model
         event EventHandler<AnotherClientConnectedEventArgs> AnotherClientConnected;
         event EventHandler<AnotherClientDisconnectedEventArgs> AnotherClientDisconnected;
         event EventHandler<ReceivedInfoAboutAllClientsEventArgs> ReceivedInfoAboutAllClients;
+        event EventHandler<AnotherClientConnectedEventArgs> AnotherNewClientConnected;
         void Connect(string ip, string port, string protocol);
         void Send(string login);
     }

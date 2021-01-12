@@ -21,6 +21,7 @@ namespace Client.Model
         public event EventHandler<AnotherClientDisconnectedEventArgs> AnotherClientDisconnected;
         public event EventHandler<NumbersOfChatsReceivedEventArgs> ResponseNumbersChats;
         public event EventHandler<ReceivedInfoAboutAllClientsEventArgs> ReceivedInfoAboutAllClients;
+        public event EventHandler<RemovedChatEventArgs> RemovedChat;
 
         public void ParsePacket(MessageContainer container)
         {
@@ -60,6 +61,12 @@ namespace Client.Model
                     {
                         var addNewChatResponse = ((JObject)container.Payload).ToObject(typeof(AddNewChatResponse)) as AddNewChatResponse;
                         AddedChat?.Invoke(this, new AddedNewChatModelEventArgs(addNewChatResponse.ClientCreator, addNewChatResponse.NumberChat, addNewChatResponse.Clients));
+                        break;
+                    }
+                case nameof(RemoveChatResponse):
+                    {
+                        var removeChatResponse = ((JObject)container.Payload).ToObject(typeof(RemoveChatResponse)) as RemoveChatResponse;
+                        RemovedChat?.Invoke(this, new RemovedChatEventArgs(removeChatResponse.NameOfClient, removeChatResponse.NumberChat));
                         break;
                     }
                 case nameof(AddNewClientToChatResponse):

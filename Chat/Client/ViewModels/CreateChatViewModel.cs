@@ -37,6 +37,9 @@ namespace Client.ViewModels
             _handlerChats.AddedChat += OnCreatedChat;
             _handlerConnection = handlerConnection;
             _handlerConnection.ReceivedInfoAboutAllClients += OnReceivedInfoAboutAllClients;
+            _handlerConnection.AnotherClientConnected += OnConnectAnotherClient;
+            _handlerConnection.AnotherNewClientConnected += OnConnectAnotherNewClient;
+            _handlerConnection.AnotherClientDisconnected += OnDisconnectAnotherClient;
             _clientsCollection = new ObservableCollection<InfoAboutClient>();
             CreateChatButton = new DelegateCommand(CreateChat);
         }
@@ -71,24 +74,27 @@ namespace Client.ViewModels
         {
             App.Current.Dispatcher.Invoke(delegate
             {
-                foreach (var item in ClientsCollection)
+                foreach (var item in ClientsCollection.ToList())
                 {
                     if (item.NameClient == container.NameClient)
                     {
                         item.ActivityClient = true;
                     }
-                    else
-                    {
-                        ClientsCollection.Add(new InfoAboutClient(container.NameClient, true));
-                    }
                 }
             });
         }
-        public void OnDisconnectClient(object sender, ClientDisconnectedEventArgs container)
+        public void OnConnectAnotherNewClient(object sender, AnotherClientConnectedEventArgs container)
         {
             App.Current.Dispatcher.Invoke(delegate
             {
-                foreach (var item in ClientsCollection)
+                ClientsCollection.Add(new InfoAboutClient(container.NameClient, true));
+            });
+        }
+        public void OnDisconnectAnotherClient(object sender, AnotherClientDisconnectedEventArgs container)
+        {
+            App.Current.Dispatcher.Invoke(delegate
+            {
+                foreach (var item in ClientsCollection.ToList())
                 {
                     if (item.NameClient == container.NameClient)
                     {

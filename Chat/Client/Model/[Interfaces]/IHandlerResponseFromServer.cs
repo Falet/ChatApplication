@@ -21,6 +21,7 @@ namespace Client.Model
         event EventHandler<AnotherClientDisconnectedEventArgs> AnotherClientDisconnected;
         event EventHandler<NumbersOfChatsReceivedEventArgs> ResponseNumbersChats;
         event EventHandler<ReceivedInfoAboutAllClientsEventArgs> ReceivedInfoAboutAllClients;
+        event EventHandler<RemovedChatEventArgs> RemovedChat;
         void ParsePacket(MessageContainer container);
     }
 }

@@ -15,6 +15,7 @@ namespace Client.Model
         public event EventHandler<AddedClientsToChatClientEvenArgs> AddedClientsToChat;
         public event EventHandler<RemovedClientsFromChatForVMEventArgs> RemovedClientsFromChat;
         public event EventHandler<NumbersOfChatsReceivedEventArgs> ResponseNumbersChats;
+        public event EventHandler<RemovedChatEventArgs> RemovedChat;
 
         public HandlerChats(ITransportClient transportClient,IHandlerConnection handlerConnection, IHandlerResponseFromServer handlerResponseFromServer, IClientInfo clientInfo)
         {
@@ -26,6 +27,7 @@ namespace Client.Model
             handlerResponseFromServer.RemovedClientsFromChat += OnRemovedClientsFromChat;
             handlerResponseFromServer.ResponseNumbersChats += OnResponseNumbersChats;
             handlerResponseFromServer.ReceivedInfoAboutAllClients += OnReceivedInfoAboutAllClients;
+            handlerResponseFromServer.RemovedChat += OnRemovedChat;
         }
         public void AddChat(List<string> namesOfClients)
         {
@@ -62,6 +64,10 @@ namespace Client.Model
                 }
             }
             AddedChat?.Invoke(this, new AddedChatEventArgs(container.ClientCreator, infoClientsAtChat, infoClientsForAdd, container.NumberChat));
+        }
+        private void OnRemovedChat(object sender, RemovedChatEventArgs container)
+        {
+            RemovedChat?.Invoke(this, new RemovedChatEventArgs(container.NameOfClient, container.NumberChat));
         }
         private void OnAddedClientsToChat(object sender, AddedClientsToChatEventArgs container)
         {

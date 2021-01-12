@@ -49,7 +49,6 @@ namespace Client.ViewModels
                 if (item.IsSelectedClient)
                 {
                     ClientForRemove.Add(item.NameClient);
-                    CollectionClientsAtChat.Remove(item);
                 }
             }
             _handlerChats.RemoveClientFromChat(_numberChat, ClientForRemove);
@@ -65,7 +64,7 @@ namespace Client.ViewModels
         {
             App.Current.Dispatcher.Invoke(delegate
             {
-                foreach (var KeyValue in clientForAdd)
+                foreach(var KeyValue in clientForAdd)
                 {
                     CollectionClientsAtChat.Add(new InfoAboutClient(KeyValue.Key, KeyValue.Value));
                 }
@@ -73,13 +72,17 @@ namespace Client.ViewModels
         }
         private void OnClientRemovedFromChat(object sender, RemovedClientsFromChatForVMEventArgs container)
         {
-            App.Current.Dispatcher.Invoke(delegate
+            if(_numberChat == container.NumberChat)
             {
-                foreach (var KeyValue in container.Clients)
+                App.Current.Dispatcher.Invoke(delegate
                 {
-                    CollectionClientsAtChat.Remove(new InfoAboutClient(KeyValue.Key, KeyValue.Value));
-                }
-            });
+                    foreach (var KeyValue in container.Clients)
+                    {
+                        //Исправить, ненаходить нужный элемент хотя он есть
+                        CollectionClientsAtChat.Remove(new InfoAboutClient(KeyValue.Key, KeyValue.Value));
+                    }
+                });
+            }
         }
         public void OnConnectedAnotherClient(object sender, AnotherClientConnectedEventArgs container)
         {
