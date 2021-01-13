@@ -78,8 +78,13 @@ namespace Client.ViewModels
                 {
                     foreach (var KeyValue in container.Clients)
                     {
-                        //Исправить, ненаходить нужный элемент хотя он есть
-                        CollectionClientsAtChat.Remove(new InfoAboutClient(KeyValue.Key, KeyValue.Value));
+                        foreach(var item in CollectionClientsAtChat.ToList())
+                        {
+                            if(item.NameClient == KeyValue.Key)
+                            {
+                                CollectionClientsAtChat.Remove(item);
+                            }
+                        }
                     }
                 });
             }

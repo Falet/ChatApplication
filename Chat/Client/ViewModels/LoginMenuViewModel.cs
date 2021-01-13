@@ -68,7 +68,7 @@ namespace Client.ViewModels
 
             _visibilityView = Visibility.Visible;
 
-            IP = "192.168.37.106";
+            IP = "192.168.0.104";
             Port = "35";
 
             _textError = null;

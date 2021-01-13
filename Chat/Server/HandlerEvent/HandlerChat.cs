@@ -78,10 +78,6 @@ namespace Server.Network
                     //Ошибка добавления чата
                 }
             }
-            else
-            {
-                //Ошибка, не существует клиента
-            }
         }
         public async void OnRemovedChat(object sender, RemovedChatEventArgs container)
         {
@@ -106,10 +102,6 @@ namespace Server.Network
                         //Ошибка на удаление в БД
                     }
                 }
-            }
-            else
-            {
-                //Ошибка
             }
         }
 
@@ -157,10 +149,6 @@ namespace Server.Network
                     }
                 }
             }
-            else
-            {
-                //Ошибка
-            }
         }
         public async void OnRemovedClientsFromChat(object sender, RemovedClientsFromChatEventArgs container)
         {
@@ -196,10 +184,6 @@ namespace Server.Network
                         //Ошибка на удаление в БД
                     }
                 }
-            }
-            else
-            {
-                //Ошибка
             }
         }
         public async void OnRequestNumbersChats(object sender, ClientRequestedNumbersChatEventArgs container)

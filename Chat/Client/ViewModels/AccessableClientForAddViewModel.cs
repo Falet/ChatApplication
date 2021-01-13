@@ -63,10 +63,6 @@ namespace Client.ViewModels
                     {
                         item.ActivityClient = true;
                     }
-                    else
-                    {
-                        ClientsAccessableCollection.Add(new InfoAboutClient(container.NameClient, true));
-                    }
                 }
             });
         }
@@ -92,23 +88,35 @@ namespace Client.ViewModels
         }
         private void OnRemovedClientFormChat(object sender, RemovedClientsFromChatForVMEventArgs container)
         {
-            App.Current.Dispatcher.Invoke(delegate
+            if(container.NumberChat == _numberChat)
             {
-                foreach (var KeyValue in container.Clients)
+                App.Current.Dispatcher.Invoke(delegate
                 {
-                    ClientsAccessableCollection.Add(new InfoAboutClient(KeyValue.Key, KeyValue.Value));
-                }
-            });
+                    foreach (var KeyValue in container.Clients)
+                    {
+                        ClientsAccessableCollection.Add(new InfoAboutClient(KeyValue.Key, KeyValue.Value));
+                    }
+                });
+            }
         }
         private void OnAddedClientsToChat(object sender, AddedClientsToChatClientEvenArgs container)
         {
-            App.Current.Dispatcher.Invoke(delegate
+            if(container.NumberChat == _numberChat)
             {
-                foreach (var KeyValue in container.NameOfClients)
+                App.Current.Dispatcher.Invoke(delegate
                 {
-                    ClientsAccessableCollection.Remove(new InfoAboutClient(KeyValue.Key, KeyValue.Value));
-                }
-            });
+                    foreach (var KeyValue in container.NameOfClients)
+                    {
+                        foreach (var item in ClientsAccessableCollection.ToList())
+                        {
+                            if (item.NameClient == KeyValue.Key)
+                            {
+                                ClientsAccessableCollection.Remove(item);
+                            }
+                        }
+                    }
+                });
+            }
         }
         private void AddClientToChat()
         {
