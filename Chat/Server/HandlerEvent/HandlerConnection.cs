@@ -26,7 +26,6 @@ namespace Server.Network
 
 		private IHandlerRequestToData _data;
         private ITransportServer _server;
-		private HandlerChat _chats;
 
 		#endregion Fields
 
@@ -36,13 +35,10 @@ namespace Server.Network
 
             _server.ClientConnected += OnConnect;
             _server.ClientDisconnected += OnDisconnect;
+			_server.RequestInfoAllClient += OnClientInfo;
 
             _data = data;
             cachedClientName = _data.GetInfoAboutAllClient();
-		}
-		public void AddChats(HandlerChat chats)
-        {
-			_chats = chats;
 		}
 		public async void OnConnect(object sender, ClientConnectedEventArgs container)
 		{
@@ -50,10 +46,16 @@ namespace Server.Network
 			{
 				if (clientGuid == Guid.Empty)
 				{
-					clientGuid = container.ClientId;
-					var SendMessageToServer = Task.Run(() =>
-					_server.SendAll(Container.GetContainer(nameof(ConnectionNoticeForClients), new ConnectionNoticeForClients(container.ClientName)))
+					cachedClientName.TryUpdate(container.ClientName, container.ClientId, Guid.Empty);
+
+					var SendMessage = Task.Run(() =>
+					_server.Send(new List<Guid> { container.ClientId },Container.GetContainer(nameof(ConnectionResponse), new ConnectionResponse(ResultRequest.Ok,container.ClientName)))
 					);
+					var SendMessageAll = Task.Run(() =>
+					_server.SendAll(container.ClientId, Container.GetContainer(nameof(ConnectionNoticeForClients), new ConnectionNoticeForClients(container.ClientName)))
+					);
+
+					_server.SetLoginConnection(container.ClientId, container.ClientName);
 				}
 				else
 				{
@@ -69,9 +71,14 @@ namespace Server.Network
 			{
 				cachedClientName.TryAdd(container.ClientName,  container.ClientId);
 
-				var SendMessageToServer = Task.Run(() =>
-					_server.SendAll(Container.GetContainer(nameof(ConnectionNoticeForClients), new ConnectionNoticeForClients(container.ClientName)))
+				var SendMessage = Task.Run(() =>
+					_server.Send(new List<Guid> { container.ClientId }, Container.GetContainer(nameof(ConnectionResponse), new ConnectionResponse(ResultRequest.Ok, container.ClientName)))
+					);
+				var SendMessageAll = Task.Run(() =>
+					_server.SendAll(container.ClientId, Container.GetContainer(nameof(ConnectionNoticeForClients), new ConnectionNoticeForClients(container.ClientName)))
 				);
+
+				_server.SetLoginConnection(container.ClientId, container.ClientName);
 
 				if (!await Task.Run(() => _data.AddNewClient(new ClientInfo { NameOfClient = container.ClientName })))
 				{
@@ -81,41 +88,37 @@ namespace Server.Network
 		}
 		public void OnDisconnect(object sender, ClientDisconnectedEventArgs container)
 		{
-			if (cachedClientName.TryGetValue(container.NameOfClient, out Guid clientGuid) && clientGuid != Guid.Empty)
+			if (cachedClientName.TryGetValue(container.NameClient, out Guid clientGuid))
 			{
-				var SendMessageDisconnectToServer = Task.Run(() => _server.FreeConnection(clientGuid));
-
 				var SendMessageToServer = Task.Run(() =>
-					_server.SendAll(Container.GetContainer(nameof(DisconnectRequest), new DisconnectRequest(container.NameOfClient)))
+					_server.SendAll(clientGuid, Container.GetContainer(nameof(DisconnectNotice), new DisconnectNotice(container.NameClient)))
 				);
 
-				cachedClientName.TryUpdate(container.NameOfClient, Guid.Empty, clientGuid);
+				cachedClientName.TryUpdate(container.NameClient, Guid.Empty, clientGuid);
 			}
 		}
-
-		//Если не будет существовать общего чата, то нужно будет рассылать сообщение о подключении только тем пользователям, 
-		//которые находятся в одном чате с подключившимся
-		/*private async Task ClientNotice(string nameClientConnected)//Доделать:рассылку другим пользователям, что зашел пользователь
-		{
-			List<Guid> ChatForNotice = new List<Guid>();
-			if(_cachedClientProperies.TryGetValue(nameClientConnected, out ClientProperties clientProperties))
-            {
-				foreach(var numberChat in clientProperties.NumbersChat)
-                {
-					if(_infoAllChat.TryGetValue(numberChat, out InfoChat infoChat))
+		public void OnClientInfo(object sender, InfoAboutAllClientsEventArgs container)
+        {
+			if(cachedClientName.TryGetValue(container.NameClient, out Guid clientGuid))
+			{
+				Dictionary<string, bool> ActivityClient = new Dictionary<string, bool>();
+				foreach (var item in cachedClientName)
+				{
+					if(item.Value == Guid.Empty)
                     {
-						foreach(var nameClient in infoChat.NameClients)
-                        {
-							if(_cachedClientProperies.TryGetValue(nameClient, out ClientProperties clientPropertiesForNotice) && clientPropertiesForNotice.IdConnection != Guid.Empty)
-                            {
-								ChatForNotice.Add(clientPropertiesForNotice.IdConnection);
-							}	
-						}
+						ActivityClient.Add(item.Key,false);
 					}
-                }
-				var DistinctListClients = ChatForNotice.Distinct().ToList();
-				await Task.Run(() => _server.Send(DistinctListClients, new ConnectionNoticeForClients(nameClientConnected).GetContainer()));
+                    else
+                    {
+						ActivityClient.Add(item.Key, true);
+					}
+				}
+				ActivityClient.Remove(container.NameClient);
+				var SendMessage = Task.Run(() =>
+				_server.Send(new List<Guid> { clientGuid }, Container.GetContainer(nameof(InfoAboutAllClientsResponse), 
+																					new InfoAboutAllClientsResponse(ActivityClient)))
+				);
 			}
-		}*/
+        }
 	}
 }

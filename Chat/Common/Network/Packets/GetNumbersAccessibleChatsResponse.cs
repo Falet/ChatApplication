@@ -1,25 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Common.Network.Packets
+﻿namespace Common.Network.Packets
 {
+    using System.Collections.Generic;
     public class GetNumbersAccessibleChatsResponse
     {
         #region Properties
 
-        public Dictionary<int, string> NumbersChatsForClient { get; }
-        public Dictionary<string, bool> InfoClientsAtChat { get; }
-        
+        public List<InfoAboutChat> AllInfoAboutChat { get; }
 
         #endregion Properties
 
         #region Constructors
 
-        public GetNumbersAccessibleChatsResponse(Dictionary<string, bool> infoClientsAtChat, Dictionary<int, string> numbersChatsForClient)
+        public GetNumbersAccessibleChatsResponse(List<InfoAboutChat> allInfoAboutChat)
         {
-            InfoClientsAtChat = infoClientsAtChat;
-            NumbersChatsForClient = numbersChatsForClient;
+            AllInfoAboutChat = allInfoAboutChat;
         }
 
         #endregion Constructors

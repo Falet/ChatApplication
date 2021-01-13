@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{ADF5DC77-28EF-49C0-819D-CA8914B62375}</ProjectGuid>
+    <ProjectGuid>{1FB61344-E1A0-41E7-B5D2-09F8ECDBFDD2}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Client</RootNamespace>
     <AssemblyName>Client</AssemblyName>
@@ -53,14 +53,12 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.2\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -76,6 +74,9 @@
     <Reference Include="Unity.Container, Version=5.11.8.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\packages\Unity.Container.5.11.8\lib\net47\Unity.Container.dll</HintPath>
     </Reference>
+    <Reference Include="websocket-sharp, Version=1.0.1.0, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebSocketSharp-netstandard.1.0.1\lib\net45\websocket-sharp.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -85,17 +86,38 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Views\GeneralChat.xaml.cs">
-      <DependentUpon>GeneralChat.xaml</DependentUpon>
+    <Compile Include="Model\[EventArgs]\AnotherClientDisconnectedEventArgs.cs" />
+    <Compile Include="ViewModels\AccessableClientForAddViewModel.cs" />
+    <Compile Include="ViewModels\ChatViewModel.cs" />
+    <Compile Include="ViewModels\ClientsAtChatViewModel.cs" />
+    <Compile Include="ViewModels\ControlChatMenuViewModel.cs" />
+    <Compile Include="ViewModels\ControlNavigationChatsViewModel.cs" />
+    <Compile Include="ViewModels\ControlVisibilityElementsOfChatMenuViewModel.cs" />
+    <Compile Include="ViewModels\ControlVisibilityViewClientsViewModel.cs" />
+    <Compile Include="ViewModels\CreateChatViewModel.cs" />
+    <Compile Include="ViewModels\EventLogViewModel.cs" />
+    <Compile Include="ViewModels\InfoAboutClient.cs" />
+    <Compile Include="ViewModels\LoginMenuViewModel.cs" />
+    <Compile Include="Views\AccessClientForAdd.xaml.cs">
+      <DependentUpon>AccessClientForAdd.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\PrivateChat.xaml.cs">
-      <DependentUpon>PrivateChat.xaml</DependentUpon>
+    <Compile Include="Views\Chat.xaml.cs">
+      <DependentUpon>Chat.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\EventLog.xaml.cs">
-      <DependentUpon>EventLog.xaml</DependentUpon>
+    <Compile Include="Views\ClientsAtChat.xaml.cs">
+      <DependentUpon>ClientsAtChat.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\UserControl1.xaml.cs">
-      <DependentUpon>UserControl1.xaml</DependentUpon>
+    <Compile Include="Views\ControlChatMenu.xaml.cs">
+      <DependentUpon>ControlChatMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ControlNavigationChats.xaml.cs">
+      <DependentUpon>ControlNavigationChats.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CreateChat.xaml.cs">
+      <DependentUpon>CreateChat.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LoginMenu.xaml.cs">
+      <DependentUpon>LoginMenu.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -109,25 +131,58 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\GeneralChat.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Views\AccessClientForAdd.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\PrivateChat.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Views\Chat.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\EventLog.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Views\ClientsAtChat.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\UserControl1.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Views\ControlChatMenu.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ControlNavigationChats.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\CreateChat.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\LoginMenu.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\ClientInfo.cs" />
+    <Compile Include="Model\HandlerChats.cs" />
+    <Compile Include="Model\HandlerConnection.cs" />
+    <Compile Include="Model\HandlerMessages.cs" />
     <Compile Include="Model\HandlerResponseFromServer.cs" />
+    <Compile Include="Model\WsClient.cs" />
+    <Compile Include="Model\[EventArgs]\AddedChatEventArgs.cs" />
+    <Compile Include="Model\[EventArgs]\AddedClientsToChatClientEvenArgs.cs" />
+    <Compile Include="Model\[EventArgs]\AddedNewChatModelEventArgs.cs" />
+    <Compile Include="Model\[EventArgs]\AnotherClientConnectedEventArgs.cs" />
+    <Compile Include="Model\[EventArgs]\ClientConnectedToChatEventArgs.cs" />
+    <Compile Include="Model\[EventArgs]\ClientConnectedToServerEventArgs.cs" />
+    <Compile Include="Model\[EventArgs]\MessageReceivedForVMEventArgs.cs" />
+    <Compile Include="Model\[EventArgs]\NumbersOfChatsReceivedEventArgs.cs" />
+    <Compile Include="Model\[EventArgs]\ReceivedInfoAboutAllClientsEventArgs.cs" />
+    <Compile Include="Model\[EventArgs]\RemovedClientsFromChatForVmEventArgs.cs" />
+    <Compile Include="Model\[Interfaces]\IClientInfo.cs" />
+    <Compile Include="Model\[Interfaces]\IHandlerChats.cs" />
+    <Compile Include="Model\[Interfaces]\IHandlerConnection.cs" />
+    <Compile Include="Model\[Interfaces]\IHandlerMessages.cs" />
+    <Compile Include="Model\[Interfaces]\IHandlerResponseFromServer.cs" />
+    <Compile Include="Model\[Interfaces]\ITransportClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -155,7 +210,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ViewModels\" />
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{ea008a83-88cf-4e35-a8ef-0ddb78ccd286}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

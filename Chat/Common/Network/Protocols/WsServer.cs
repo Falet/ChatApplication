@@ -25,12 +25,13 @@
         public event EventHandler<ClientConnectedEventArgs> ClientConnected;
         public event EventHandler<MessageReceivedEventArgs> MessageReceived;
         public event EventHandler<ConnectionToChatEventArgs> ConnectedToChat;
-        public event EventHandler<AddedChatEventArgs> AddedChat;
+        public event EventHandler<AddedNewChatEventArgs> AddedChat;
         public event EventHandler<RemovedChatEventArgs> RemovedChat;
         public event EventHandler<AddedClientsToChatEventArgs> AddedClientsToChat;
         public event EventHandler<RemovedClientsFromChatEventArgs> RemovedClientsFromChat;
         public event EventHandler<ClientDisconnectedEventArgs> ClientDisconnected;
         public event EventHandler<ClientRequestedNumbersChatEventArgs> RequestNumbersChats;
+        public event EventHandler<InfoAboutAllClientsEventArgs> RequestInfoAllClient;
 
         #endregion Event
 
@@ -40,14 +41,6 @@
         {
             _listenAddress = IPendPoint;
             _connections = new ConcurrentDictionary<Guid, WsConnection>();
-        }
-
-        #endregion Constructors
-
-        #region Methods
-
-        public void Start()
-        {
             _server = new WebSocketServer(_listenAddress.Address, _listenAddress.Port, false);
             _server.AddWebSocketService<WsConnection>("/",
                 client =>
@@ -55,21 +48,12 @@
                     client.AddServer(this);
                 });
             _server.Start();
+            Console.WriteLine("Start");
         }
 
-        public void Stop()
-        {
-            _server?.Stop();
-            _server = null;
+        #endregion Constructors
 
-            var connections = _connections.Select(item => item.Value).ToArray();
-            foreach (var connection in connections)
-            {
-                connection.Close();
-            }
-
-            _connections.Clear();
-        }
+        #region Methods
 
         public void AddConnection(WsConnection connection)
         {
@@ -86,44 +70,44 @@
                 case nameof(ConnectionRequest):
                 {
                     var connectionRequest = ((JObject)container.Payload).ToObject(typeof(ConnectionRequest)) as ConnectionRequest;
-                    ClientConnected?.Invoke(this, new ClientConnectedEventArgs(connection.Login, clientId));
+                    ClientConnected?.Invoke(this, new ClientConnectedEventArgs(connectionRequest.ClientName, clientId));
                     break;
                 }
-                case nameof(DisconnectRequest):
+                case nameof(InfoAboutAllClientsRequest):
                 {
-                    var connectionRequest = ((JObject)container.Payload).ToObject(typeof(ConnectionRequest)) as ConnectionRequest;
-                    ClientDisconnected?.Invoke(this, new ClientDisconnectedEventArgs(connection.Login));
+                    var infoClientRequest = ((JObject)container.Payload).ToObject(typeof(InfoAboutAllClientsRequest)) as InfoAboutAllClientsRequest;
+                    RequestInfoAllClient?.Invoke(this, new InfoAboutAllClientsEventArgs(infoClientRequest.NameClient));
                     break;
                 }
                 case nameof(MessageRequest):
                 {
                     var messageRequest = ((JObject)container.Payload).ToObject(typeof(MessageRequest)) as MessageRequest;
-                    MessageReceived?.Invoke(this, new MessageReceivedEventArgs(connection.Login, messageRequest.Message, messageRequest.NumberChat));
+                    MessageReceived?.Invoke(this, new MessageReceivedEventArgs(messageRequest.ClientName, messageRequest.Message, messageRequest.NumberChat));
                     break;
                 }
                 case nameof(ConnectToChatRequest):
                 {
                     var connectionToChat = ((JObject)container.Payload).ToObject(typeof(ConnectToChatRequest)) as ConnectToChatRequest;
-                    ConnectedToChat?.Invoke(this, new ConnectionToChatEventArgs(connection.Login, connectionToChat.NumberChat));
+                    ConnectedToChat?.Invoke(this, new ConnectionToChatEventArgs(connectionToChat.ClientName, connectionToChat.NumberChat));
                     break;
                 }
                 case nameof(AddNewChatRequest):
                 {
                     var addNewChatRequest = ((JObject)container.Payload).ToObject(typeof(AddNewChatRequest)) as AddNewChatRequest;
-                    AddedChat?.Invoke(this, new AddedChatEventArgs(connection.Login, addNewChatRequest.Clients));
+                    AddedChat?.Invoke(this, new AddedNewChatEventArgs(addNewChatRequest.NameClientSender, addNewChatRequest.Clients));
                     break;
                 }
                 case nameof(RemoveChatRequest):
                 {
                     var removeChatRequest = ((JObject)container.Payload).ToObject(typeof(RemoveChatRequest)) as RemoveChatRequest;
-                    RemovedChat?.Invoke(this, new RemovedChatEventArgs(connection.Login, removeChatRequest.NumberChat));
+                    RemovedChat?.Invoke(this, new RemovedChatEventArgs(removeChatRequest.NameOfRemover, removeChatRequest.NumberChat));
                     break;
                 }
                 case nameof(AddNewClientToChatRequest):
                 {
                     var addNewClientToChatRequest = ((JObject)container.Payload)
                                                 .ToObject(typeof(AddNewClientToChatRequest)) as AddNewClientToChatRequest;
-                    AddedClientsToChat?.Invoke(this, new AddedClientsToChatEventArgs(connection.Login,
+                    AddedClientsToChat?.Invoke(this, new AddedClientsToChatEventArgs(addNewClientToChatRequest.ClientName,
                                                                                  addNewClientToChatRequest.NumberChat,
                                                                                  addNewClientToChatRequest.Clients));
                     break;
@@ -132,7 +116,7 @@
                 {
                     var removeClientFromChatRequest = ((JObject)container.Payload)
                                                     .ToObject(typeof(RemoveClientFromChatRequest)) as RemoveClientFromChatRequest;
-                    RemovedClientsFromChat?.Invoke(this, new RemovedClientsFromChatEventArgs(connection.Login,
+                    RemovedClientsFromChat?.Invoke(this, new RemovedClientsFromChatEventArgs(removeClientFromChatRequest.ClientName,
                                                                                          removeClientFromChatRequest.NumberChat,
                                                                                          removeClientFromChatRequest.Clients));
                     break;
@@ -150,6 +134,10 @@
         public void FreeConnection(Guid ClientId)
         {
             _connections.TryRemove(ClientId, out WsConnection connection);
+            if(connection.Login != null)
+            {
+                ClientDisconnected.Invoke(this, new ClientDisconnectedEventArgs(ClientId, connection.Login));
+            }
         }
 
         public void Send(List<Guid> ListClientId, MessageContainer message)
@@ -161,11 +149,21 @@
                 connection.Send(message);
             }
         }
-        public void SendAll(MessageContainer message)
+        public void SendAll(Guid clientGuid, MessageContainer message)
         {
             foreach (var connection in _connections)
             {
-                connection.Value.Send(message);
+                if(connection.Key != clientGuid)
+                {
+                    connection.Value.Send(message);
+                }
+            }
+        }
+        public void SetLoginConnection(Guid clientGuid, string nameClient)
+        {
+            if(_connections.TryGetValue(clientGuid, out WsConnection wsConnection))
+            {
+                wsConnection.Login = nameClient;
             }
         }
         #endregion Methods

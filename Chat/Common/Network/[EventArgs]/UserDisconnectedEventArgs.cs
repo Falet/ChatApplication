@@ -1,18 +1,23 @@
-﻿namespace Common.Network
+﻿using System;
+
+namespace Common.Network
 {
     public class ClientDisconnectedEventArgs
     {
         #region Properties
 
-        public string NameOfClient { get; }
+        public Guid NameGuid { get; }
+
+        public string NameClient { get; }
 
         #endregion Properties
 
         #region Constructors
 
-        public ClientDisconnectedEventArgs(string nameOfClient)
+        public ClientDisconnectedEventArgs(Guid nameGuid, string nameClient)
         {
-            NameOfClient = nameOfClient;
+            NameGuid = nameGuid;
+            NameClient = nameClient;
         }
 
         #endregion Constructors

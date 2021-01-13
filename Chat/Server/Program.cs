@@ -15,7 +15,6 @@
         {
             try
             {
-                //var networkManager = new NetworkManager(TypeReceivedConfig.File);
                 IUnityContainer container = new UnityContainer();
 
                 ConfigServer _ConfigServer = ConfigurationServer.ReadConfigFromFile("user.json");
@@ -23,11 +22,13 @@
 
                 container.RegisterType<IHandlerRequestToData, RequestManagerDb>();
 
-                container.RegisterType<HandlerConnection>();
-                container.RegisterType<HandlerChat>();
-                container.RegisterType<HandlerMessage>();
+                container.RegisterSingleton<HandlerConnection>();
+                container.RegisterSingleton<HandlerChat>();
+                container.RegisterSingleton<HandlerMessage>();
 
                 container.Resolve<HandlerMessage>();
+
+                Console.ReadLine();
             }
             catch(Exception ex)
             {

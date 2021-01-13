@@ -12,12 +12,13 @@
         public event EventHandler<ClientConnectedEventArgs> ClientConnected;
         public event EventHandler<MessageReceivedEventArgs> MessageReceived;
         public event EventHandler<ConnectionToChatEventArgs> ConnectedToChat;
-        public event EventHandler<AddedChatEventArgs> AddedChat;
+        public event EventHandler<AddedNewChatEventArgs> AddedChat;
         public event EventHandler<RemovedChatEventArgs> RemovedChat;
         public event EventHandler<AddedClientsToChatEventArgs> AddedClientsToChat;
         public event EventHandler<RemovedClientsFromChatEventArgs> RemovedClientsFromChat;
         public event EventHandler<ClientDisconnectedEventArgs> ClientDisconnected;
         public event EventHandler<ClientRequestedNumbersChatEventArgs> RequestNumbersChats;
+        public event EventHandler<InfoAboutAllClientsEventArgs> RequestInfoAllClient;
 
         #endregion Event
 
@@ -52,11 +53,16 @@
             var buf = message.Payload.GetType();
         }
 
-
-        public void SendAll(MessageContainer message)
+        public void SendAll(Guid clientGuid, MessageContainer message)
         {
-
+            throw new NotImplementedException();
         }
+
+        public void SetLoginConnection(Guid clientGuid, string nameClient)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion Methods
     }
 }

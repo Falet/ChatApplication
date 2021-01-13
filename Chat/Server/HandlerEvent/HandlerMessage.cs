@@ -75,15 +75,15 @@
                     }
                 }
                 var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage,
-                                                                      Container.GetContainer(nameof(ConnectToChatResponse),
-                                                                      new MessageResponse(container.NameOfClient, container.Message, container.NumberChat)))
+                                                                      Container.GetContainer(nameof(MessageResponse),
+                                                                      new MessageResponse(new MessageInfo(container.NameOfClient, container.Message, DateTime.Now), container.NumberChat)))
                                                     );
 
                 DateTime time = DateTime.Now;
                 if (MessagesAtChat.TryGetValue(container.NumberChat, out List<MessageInfo> allMessageAtChat))
                 {
                     var lastValueMessages = allMessageAtChat;
-                    allMessageAtChat.Add(new MessageInfo { FromMessage = container.NameOfClient, Text = container.Message, Time = time });
+                    allMessageAtChat.Add(new MessageInfo(container.NameOfClient, container.Message, time));
                     MessagesAtChat.TryUpdate(container.NumberChat, allMessageAtChat, lastValueMessages);
                 }
 

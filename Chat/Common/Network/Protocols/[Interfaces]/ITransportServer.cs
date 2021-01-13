@@ -8,28 +8,27 @@
     {
         #region Events
 
-        public event EventHandler<ClientConnectedEventArgs> ClientConnected;
-        public event EventHandler<ClientDisconnectedEventArgs> ClientDisconnected;
-        public event EventHandler<MessageReceivedEventArgs> MessageReceived;
-        public event EventHandler<ConnectionToChatEventArgs> ConnectedToChat;
-        public event EventHandler<AddedChatEventArgs> AddedChat;
-        public event EventHandler<RemovedChatEventArgs> RemovedChat;
-        public event EventHandler<AddedClientsToChatEventArgs> AddedClientsToChat;
-        public event EventHandler<RemovedClientsFromChatEventArgs> RemovedClientsFromChat; 
-        public event EventHandler<ClientRequestedNumbersChatEventArgs> RequestNumbersChats;
+        event EventHandler<ClientConnectedEventArgs> ClientConnected;
+        event EventHandler<ClientDisconnectedEventArgs> ClientDisconnected;
+        event EventHandler<MessageReceivedEventArgs> MessageReceived;
+        event EventHandler<ConnectionToChatEventArgs> ConnectedToChat;
+        event EventHandler<AddedNewChatEventArgs> AddedChat;
+        event EventHandler<RemovedChatEventArgs> RemovedChat;
+        event EventHandler<AddedClientsToChatEventArgs> AddedClientsToChat;
+        event EventHandler<RemovedClientsFromChatEventArgs> RemovedClientsFromChat; 
+        event EventHandler<ClientRequestedNumbersChatEventArgs> RequestNumbersChats;
+        event EventHandler<InfoAboutAllClientsEventArgs> RequestInfoAllClient;
         #endregion Events
 
         #region Methods
 
-        public void Start();
+        void FreeConnection(Guid ClientId);
 
-        public void Stop();
+        void Send(List<Guid> ListClientId, MessageContainer message);
 
-        public void FreeConnection(Guid ClientId);
+        void SendAll(Guid clientGuid, MessageContainer message);
 
-        public void Send(List<Guid> ListClientId, MessageContainer message);
-
-        public void SendAll(MessageContainer message);
+        void SetLoginConnection(Guid clientGuid,string nameClient);
 
         #endregion Methods
     }

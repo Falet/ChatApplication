@@ -4,7 +4,7 @@
     public class AddNewChatRequest
     {
         #region Properties
-
+        public string NameClientSender { get; }
         public List<string> Clients { get; }
 
         #endregion Properties
@@ -12,26 +12,12 @@
 
         #region Constructors
 
-        public AddNewChatRequest(List<string> clients)
+        public AddNewChatRequest(string nameClientSender,List<string> clients)
         {
+            NameClientSender = nameClientSender;
             Clients = clients;
         }
 
         #endregion Constructors
-
-        #region Methods
-
-        public MessageContainer GetContainer()
-        {
-            var container = new MessageContainer
-            {
-                Identifier = nameof(AddNewChatRequest),
-                Payload = this
-            };
-
-            return container;
-        }
-
-        #endregion Methods
     }
 }

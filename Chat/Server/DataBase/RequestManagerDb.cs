@@ -7,6 +7,8 @@
     using System.Collections.Concurrent;
     using Common.Network;
     using Network;
+    using System.Data.Entity.Validation;
+
     public class RequestManagerDb : IHandlerRequestToData
     {
         #region Methods
@@ -74,7 +76,7 @@
                                          .Where(Client => Client.ChatID == item.ChatID);
                     foreach (var message in MessagesOfChats)
                     {
-                        messages.Add(new MessageInfo { FromMessage = message.From, Text = message.Text, Time = DateTime.Parse(message.Time) });
+                        messages.Add(new MessageInfo(message.From, message.Text, DateTime.Parse(message.Time)));
                     }
                     allMessage.TryAdd(item.ChatID, messages);
                 }
@@ -114,17 +116,24 @@
                     Time = container.Time.ToString(),
                 };
                 db.Messages.Add(message);
-
-                int taskDb = await db.SaveChangesAsync();
-                if (taskDb == 0)
+                try
                 {
-                    return false;
+                    int taskDb = await db.SaveChangesAsync();
+                    if (taskDb == 0)
+                    {
+                        return false;
+                    }
                 }
+                catch(Exception e)
+                {
+                   
+                }
+                
             }
             return true;
         }
 
-        public async Task<int> CreatNewChat(CreatingChatInfo container)
+        public int CreatNewChat(CreatingChatInfo container)
         {
             int numberChat = -1;
             using (var db = new DBChat())
@@ -154,6 +163,7 @@
                 {
                     ChatID = numberChat,
                 };
+                db.PoolChat.Attach(chat);
                 db.PoolChat.Remove(chat);
 
                 int taskDb = await db.SaveChangesAsync();
@@ -197,6 +207,7 @@
                         ClientID = client,
                         ChatID = container.NumberChat,
                     };
+                    db.ClientsInChats.Attach(clientInChat);
                     db.ClientsInChats.Remove(clientInChat);
                 }
 
