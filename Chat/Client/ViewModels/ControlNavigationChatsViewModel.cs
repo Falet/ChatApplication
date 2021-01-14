@@ -66,14 +66,10 @@ namespace Client.ViewModels
             if (SelectedChat != null)
             {
                 CurrentViewModelChat = SelectedChat;
-            }
-            else
-            {
-                return;
-            }
-            if (!CurrentViewModelChat._chatIsLoad)
-            {
-                _handlerMessages.ConnectToChat(CurrentViewModelChat.NumberChat);
+                if (!CurrentViewModelChat._chatIsLoad)
+                {
+                    _handlerMessages.ConnectToChat(CurrentViewModelChat.NumberChat);
+                }
             }
         }
         private void OnCreateChat(object sender, AddedChatEventArgs container)

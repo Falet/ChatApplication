@@ -8,13 +8,13 @@ namespace Client.Model
 {
     public class HandlerChats : IHandlerChats
     {
+        private List<InfoAboutChat> _infoAboutAllChat;
         private ITransportClient _transportClient;
         private IHandlerConnection _handlerConnection;
         private IClientInfo _clientInfo;
         public event EventHandler<AddedChatEventArgs> AddedChat;
         public event EventHandler<AddedClientsToChatClientEvenArgs> AddedClientsToChat;
         public event EventHandler<RemovedClientsFromChatForVMEventArgs> RemovedClientsFromChat;
-        public event EventHandler<NumbersOfChatsReceivedEventArgs> ResponseNumbersChats;
         public event EventHandler<RemovedChatEventArgs> RemovedChat;
 
         public HandlerChats(ITransportClient transportClient,IHandlerConnection handlerConnection, IHandlerResponseFromServer handlerResponseFromServer, IClientInfo clientInfo)
@@ -28,6 +28,9 @@ namespace Client.Model
             handlerResponseFromServer.ResponseNumbersChats += OnResponseNumbersChats;
             handlerResponseFromServer.ReceivedInfoAboutAllClients += OnReceivedInfoAboutAllClients;
             handlerResponseFromServer.RemovedChat += OnRemovedChat;
+            _handlerConnection.AnotherClientConnected += ;
+            _handlerConnection.AnotherNewClientConnected += ;
+            _handlerConnection.AnotherClientDisconnected += ;
         }
         public void AddChat(List<string> namesOfClients)
         {
@@ -95,9 +98,10 @@ namespace Client.Model
         }
         private void OnResponseNumbersChats(object sender, NumbersOfChatsReceivedEventArgs container)
         {
-            if(container.AllInfoAboutChat.Count != 0)
+            if (container.InfoAboutAllChat.Count != 0)
             {
-                foreach (var item in container.AllInfoAboutChat)
+                _infoAboutAllChat = new List<InfoAboutChat>(container.InfoAboutAllChat);
+                foreach (var item in _infoAboutAllChat)
                 {
                     OnAddedChat(this, new AddedNewChatModelEventArgs(item.NameCreator, item.NumberChat, item.NamesOfClients));
                 }

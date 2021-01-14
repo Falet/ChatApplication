@@ -1,23 +1,12 @@
-﻿using Client.Model;
-using Prism.Commands;
-using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-
-
-namespace Client.ViewModels
+﻿namespace Client.ViewModels
 {
     using Common.Network;
-    using Common.Network.Packets;
-    using System.Net;
-    using System.Threading;
-
+    using Client.Model;
+    using Prism.Commands;
+    using Prism.Mvvm;
+    using System.Linq;
+    using System.Text.RegularExpressions;
+    using System.Windows;
     public class LoginMenuViewModel : BindableBase
     {
         private Visibility _visibilityView;
@@ -29,7 +18,6 @@ namespace Client.ViewModels
         private IHandlerConnection _handlerConnection;
         private Regex regexIP;
         private Regex regexLogin;
-        IClientInfo _clientInfo;
         public Visibility VisibilityLoginMenu
         {
             get => _visibilityView;
@@ -62,10 +50,8 @@ namespace Client.ViewModels
             get => _comboBoxItemSelected;
             set => SetProperty(ref _comboBoxItemSelected, value);
         }
-        public LoginMenuViewModel(IHandlerConnection handlerConnection, IClientInfo clientInfo)
+        public LoginMenuViewModel(IHandlerConnection handlerConnection)
         {
-            _clientInfo = clientInfo;
-
             _visibilityView = Visibility.Visible;
 
             IP = "192.168.0.104";
@@ -86,7 +72,6 @@ namespace Client.ViewModels
         private void ConnectToServer()
         {
             _handlerConnection.Connect(IP, Port, Protocol);
-            Thread.Sleep(100);
             _handlerConnection.Send(Login);
         }
         private bool IsTrueDataForSignIn()

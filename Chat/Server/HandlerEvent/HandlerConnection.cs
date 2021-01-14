@@ -60,11 +60,10 @@ namespace Server.Network
 				else
 				{
 					var SendMessageToServer = Task.Run(() =>
-					_server.Send(new List<Guid>() { clientGuid },
+					_server.Send(new List<Guid>() { container.ClientId },
 								 Container.GetContainer(nameof(ConnectionResponse), 
 														new ConnectionResponse(ResultRequest.Failure, "Такой пользователь уже есть")))
 					);
-					var SendMessageDisconnectToServer = Task.Run(() => _server.FreeConnection(clientGuid));
 				}
 			}
 			else

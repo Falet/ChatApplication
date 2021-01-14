@@ -9,16 +9,16 @@ namespace Client.Model
     {
         #region Properties
 
-        public List<InfoAboutChat> AllInfoAboutChat { get; }
+        public List<InfoAboutChat> InfoAboutAllChat { get; }
  
 
         #endregion Properties
 
         #region Constructors
 
-        public NumbersOfChatsReceivedEventArgs(List<InfoAboutChat> allInfoAboutChat)
+        public NumbersOfChatsReceivedEventArgs(List<InfoAboutChat> infoAboutAllChat)
         {
-            AllInfoAboutChat = allInfoAboutChat;
+            InfoAboutAllChat = infoAboutAllChat;
         }
 
         #endregion Constructors
