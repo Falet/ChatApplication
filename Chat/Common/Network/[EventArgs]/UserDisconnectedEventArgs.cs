@@ -14,7 +14,7 @@ namespace Common.Network
 
         #region Constructors
 
-        public ClientDisconnectedEventArgs(Guid nameGuid, string nameClient)
+        public ClientDisconnectedEventArgs(string nameClient,Guid nameGuid)
         {
             NameGuid = nameGuid;
             NameClient = nameClient;

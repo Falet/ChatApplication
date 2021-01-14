@@ -29,13 +29,13 @@ namespace Server.Network
 
 		#endregion Fields
 
-		public HandlerConnection(ITransportServer server, IHandlerRequestToData data)
+		public HandlerConnection(ITransportServer server, IHandlerRequestFromClient handlerRequestFromClient, IHandlerRequestToData data)
         {
             _server = server;
 
-            _server.ClientConnected += OnConnect;
-            _server.ClientDisconnected += OnDisconnect;
-			_server.RequestInfoAllClient += OnClientInfo;
+			handlerRequestFromClient.ClientConnected += OnConnect;
+			handlerRequestFromClient.ClientDisconnected += OnDisconnect;
+			handlerRequestFromClient.RequestInfoAllClient += OnClientInfo;
 
             _data = data;
             cachedClientName = _data.GetInfoAboutAllClient();

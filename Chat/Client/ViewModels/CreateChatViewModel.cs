@@ -78,7 +78,8 @@ namespace Client.ViewModels
                 {
                     if (item.NameClient == container.NameClient)
                     {
-                        item.ActivityClient = true;
+                        item.ActivityClientChanged = true;
+                        break;
                     }
                 }
             });
@@ -98,7 +99,8 @@ namespace Client.ViewModels
                 {
                     if (item.NameClient == container.NameClient)
                     {
-                        item.ActivityClient = false;
+                        item.ActivityClientChanged = false;
+                        break;
                     }
                 }
             });

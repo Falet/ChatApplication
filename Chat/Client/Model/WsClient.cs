@@ -16,7 +16,6 @@ namespace Client.Model
     {
         #region Fields
 
-        private readonly ConcurrentQueue<MessageContainer> _sendQueue;
         private IHandlerResponseFromServer _handlerResponseFromServer;
         private WebSocket _socket;
 
@@ -28,7 +27,6 @@ namespace Client.Model
 
         public WsClient(IHandlerResponseFromServer handlerResponseFromServer)
         {
-            _sendQueue = new ConcurrentQueue<MessageContainer>();
             _socket = new WebSocket($"ws://192.168.37.106:35");
             _handlerResponseFromServer = handlerResponseFromServer;
         }

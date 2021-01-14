@@ -97,7 +97,7 @@ namespace Client.ViewModels
                 {
                     if (item.NameClient == container.NameClient)
                     {
-                        item.ActivityClient = true;
+                        item.ActivityClientChanged = true;
                     }
                 }
             });
@@ -106,11 +106,11 @@ namespace Client.ViewModels
         {
             App.Current.Dispatcher.Invoke(delegate
             {
-                foreach (var item in CollectionClientsAtChat)
+                foreach (var item in CollectionClientsAtChat.ToList())
                 {
                     if (item.NameClient == container.NameClient)
                     {
-                        item.ActivityClient = false;
+                        item.ActivityClientChanged = false;
                     }
                 }
             });

@@ -31,15 +31,15 @@ namespace Server.Network
          
         public ConcurrentDictionary<int, InfoChat> InfoChats { get; }//Ключ - номер комнаты
 
-        public HandlerChat(ITransportServer server, IHandlerRequestToData data, HandlerConnection connection)
+        public HandlerChat(ITransportServer server, IHandlerRequestFromClient handlerRequestFromClient, IHandlerRequestToData data, HandlerConnection connection)
         {
             _server = server;
 
-            _server.AddedChat += OnAddedChat;
-            _server.RemovedChat += OnRemovedChat;
-            _server.AddedClientsToChat += OnAddedClientsToChat;
-            _server.RemovedClientsFromChat += OnRemovedClientsFromChat;
-            _server.RequestNumbersChats += OnRequestNumbersChats;
+            handlerRequestFromClient.AddedChat += OnAddedChat;
+            handlerRequestFromClient.RemovedChat += OnRemovedChat;
+            handlerRequestFromClient.AddedClientsToChat += OnAddedClientsToChat;
+            handlerRequestFromClient.RemovedClientsFromChat += OnRemovedClientsFromChat;
+            handlerRequestFromClient.RequestNumbersChats += OnRequestNumbersChats;
 
             _data = data;
             _cachedClientProperies = _data.GetInfoAboutLinkClientToChat();
@@ -217,18 +217,18 @@ namespace Server.Network
                         AllInfoAboutChat.Add(new InfoAboutChat(NumberGeneralChat, infoChat1.OwnerChat, infoChat1.NameOfClients));
                     }
 
+                    var SendMessageAboutConnectNewClient = Task.Run
+                    (
+                    () => _server.SendAll(clientGuid,
+                                 Container.GetContainer(nameof(AddNewClientToChatResponse),
+                                 new AddNewClientToChatResponse("Server", new List<string> { container.NameOfClientSender }, NumberGeneralChat)))
+                    );
                     if (!await Task.Run(() => _data.AddClientToChat(new AddClientToChat { NumberChat = NumberGeneralChat, 
                                                                       NameOfClients = new List<string> { container.NameOfClientSender } })))
                     {
 
                     }
                 }
-                var SendMessageAboutConnectNewClient = Task.Run
-                    (
-                    () => _server.SendAll(clientGuid ,
-                                 Container.GetContainer(nameof(AddNewClientToChatResponse),
-                                 new AddNewClientToChatResponse("Server",new List<string> { container.NameOfClientSender }, NumberGeneralChat)))
-                    );
                 var SendMessageToServer = Task.Run
                     (
                     () => _server.Send(new List<Guid> { clientGuid },

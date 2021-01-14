@@ -28,9 +28,9 @@ namespace Client.Model
             handlerResponseFromServer.ResponseNumbersChats += OnResponseNumbersChats;
             handlerResponseFromServer.ReceivedInfoAboutAllClients += OnReceivedInfoAboutAllClients;
             handlerResponseFromServer.RemovedChat += OnRemovedChat;
-            _handlerConnection.AnotherClientConnected += ;
+            /*_handlerConnection.AnotherClientConnected += ;
             _handlerConnection.AnotherNewClientConnected += ;
-            _handlerConnection.AnotherClientDisconnected += ;
+            _handlerConnection.AnotherClientDisconnected += ;*/
         }
         public void AddChat(List<string> namesOfClients)
         {

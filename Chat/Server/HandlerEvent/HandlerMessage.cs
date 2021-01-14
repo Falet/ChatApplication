@@ -21,11 +21,11 @@
         private HandlerChat _chats;
 
         #endregion Fields
-        public HandlerMessage(ITransportServer server, IHandlerRequestToData data, HandlerConnection connection, HandlerChat chats)
+        public HandlerMessage(ITransportServer server,IHandlerRequestFromClient handlerRequestFromClient, IHandlerRequestToData data, HandlerConnection connection, HandlerChat chats)
         {
             _server = server;
-            _server.MessageReceived += OnMessage;
-            _server.ConnectedToChat += OnChatOpened;
+            handlerRequestFromClient.MessageReceived += OnMessage;
+            handlerRequestFromClient.ConnectedToChat += OnChatOpened;
 
             _data = data;
             MessagesAtChat = _data.GetAllMessageFromChats();
