@@ -44,6 +44,10 @@ namespace Client.Model
         }
         public void Send(MessageContainer container)
         {
+            if (!IsConnected)
+            {
+                return;
+            }
             var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
             string serializedMessages = JsonConvert.SerializeObject(container, settings);
             _socket.Send(serializedMessages);

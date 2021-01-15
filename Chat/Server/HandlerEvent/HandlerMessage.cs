@@ -51,6 +51,15 @@
                                          new ConnectToChatResponse(container.NumberChat, messages)))
                             );
                         }
+                        else
+                        {
+                            var SendMessageToServer = Task.Run
+                            (
+                            () => _server.Send(new List<Guid> { clientGuid },
+                                         Container.GetContainer(nameof(ConnectToChatResponse),
+                                         new ConnectToChatResponse(container.NumberChat, new List<MessageInfo>())))
+                            );
+                        }
                     }
                 }
             }

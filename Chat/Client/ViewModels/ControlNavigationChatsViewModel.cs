@@ -65,8 +65,13 @@ namespace Client.ViewModels
         {
             if (SelectedChat != null)
             {
+                if(CurrentViewModelChat != null)
+                {
+                    CurrentViewModelChat.VisibilityChat = Visibility.Hidden;
+                }
                 CurrentViewModelChat = SelectedChat;
-                if (!CurrentViewModelChat._chatIsLoad)
+                CurrentViewModelChat.VisibilityChat = Visibility.Visible;
+                if (!CurrentViewModelChat.ChatIsLoad)
                 {
                     _handlerMessages.ConnectToChat(CurrentViewModelChat.NumberChat);
                 }

@@ -83,7 +83,7 @@
 
         protected override void OnMessage(MessageEventArgs e)
         {
-            Console.WriteLine("Message");
+            Console.WriteLine("Message: " + e.Data);
             if (e.IsText)
             {
                 var message = JsonConvert.DeserializeObject<MessageContainer>(e.Data);

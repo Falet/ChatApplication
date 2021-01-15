@@ -43,8 +43,6 @@
 		</Button>
 		<TextBlock  Grid.Row="2"
 					TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center"
-					Visibility="Visible">
-			Пользователи не выделены
-		</TextBlock>
+					Text="{Binding TextError}"/>
 	</Grid>
 </UserControl>

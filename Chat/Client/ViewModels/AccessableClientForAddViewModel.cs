@@ -18,6 +18,7 @@ namespace Client.ViewModels
         private ObservableCollection<InfoAboutClient> _clientsCollection;
         private IHandlerChats _handlerChats;
         private int _numberChat;
+        private string _textError;
         public Visibility VisibilityOfControlAllClient
         {
             get => _visibilityViewAllClient;
@@ -27,6 +28,11 @@ namespace Client.ViewModels
         {
             get => _clientsCollection;
             set => SetProperty(ref _clientsCollection, value);
+        }
+        public string TextError
+        {
+            get => _textError;
+            set => SetProperty(ref _textError, value);
         }
         public DelegateCommand AddClientToChatButton { get; }
         public AccessableClientForAddViewModel(IHandlerConnection handlerConnection, IHandlerChats handlerChats, Dictionary<string, bool> accessNameClientForAdd, int numberChat)
@@ -49,7 +55,7 @@ namespace Client.ViewModels
             {
                 foreach (var KeyValue in accessNameClientForAdd)
                 {
-                    ClientsAccessableCollection.Add(new InfoAboutClient(KeyValue.Key, KeyValue.Value));
+                    ClientsAccessableCollection.Add(new InfoAboutClient(KeyValue.Key, KeyValue.Value ? "Online" : "Offline"));
                 }
             });
         }
@@ -61,7 +67,7 @@ namespace Client.ViewModels
                 {
                     if (item.NameClient == container.NameClient)
                     {
-                        item.ActivityClientChanged = true;
+                        item.ActivityClientChanged = "Online";
                     }
                 }
             });
@@ -70,7 +76,7 @@ namespace Client.ViewModels
         {
             App.Current.Dispatcher.Invoke(delegate
             {
-                 ClientsAccessableCollection.Add(new InfoAboutClient(container.NameClient, true));
+                 ClientsAccessableCollection.Add(new InfoAboutClient(container.NameClient, "Online"));
             });
         }
         private void OnDisconnectClient(object sender, AnotherClientDisconnectedEventArgs container)
@@ -81,7 +87,7 @@ namespace Client.ViewModels
                 {
                     if (item.NameClient == container.NameClient)
                     {
-                        item.ActivityClientChanged = false;
+                        item.ActivityClientChanged = "Offline";
                     }
                 }
             });
@@ -94,7 +100,7 @@ namespace Client.ViewModels
                 {
                     foreach (var KeyValue in container.Clients)
                     {
-                        ClientsAccessableCollection.Add(new InfoAboutClient(KeyValue.Key, KeyValue.Value));
+                        ClientsAccessableCollection.Add(new InfoAboutClient(KeyValue.Key, KeyValue.Value ? "Online" : "Offline"));
                     }
                 });
             }

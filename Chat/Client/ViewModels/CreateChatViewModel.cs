@@ -66,7 +66,7 @@ namespace Client.ViewModels
             {
                 foreach (var KeyValue in container.InfoClientsAtChat)
                 {
-                    ClientsCollection.Add(new InfoAboutClient(KeyValue.Key, KeyValue.Value));
+                    ClientsCollection.Add(new InfoAboutClient(KeyValue.Key, KeyValue.Value ? "Online" : "Offline"));
                 }
             });
         }
@@ -78,7 +78,7 @@ namespace Client.ViewModels
                 {
                     if (item.NameClient == container.NameClient)
                     {
-                        item.ActivityClientChanged = true;
+                        item.ActivityClientChanged = "Online";
                         break;
                     }
                 }
@@ -88,7 +88,7 @@ namespace Client.ViewModels
         {
             App.Current.Dispatcher.Invoke(delegate
             {
-                ClientsCollection.Add(new InfoAboutClient(container.NameClient, true));
+                ClientsCollection.Add(new InfoAboutClient(container.NameClient, "Online"));
             });
         }
         public void OnDisconnectAnotherClient(object sender, AnotherClientDisconnectedEventArgs container)
@@ -99,7 +99,7 @@ namespace Client.ViewModels
                 {
                     if (item.NameClient == container.NameClient)
                     {
-                        item.ActivityClientChanged = false;
+                        item.ActivityClientChanged = "Offline";
                         break;
                     }
                 }

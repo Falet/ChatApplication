@@ -18,6 +18,7 @@ namespace Client.ViewModels
         private ObservableCollection<InfoAboutClient> _collectionClientsAtChat;
         private int _numberChat;
         private IHandlerChats _handlerChats;
+        private string _textError;
         public ObservableCollection<InfoAboutClient> CollectionClientsAtChat
         {
             get => _collectionClientsAtChat;
@@ -27,6 +28,11 @@ namespace Client.ViewModels
         {
             get => _visibilityViewClientsAtChat;
             set => SetProperty(ref _visibilityViewClientsAtChat, value);
+        }
+        public string TextError
+        {
+            get => _textError;
+            set => SetProperty(ref _textError, value);
         }
         public DelegateCommand RemoveButton { get; }
         public ClientsAtChatViewModel(IHandlerConnection handlerConnection, IHandlerChats handlerChats, int numberChat, Dictionary<string, bool> clientForAdd)
@@ -66,7 +72,7 @@ namespace Client.ViewModels
             {
                 foreach(var KeyValue in clientForAdd)
                 {
-                    CollectionClientsAtChat.Add(new InfoAboutClient(KeyValue.Key, KeyValue.Value));
+                    CollectionClientsAtChat.Add(new InfoAboutClient(KeyValue.Key, KeyValue.Value ? "Online" : "Offline" ));
                 }
             });
         }
@@ -97,7 +103,7 @@ namespace Client.ViewModels
                 {
                     if (item.NameClient == container.NameClient)
                     {
-                        item.ActivityClientChanged = true;
+                        item.ActivityClientChanged = "Online";
                     }
                 }
             });
@@ -110,7 +116,7 @@ namespace Client.ViewModels
                 {
                     if (item.NameClient == container.NameClient)
                     {
-                        item.ActivityClientChanged = false;
+                        item.ActivityClientChanged = "Offline";
                     }
                 }
             });

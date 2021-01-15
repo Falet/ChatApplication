@@ -8,10 +8,10 @@ namespace Client.ViewModels
     public class InfoAboutClient : BindableBase
     {
         private bool _isSelectedClient;
-        private bool _activityClient;
+        private string _activityClient;
         public string NameClient { get; }
         
-        public bool ActivityClientChanged
+        public string ActivityClientChanged
         {
             get => _activityClient;
             set => SetProperty(ref _activityClient, value);
@@ -21,7 +21,7 @@ namespace Client.ViewModels
             get => _isSelectedClient;
             set => SetProperty(ref _isSelectedClient, value);
         }
-        public InfoAboutClient(string nameClient, bool activityClient)
+        public InfoAboutClient(string nameClient, string activityClient)
         {
             IsSelectedClient = false;
 

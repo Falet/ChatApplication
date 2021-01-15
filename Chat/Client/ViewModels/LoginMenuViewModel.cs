@@ -76,6 +76,10 @@
         }
         private bool IsTrueDataForSignIn()
         {
+            if (Login == null)
+            {
+                return false;
+            }
             if (IP == null)
             {
                 return false;
@@ -100,10 +104,7 @@
                 error += "Port must be valid\n";
             }
 
-            if (Login == null)
-            {
-                return false;
-            }
+            
             match = regexLogin.Match(Login);
             if (string.IsNullOrWhiteSpace(Login))
             {
@@ -121,6 +122,7 @@
             }
             else
             {
+                TextError = null;
                 return true;
             }
         }
