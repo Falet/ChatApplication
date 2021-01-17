@@ -1,16 +1,13 @@
-﻿using Common.Network;
-using Common.Network.Packets;
-using Server.DataBase;
-using Server.Network;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Server.Network
+﻿namespace Server.Network
 {
+    using Common.Network;
+    using Common.Network.Packets;
+    using Server.DataBase;
+    using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+
     public class HandlerChat
     {
         #region Const
@@ -18,7 +15,6 @@ namespace Server.Network
         const int NumberGeneralChat = 1;
 
         #endregion Const
-
 
         #region Fields
 
@@ -28,8 +24,14 @@ namespace Server.Network
         private HandlerConnection _connection;
 
         #endregion Fields
-         
+
+        #region Properties
+
         public ConcurrentDictionary<int, InfoChat> InfoChats { get; }//Ключ - номер комнаты
+
+        #endregion Properties
+
+        #region Constructors
 
         public HandlerChat(ITransportServer server, IHandlerRequestFromClient handlerRequestFromClient, IHandlerRequestToData data, HandlerConnection connection)
         {
@@ -45,8 +47,10 @@ namespace Server.Network
             _cachedClientProperies = _data.GetInfoAboutLinkClientToChat();
             InfoChats = _data.GetInfoAboutAllChat();
             _connection = connection;
-
         }
+
+        #endregion Constructors
+
 
         #region Methods
         public async void OnAddedChat(object sender, AddedNewChatEventArgs container)
@@ -232,8 +236,8 @@ namespace Server.Network
                 var SendMessageToServer = Task.Run
                     (
                     () => _server.Send(new List<Guid> { clientGuid },
-                                 Container.GetContainer(nameof(GetNumbersAccessibleChatsResponse),
-                                 new GetNumbersAccessibleChatsResponse(AllInfoAboutChat)))
+                                 Container.GetContainer(nameof(NumbersAccessibleChatsResponse),
+                                 new NumbersAccessibleChatsResponse(AllInfoAboutChat)))
                     );
             }
         }

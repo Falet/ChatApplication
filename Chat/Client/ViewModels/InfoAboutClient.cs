@@ -1,16 +1,20 @@
-﻿using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Client.ViewModels
+﻿namespace Client.ViewModels
 {
+    using Prism.Mvvm;
+
     public class InfoAboutClient : BindableBase
     {
+        #region Fields
+
         private bool _isSelectedClient;
         private string _activityClient;
+
+        #endregion Fields
+
+        #region Properties
+
         public string NameClient { get; }
-        
+
         public string ActivityClientChanged
         {
             get => _activityClient;
@@ -21,6 +25,11 @@ namespace Client.ViewModels
             get => _isSelectedClient;
             set => SetProperty(ref _isSelectedClient, value);
         }
+
+        #endregion Properties
+
+        #region Constructors
+
         public InfoAboutClient(string nameClient, string activityClient)
         {
             IsSelectedClient = false;
@@ -29,5 +38,6 @@ namespace Client.ViewModels
             ActivityClientChanged = activityClient;
         }
 
+        #endregion Constructors
     }
 }

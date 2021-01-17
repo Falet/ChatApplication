@@ -9,15 +9,22 @@
     using System.Windows;
     public class LoginMenuViewModel : BindableBase
     {
+        #region Fields
+
         private Visibility _visibilityView;
         private string _comboBoxItemSelected;
         private string _textIP;
         private string _textPort;
         private string _textLogin;
         private string _textError;
-        private IHandlerConnection _handlerConnection;
         private Regex regexIP;
         private Regex regexLogin;
+        private IHandlerConnection _handlerConnection;
+
+        #endregion Fields
+
+        #region Properties
+
         public Visibility VisibilityLoginMenu
         {
             get => _visibilityView;
@@ -50,6 +57,11 @@
             get => _comboBoxItemSelected;
             set => SetProperty(ref _comboBoxItemSelected, value);
         }
+
+        #endregion Properties
+
+        #region Constructors
+
         public LoginMenuViewModel(IHandlerConnection handlerConnection)
         {
             _visibilityView = Visibility.Visible;
@@ -69,6 +81,11 @@
             SignIn.ObservesProperty(() => Login);
             SignIn.ObservesProperty(() => Port);
         }
+
+        #endregion Constructors
+
+        #region Methods
+
         private void ConnectToServer()
         {
             _handlerConnection.Connect(IP, Port, Protocol);
@@ -104,7 +121,7 @@
                 error += "Port must be valid\n";
             }
 
-            
+
             match = regexLogin.Match(Login);
             if (string.IsNullOrWhiteSpace(Login))
             {
@@ -115,7 +132,7 @@
                 error += "Login must be valid username format and contains only alphabetic symbols and numbers. For example 'Cyberprank2020'\n";
             }
 
-            if(error!= null)
+            if (error != null)
             {
                 TextError = error;
                 return false;
@@ -128,7 +145,7 @@
         }
         private void OnClientConnected(object sender, ClientConnectedToServerEventArgs container)
         {
-            if(container.Result == ResultRequest.Ok)
+            if (container.Result == ResultRequest.Ok)
             {
                 VisibilityLoginMenu = Visibility.Collapsed;
             }
@@ -137,5 +154,7 @@
                 TextError = container.Reason;
             }
         }
+
+        #endregion Methods
     }
 }

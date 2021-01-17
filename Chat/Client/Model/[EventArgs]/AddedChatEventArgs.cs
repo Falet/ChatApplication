@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Client.Model
+﻿namespace Client.Model
 {
+    using System.Collections.Generic;
     public class AddedChatEventArgs
     {
         #region Properties

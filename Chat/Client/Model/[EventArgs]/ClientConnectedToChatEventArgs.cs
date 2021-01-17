@@ -1,10 +1,8 @@
-﻿using Common.Network;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Client.Model
+﻿namespace Client.Model
 {
+    using Common.Network;
+    using System.Collections.Generic;
+
     public class ClientConnectedToChatEventArgs
     {
         #region Properties

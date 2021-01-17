@@ -1,7 +1,7 @@
 ﻿namespace Common.Network.Packets
 {
     using System.Collections.Generic;
-    public class GetNumbersAccessibleChatsResponse
+    public class NumbersAccessibleChatsResponse
     {
         #region Properties
 
@@ -11,7 +11,7 @@
 
         #region Constructors
 
-        public GetNumbersAccessibleChatsResponse(List<InfoAboutChat> allInfoAboutChat)
+        public NumbersAccessibleChatsResponse(List<InfoAboutChat> allInfoAboutChat)
         {
             AllInfoAboutChat = allInfoAboutChat;
         }

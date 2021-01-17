@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Common.Network.Packets
 {
-    public class GetNumbersAccessibleChatsRequest
+    public class NumbersAccessibleChatsRequest
     {
         #region Properties
 
@@ -14,7 +14,7 @@ namespace Common.Network.Packets
 
         #region Constructors
 
-        public GetNumbersAccessibleChatsRequest(string nameClient)
+        public NumbersAccessibleChatsRequest(string nameClient)
         {
             NameClient = nameClient;
         }

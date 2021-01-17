@@ -1,17 +1,9 @@
-﻿using Common.Network.Packets;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using WebSocketSharp;
-
-namespace Client.Model
+﻿namespace Client.Model
 {
+    using Common.Network.Packets;
+    using Newtonsoft.Json;
+    using System;
+    using WebSocketSharp;
     public class WsClient: ITransportClient
     {
         #region Fields
@@ -21,7 +13,12 @@ namespace Client.Model
 
         #endregion Fields
 
+
+        #region Properties
+
         public bool IsConnected => _socket?.ReadyState == WebSocketState.Open;
+
+        #endregion Properties
 
         #region Constructors
 
@@ -34,6 +31,7 @@ namespace Client.Model
         #endregion Constructors
 
         #region Methods
+
         public void Connect(string ip, int port)
         {
             _socket = new WebSocket($"ws://{ip}:{port}");
@@ -72,5 +70,4 @@ namespace Client.Model
         }
         #endregion Methods
     }
-
 }

@@ -1,29 +1,28 @@
-﻿using Client.Model;
-using Common.Network;
-using Prism.Commands;
-using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Threading;
-
-namespace Client.ViewModels
+﻿namespace Client.ViewModels
 {
+    using Client.Model;
+    using Prism.Commands;
+    using Prism.Mvvm;
+    using System.Collections.ObjectModel;
+    using System.Windows;
+
     public class ChatViewModel : BindableBase
     {
-        private string _textMessages;
+        #region Fields
+
+        private Visibility _visibilityView;
         private ControlVisibilityViewClientsViewModel _controlVisibilityViewClients;
         private string _textButtonChangeViewClients;
+        private string _textMessages;
+        private string _textToolTip;
         private bool IsViewClientsChanged;
         private ObservableCollection<string> _messagesCollection;
-        private string _textToolTip;
         private IHandlerMessages _handlerMessages;
-        private Visibility _visibilityView;
+
+        #endregion Fields
+
+        #region Properties
+
         public bool ChatIsLoad { get; private set; }
         public Visibility VisibilityChat
         {
@@ -59,6 +58,10 @@ namespace Client.ViewModels
         public DelegateCommand SendMessage { get; }
         public DelegateCommand ChangeVisibilityViewClients { get; }
 
+        #endregion Properties
+
+        #region Constructors
+
         public ChatViewModel(AccessableClientForAddViewModel allClientsViewModel, ClientsAtChatViewModel clientsAtChatViewModel, IHandlerMessages handlerMessages, int numberChat)
         {
             _visibilityView = Visibility.Hidden;
@@ -81,6 +84,11 @@ namespace Client.ViewModels
             ChangeVisibilityViewClients = new DelegateCommand(ChangeViewClients).ObservesProperty(() => TextButtonChangeViewClients);
             ChangeVisibilityViewClients.ObservesProperty(() => TextToolTip);
         }
+
+        #endregion Constructors
+
+        #region Methods
+
         private void ExecuteSendMessage()
         {
             _handlerMessages.SendMessage(CurrentTextMessage, NumberChat);
@@ -132,5 +140,7 @@ namespace Client.ViewModels
                 });
             }
         }
+
+        #endregion Methods
     }
 }

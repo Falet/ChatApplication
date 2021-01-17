@@ -84,10 +84,10 @@ namespace Common.Network
                                                                                              removeClientFromChatRequest.Clients));
                         break;
                     }
-                case nameof(GetNumbersAccessibleChatsRequest):
+                case nameof(NumbersAccessibleChatsRequest):
                     {
                         var requestNumbersChats = ((JObject)container.Payload)
-                                                        .ToObject(typeof(GetNumbersAccessibleChatsRequest)) as GetNumbersAccessibleChatsRequest;
+                                                        .ToObject(typeof(NumbersAccessibleChatsRequest)) as NumbersAccessibleChatsRequest;
                         RequestNumbersChats?.Invoke(this, new ClientRequestedNumbersChatEventArgs(requestNumbersChats.NameClient));
                         break;
                     }

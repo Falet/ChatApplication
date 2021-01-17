@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Common.Network
+﻿namespace Common.Network
 {
+    using System;
+
     public class ClientDisconnectedEventArgs
     {
         #region Properties

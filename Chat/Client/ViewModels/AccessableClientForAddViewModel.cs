@@ -1,24 +1,27 @@
-﻿using Client.Model;
-using Common.Network;
-using Prism.Commands;
-using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-
-namespace Client.ViewModels
+﻿namespace Client.ViewModels
 {
+    using Client.Model;
+    using Prism.Commands;
+    using Prism.Mvvm;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+    using System.Windows;
+
     public class AccessableClientForAddViewModel : BindableBase
     {
+        #region Fields
+
         private Visibility _visibilityViewAllClient;
         private ObservableCollection<InfoAboutClient> _clientsCollection;
         private IHandlerChats _handlerChats;
         private int _numberChat;
         private string _textError;
+
+        #endregion Fields
+
+        #region Properties
+
         public Visibility VisibilityOfControlAllClient
         {
             get => _visibilityViewAllClient;
@@ -35,21 +38,34 @@ namespace Client.ViewModels
             set => SetProperty(ref _textError, value);
         }
         public DelegateCommand AddClientToChatButton { get; }
+
+        #endregion Properties
+
+
+        #region Constructors
+
         public AccessableClientForAddViewModel(IHandlerConnection handlerConnection, IHandlerChats handlerChats, Dictionary<string, bool> accessNameClientForAdd, int numberChat)
         {
             _numberChat = numberChat;
-            
+
             _clientsCollection = new ObservableCollection<InfoAboutClient>();
             _handlerChats = handlerChats;
             _handlerChats.AddedClientsToChat += OnAddedClientsToChat;
             _handlerChats.RemovedClientsFromChat += OnRemovedClientFormChat;
-            handlerConnection.AnotherClientConnected += OnConnectAnotherClient;
+            handlerConnection.AnotherClientConnected += OnAnotherClientConnected;
             handlerConnection.AnotherNewClientConnected += OnAnotherNewClientConnected;
-            handlerConnection.AnotherClientDisconnected += OnDisconnectClient;
-            SetStartCollection(accessNameClientForAdd);
+            handlerConnection.AnotherClientDisconnected += OnAnotherClientDisconnected;
+
+            SetCollection(accessNameClientForAdd);
+
             AddClientToChatButton = new DelegateCommand(AddClientToChat);
         }
-        private void SetStartCollection(Dictionary<string, bool> accessNameClientForAdd)
+
+        #endregion Constructors
+
+        #region Methods
+
+        private void SetCollection(Dictionary<string, bool> accessNameClientForAdd)
         {
             App.Current.Dispatcher.Invoke(delegate
             {
@@ -59,7 +75,7 @@ namespace Client.ViewModels
                 }
             });
         }
-        private void OnConnectAnotherClient(object sender, AnotherClientConnectedEventArgs container)
+        private void OnAnotherClientConnected(object sender, AnotherClientConnectedEventArgs container)
         {
             App.Current.Dispatcher.Invoke(delegate
             {
@@ -76,10 +92,10 @@ namespace Client.ViewModels
         {
             App.Current.Dispatcher.Invoke(delegate
             {
-                 ClientsAccessableCollection.Add(new InfoAboutClient(container.NameClient, "Online"));
+                ClientsAccessableCollection.Add(new InfoAboutClient(container.NameClient, "Online"));
             });
         }
-        private void OnDisconnectClient(object sender, AnotherClientDisconnectedEventArgs container)
+        private void OnAnotherClientDisconnected(object sender, AnotherClientDisconnectedEventArgs container)
         {
             App.Current.Dispatcher.Invoke(delegate
             {
@@ -94,20 +110,17 @@ namespace Client.ViewModels
         }
         private void OnRemovedClientFormChat(object sender, RemovedClientsFromChatForVMEventArgs container)
         {
-            if(container.NumberChat == _numberChat)
+            if (container.NumberChat == _numberChat)
             {
                 App.Current.Dispatcher.Invoke(delegate
                 {
-                    foreach (var KeyValue in container.Clients)
-                    {
-                        ClientsAccessableCollection.Add(new InfoAboutClient(KeyValue.Key, KeyValue.Value ? "Online" : "Offline"));
-                    }
+                    SetCollection(container.Clients);
                 });
             }
         }
         private void OnAddedClientsToChat(object sender, AddedClientsToChatClientEvenArgs container)
         {
-            if(container.NumberChat == _numberChat)
+            if (container.NumberChat == _numberChat)
             {
                 App.Current.Dispatcher.Invoke(delegate
                 {
@@ -141,5 +154,6 @@ namespace Client.ViewModels
             });
         }
 
+        #endregion Methods
     }
 }
