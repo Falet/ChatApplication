@@ -1,8 +1,7 @@
 ﻿namespace Server.Network
 {
-	using System;
-	using System.Collections.Generic;
-	public class ClientProperties
+    using System.Collections.Generic;
+    public class ClientProperties
 	{
 		#region Properties
 

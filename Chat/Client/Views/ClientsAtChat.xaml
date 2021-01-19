@@ -7,44 +7,45 @@
 		     xmlns:view="clr-namespace:Client.Views"
 		     xmlns:viewModel="clr-namespace:Client.ViewModels"
 			 mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800" Visibility="{Binding VisibilityClientsAtChat}">
+             d:DesignHeight="450" d:DesignWidth="800" 
+             Style="{StaticResource PrimaryControlStyle}"
+             Visibility="{Binding VisibilityClientsAtChat}">
     <Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="*"/>
-			<RowDefinition Height="0.1*"/>
-			<RowDefinition Height="0.1*"/>
-		</Grid.RowDefinitions>
-		<ListBox Grid.Row="0" SelectionMode="Multiple" ItemsSource="{Binding CollectionClientsAtChat}">
-			<ListBox.ItemContainerStyle>
-				<Style TargetType="ListBoxItem">
-					<Setter Property="IsSelected" Value="{Binding IsSelectedClient}"/>
-				</Style>
-			</ListBox.ItemContainerStyle>
-			<ListBox.ItemTemplate>
-				<DataTemplate>
-					<ListBoxItem>
-						<StackPanel Orientation="Horizontal">
-							<TextBlock Margin="3" Text="{Binding NameClient}"/>
-							<TextBlock Margin="3" Text="{Binding ActivityClient}"/>
-						</StackPanel>
-					</ListBoxItem>
-				</DataTemplate>
-			</ListBox.ItemTemplate>
-		</ListBox>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="450*"/>
+            <RowDefinition Height="56*"/>
+            <RowDefinition Height="33*"/>
+        </Grid.RowDefinitions>
+        <ListBox Grid.Row="0" SelectionMode="Multiple" ItemsSource="{Binding CollectionClientsAtChat}" Style="{StaticResource PrimaryListBoxStyle}">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="IsSelected" Value="{Binding IsSelectedClient}"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <ListBoxItem>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Margin="3" Text="{Binding NameClient}"/>
+                            <TextBlock Margin="3" Text="{Binding ActivityClientChanged}"/>
+                        </StackPanel>
+                    </ListBoxItem>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
 
-		<Button Grid.Row="1" Content="Удалить"
+        <Button Grid.Row="1" Content="Удалить" Margin="5"
 				Command="{Binding RemoveButton}"
+                Style="{StaticResource ButtonStyle}"
                 ToolTipService.InitialShowDelay="0">
-			<Button.ToolTip>
-				<ToolTip>
-					Удалить выделенных пользователей из чата
-				</ToolTip>
-			</Button.ToolTip>
-		</Button>
-		<TextBlock  Grid.Row="2"
+            <Button.ToolTip>
+                <ToolTip>
+                    Удалить выделенных пользователей из чата
+                </ToolTip>
+            </Button.ToolTip>
+        </Button>
+        <TextBlock  Grid.Row="2"
 					TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center"
-					Visibility="Visible">
-			Пользователи не выделены
-		</TextBlock>
-	</Grid>
+					Text="{Binding TextError}" Height="16" Margin="400,11,400,10" Width="0"/>
+    </Grid>
 </UserControl>

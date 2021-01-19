@@ -10,6 +10,7 @@
 		     xmlns:viewModel="clr-namespace:Client.ViewModels" 
 			 mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
+             Style="{StaticResource PrimaryControlStyle}"
 			 Visibility="{Binding VisibilityNavigationChat}">
 	<Grid>
 		<Grid.ColumnDefinitions>
@@ -17,7 +18,7 @@
 			<ColumnDefinition Width="21*"/>
 		</Grid.ColumnDefinitions>
 
-		<ListBox Grid.Column="0" ItemsSource="{Binding ChatCollection}" SelectedItem="{Binding SelectedChat}">
+        <ListBox Grid.Column="0" ItemsSource="{Binding ChatCollection}" SelectedItem="{Binding SelectedChat}" Style="{StaticResource PrimaryListBoxStyle}">
 			<ListBox.ItemTemplate>
 				<DataTemplate>
 					<StackPanel Orientation="Horizontal">

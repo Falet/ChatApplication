@@ -1,20 +1,17 @@
-﻿using Client.Model;
-using Common.Network;
-using Prism.Commands;
-using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Threading;
-
-namespace Client.ViewModels
+﻿namespace Client.ViewModels
 {
+    using Client.Model;
+    using Common.Network;
+    using Prism.Commands;
+    using Prism.Mvvm;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+    using System.Windows;
+
     public class ControlNavigationChatsViewModel : BindableBase
     {
+        #region Fields
+
         private Visibility _visibilityView = Visibility.Visible;
         private ObservableCollection<ChatViewModel> _chatCollection;
         private IHandlerMessages _handlerMessages;
@@ -23,6 +20,11 @@ namespace Client.ViewModels
         private ChatViewModel _selectedItemChat;
         private string _textButtonChangeViewClients;
         private ChatViewModel _currentViewModelChat;
+
+        #endregion Fields
+
+        #region Properties
+
         public Visibility VisibilityNavigationChat
         {
             get => _visibilityView;
@@ -43,7 +45,7 @@ namespace Client.ViewModels
             get => _textButtonChangeViewClients;
             set => SetProperty(ref _textButtonChangeViewClients, value);
         }
-        
+
         public ChatViewModel CurrentViewModelChat
         {
             get => _currentViewModelChat;
@@ -51,56 +53,71 @@ namespace Client.ViewModels
         }
         public DelegateCommand CreateChat { get; }
         public DelegateCommand SelectChange { get; }
+
+        #endregion Properties
+
+        #region Constructors
+
         public ControlNavigationChatsViewModel(IHandlerConnection handlerConnection, IHandlerMessages handlerMessages, IHandlerChats handlerChats)
         {
             _chatCollection = new ObservableCollection<ChatViewModel>();
 
             _handlerChats = handlerChats;
-            _handlerChats.AddedChat += OnCreateChat;
+            _handlerChats.AddedChat += OnAddedChat;
             _handlerChats.RemovedChat += OnRemovedChat;
             _handlerConnection = handlerConnection;
             _handlerMessages = handlerMessages;
         }
+
+        #endregion Constructors
+
+        #region Methods
+
         private void ChangeViewModelOfViewChat()
         {
             if (SelectedChat != null)
             {
+                if (CurrentViewModelChat != null)
+                {
+                    CurrentViewModelChat.VisibilityChat = Visibility.Hidden;
+                }
                 CurrentViewModelChat = SelectedChat;
-            }
-            else
-            {
-                return;
-            }
-            if (!CurrentViewModelChat._chatIsLoad)
-            {
-                _handlerMessages.ConnectToChat(CurrentViewModelChat.NumberChat);
+                CurrentViewModelChat.VisibilityChat = Visibility.Visible;
+                if (!CurrentViewModelChat.ChatIsLoad)
+                {
+                    _handlerMessages.ConnectToChat(CurrentViewModelChat.NumberChat);
+                }
             }
         }
-        private void OnCreateChat(object sender, AddedChatEventArgs container)
+        private void OnAddedChat(object sender, AddedChatEventArgs container)
         {
             App.Current.Dispatcher.Invoke(delegate
             {
-                AccessableClientForAddViewModel allClientViewModel = new AccessableClientForAddViewModel(_handlerConnection, _handlerChats, 
+                AccessableClientForAddViewModel allClientViewModel = new AccessableClientForAddViewModel(_handlerConnection, _handlerChats,
                                                                                        container.AccessNameClientForAdd, container.NumberChat);
                 ClientsAtChatViewModel clientsAtChat = new ClientsAtChatViewModel(_handlerConnection, _handlerChats,
                                                                                   container.NumberChat, container.NameOfClientsForAdd);
                 ChatViewModel newChat = new ChatViewModel(allClientViewModel, clientsAtChat, _handlerMessages, container.NumberChat);
 
                 ChatCollection.Add(newChat);
+
+                CurrentViewModelChat = newChat;
             });
         }
         private void OnRemovedChat(object sender, RemovedChatEventArgs container)
         {
             App.Current.Dispatcher.Invoke(delegate
             {
-                foreach(var item in ChatCollection.ToList())
+                foreach (var item in ChatCollection.ToList())
                 {
-                    if(item.NumberChat == container.NumberChat)
+                    if (item.NumberChat == container.NumberChat)
                     {
                         ChatCollection.Remove(item);
                     }
                 }
             });
         }
+
+        #endregion Methods
     }
 }

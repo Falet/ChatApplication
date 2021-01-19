@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Client.Model
+﻿namespace Client.Model
 {
     public class ClientInfo : IClientInfo
     {
+        #region Properties
+
         public string Login { get; set; }
+
+        #endregion Properties
     }
 }

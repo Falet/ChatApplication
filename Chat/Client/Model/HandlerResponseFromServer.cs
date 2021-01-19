@@ -1,27 +1,30 @@
-﻿using Common.Network;
-using Common.Network.Packets;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Client.Model
+﻿namespace Client.Model
 {
+    using Common.Network;
+    using Common.Network.Packets;
+    using Newtonsoft.Json.Linq;
+    using System;
+
     public class HandlerResponseFromServer : IHandlerResponseFromServer
     {
+        #region Event
+
         public event EventHandler<ClientConnectedToServerEventArgs> ClientConnected;
         public event EventHandler<AnotherClientConnectedEventArgs> AnotherClientConnected;
-        public event EventHandler<MessageReceivedForVMEventArgs> MessageReceived;
-        public event EventHandler<ClientConnectedToChatEventArgs> ConnectedToChat;
+        public event EventHandler<AnotherClientDisconnectedEventArgs> AnotherClientDisconnected;
         public event EventHandler<AddedNewChatModelEventArgs> AddedChat;
+        public event EventHandler<RemovedChatEventArgs> RemovedChat;
         public event EventHandler<AddedClientsToChatEventArgs> AddedClientsToChat;
         public event EventHandler<RemovedClientsFromChatEventArgs> RemovedClientsFromChat;
-        public event EventHandler<AnotherClientDisconnectedEventArgs> AnotherClientDisconnected;
+        public event EventHandler<MessageReceivedForVMEventArgs> MessageReceived;
+        public event EventHandler<ClientConnectedToChatEventArgs> ConnectedToChat;
         public event EventHandler<NumbersOfChatsReceivedEventArgs> ResponseNumbersChats;
         public event EventHandler<ReceivedInfoAboutAllClientsEventArgs> ReceivedInfoAboutAllClients;
-        public event EventHandler<RemovedChatEventArgs> RemovedChat;
+
+        #endregion Event
+
+
+        #region Methods
 
         public void ParsePacket(MessageContainer container)
         {
@@ -36,13 +39,13 @@ namespace Client.Model
                 case nameof(ConnectionNoticeForClients):
                     {
                         var connectionNoticeForClients = ((JObject)container.Payload).ToObject(typeof(ConnectionNoticeForClients)) as ConnectionNoticeForClients;
-                        AnotherClientConnected?.Invoke(this, new AnotherClientConnectedEventArgs(connectionNoticeForClients.NameOfClient));
+                        AnotherClientConnected?.Invoke(this, new AnotherClientConnectedEventArgs(connectionNoticeForClients.NameClient));
                         break;
                     }
                 case nameof(DisconnectNotice):
                     {
                         var disconnectionResponse = ((JObject)container.Payload).ToObject(typeof(DisconnectNotice)) as DisconnectNotice;
-                        AnotherClientDisconnected?.Invoke(this, new AnotherClientDisconnectedEventArgs(disconnectionResponse.NameOfClient));
+                        AnotherClientDisconnected?.Invoke(this, new AnotherClientDisconnectedEventArgs(disconnectionResponse.NameClient));
                         break;
                     }
                 case nameof(MessageResponse):
@@ -66,15 +69,15 @@ namespace Client.Model
                 case nameof(RemoveChatResponse):
                     {
                         var removeChatResponse = ((JObject)container.Payload).ToObject(typeof(RemoveChatResponse)) as RemoveChatResponse;
-                        RemovedChat?.Invoke(this, new RemovedChatEventArgs(removeChatResponse.NameOfClient, removeChatResponse.NumberChat));
+                        RemovedChat?.Invoke(this, new RemovedChatEventArgs(removeChatResponse.NameClient, removeChatResponse.NumberChat));
                         break;
                     }
                 case nameof(AddNewClientToChatResponse):
                     {
                         var addNewClientToChatResponse = ((JObject)container.Payload)
                                                     .ToObject(typeof(AddNewClientToChatResponse)) as AddNewClientToChatResponse;
-                        AddedClientsToChat?.Invoke(this, new AddedClientsToChatEventArgs(addNewClientToChatResponse.ClientName, 
-                                                                                         addNewClientToChatResponse.NumberChat, 
+                        AddedClientsToChat?.Invoke(this, new AddedClientsToChatEventArgs(addNewClientToChatResponse.ClientName,
+                                                                                         addNewClientToChatResponse.NumberChat,
                                                                                          addNewClientToChatResponse.Clients));
                         break;
                     }
@@ -87,10 +90,10 @@ namespace Client.Model
                                                                                              removeClientFromChatResponse.Clients));
                         break;
                     }
-                case nameof(GetNumbersAccessibleChatsResponse):
+                case nameof(NumbersAccessibleChatsResponse):
                     {
                         var responseNumbersChats = ((JObject)container.Payload)
-                                                        .ToObject(typeof(GetNumbersAccessibleChatsResponse)) as GetNumbersAccessibleChatsResponse;
+                                                        .ToObject(typeof(NumbersAccessibleChatsResponse)) as NumbersAccessibleChatsResponse;
                         ResponseNumbersChats?.Invoke(this, new NumbersOfChatsReceivedEventArgs(responseNumbersChats.AllInfoAboutChat));
                         break;
                     }
@@ -103,5 +106,7 @@ namespace Client.Model
                     }
             }
         }
+
+        #endregion Methods
     }
 }

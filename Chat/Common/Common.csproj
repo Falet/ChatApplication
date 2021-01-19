@@ -65,8 +65,8 @@
     <Compile Include="Network\Packets\ConnectToChatResponse.cs" />
     <Compile Include="Network\Packets\Container.cs" />
     <Compile Include="Network\Packets\DisconnectNotice.cs" />
-    <Compile Include="Network\Packets\GetNumbersAccessibleChatsRequest.cs" />
-    <Compile Include="Network\Packets\GetNumbersAccessibleChatsResponse.cs" />
+    <Compile Include="Network\Packets\NumbersAccessibleChatsRequest.cs" />
+    <Compile Include="Network\Packets\NumbersAccessibleChatsResponse.cs" />
     <Compile Include="Network\Packets\InfoAboutAllClientsRequest.cs" />
     <Compile Include="Network\Packets\InfoAboutAllClientsResponse.cs" />
     <Compile Include="Network\Packets\MessageContainer.cs" />
@@ -77,10 +77,11 @@
     <Compile Include="Network\Packets\RemoveChatResponse.cs" />
     <Compile Include="Network\Packets\RemoveUserFromChatRequest.cs" />
     <Compile Include="Network\Packets\RemoveUserFromChatResponse.cs" />
+    <Compile Include="Network\Protocols\HandlerRequestFromClient.cs" />
     <Compile Include="Network\Protocols\TcpClient.cs" />
     <Compile Include="Network\Protocols\TcpServer.cs" />
-    <Compile Include="Network\Protocols\WsClient.cs" />
     <Compile Include="Network\Protocols\WsServer.cs" />
+    <Compile Include="Network\Protocols\[Interfaces]\IHandlerRequestFromClient.cs" />
     <Compile Include="Network\Protocols\[Interfaces]\ITransportServer.cs" />
     <Compile Include="Network\[Enum]\ResultRequest.cs" />
     <Compile Include="Network\[Enum]\TypeTransport.cs" />
