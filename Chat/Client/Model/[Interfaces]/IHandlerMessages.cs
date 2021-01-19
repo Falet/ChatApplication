@@ -1,22 +1,16 @@
-﻿namespace Client.Model
-{
-    using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
+namespace Client.Model
+{
+    using Common.Network.Packets;
+    using Common.Network;
     public interface IHandlerMessages
     {
-
-        #region Event
-
         event EventHandler<MessageReceivedForVMEventArgs> MessageReceived;
         event EventHandler<ClientConnectedToChatEventArgs> ConnectedToChat;
-
-        #endregion Event
-
-        #region Methods
-
         void SendMessage(string message, int numberChat);
         void ConnectToChat(int numberChat);
-
-        #endregion Methods
     }
 }

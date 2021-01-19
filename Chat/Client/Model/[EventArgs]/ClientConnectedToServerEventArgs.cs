@@ -1,7 +1,10 @@
-﻿namespace Client.Model
-{
-    using Common.Network;
+﻿using Common.Network;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
+namespace Client.Model
+{
     public class ClientConnectedToServerEventArgs
     {
         #region Properties

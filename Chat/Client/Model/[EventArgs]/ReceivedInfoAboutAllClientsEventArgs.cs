@@ -1,7 +1,9 @@
-﻿namespace Client.Model
-{
-    using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
+namespace Client.Model
+{
     public class ReceivedInfoAboutAllClientsEventArgs
     {
         #region Properties

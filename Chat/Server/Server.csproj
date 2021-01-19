@@ -79,7 +79,6 @@
     <Compile Include="DataBase\AddClientToChat.cs" />
     <Compile Include="DataBase\ClientInfo.cs" />
     <Compile Include="DataBase\CreatingChatInfo.cs" />
-    <Compile Include="DataBase\GeneralChatInfo.cs" />
     <Compile Include="DataBase\MessageInfoForDataBase.cs" />
     <Compile Include="DataBase\RemoveClientFromChat.cs" />
     <Compile Include="DataBase\RequestManagerDb.cs" />

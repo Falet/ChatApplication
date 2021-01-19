@@ -24,7 +24,7 @@
 
         #region Constructors
 
-        public TcpServer(IPEndPoint IPendPoint,IHandlerRequestFromClient handlerRequestFromClient)
+        public TcpServer(IPEndPoint IPendPoint)
         {
 
         }

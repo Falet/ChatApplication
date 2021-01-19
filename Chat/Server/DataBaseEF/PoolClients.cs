@@ -11,5 +11,6 @@
         public List<ClientsInChats> Clients { get; set; }
 
         #endregion Properties
+
     }
 }

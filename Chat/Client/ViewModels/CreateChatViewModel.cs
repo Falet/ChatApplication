@@ -1,26 +1,24 @@
-﻿namespace Client.ViewModels
-{
-    using Client.Model;
-    using Prism.Commands;
-    using Prism.Mvvm;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Linq;
-    using System.Windows;
+﻿using Client.Model;
+using Common.Network;
+using Prism.Commands;
+using Prism.Mvvm;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Threading;
 
+namespace Client.ViewModels
+{
     public class CreateChatViewModel : BindableBase
     {
-        #region Fields
-
         private Visibility _visibilityView;
         private ObservableCollection<InfoAboutClient> _clientsCollection;
         private IHandlerChats _handlerChats;
         private IHandlerConnection _handlerConnection;
-
-        #endregion Fields
-
-        #region Properties
-
         public Visibility VisibilityCreateChat
         {
             get => _visibilityView;
@@ -32,29 +30,19 @@
             set => SetProperty(ref _clientsCollection, value);
         }
         public DelegateCommand CreateChatButton { get; }
-
-        #endregion Properties
-
-        #region Constructors
-
         public CreateChatViewModel(IHandlerConnection handlerConnection, IHandlerChats handlerChats)
         {
             VisibilityCreateChat = Visibility.Hidden;
             _handlerChats = handlerChats;
-            _handlerChats.AddedChat += OnAddedChat;
+            _handlerChats.AddedChat += OnCreatedChat;
             _handlerConnection = handlerConnection;
             _handlerConnection.ReceivedInfoAboutAllClients += OnReceivedInfoAboutAllClients;
-            _handlerConnection.AnotherClientConnected += OnAnotherClientConnected;
-            _handlerConnection.AnotherNewClientConnected += OnAnotherNewClientConnected;
-            _handlerConnection.AnotherClientDisconnected += OnAnotherClientDisconnected;
+            _handlerConnection.AnotherClientConnected += OnConnectAnotherClient;
+            _handlerConnection.AnotherNewClientConnected += OnConnectAnotherNewClient;
+            _handlerConnection.AnotherClientDisconnected += OnDisconnectAnotherClient;
             _clientsCollection = new ObservableCollection<InfoAboutClient>();
             CreateChatButton = new DelegateCommand(CreateChat);
         }
-
-        #endregion Constructors
-
-        #region Methods
-
         private void CreateChat()
         {
             List<string> ClientForAdd = new List<string>();
@@ -68,7 +56,7 @@
             }
             _handlerChats.AddChat(ClientForAdd);
         }
-        private void OnAddedChat(object sender, AddedChatEventArgs container)
+        private void OnCreatedChat(object sender, AddedChatEventArgs container)
         {
             VisibilityCreateChat = Visibility.Hidden;
         }
@@ -78,11 +66,11 @@
             {
                 foreach (var KeyValue in container.InfoClientsAtChat)
                 {
-                    ClientsCollection.Add(new InfoAboutClient(KeyValue.Key, KeyValue.Value ? "Online" : "Offline"));
+                    ClientsCollection.Add(new InfoAboutClient(KeyValue.Key, KeyValue.Value));
                 }
             });
         }
-        public void OnAnotherClientConnected(object sender, AnotherClientConnectedEventArgs container)
+        public void OnConnectAnotherClient(object sender, AnotherClientConnectedEventArgs container)
         {
             App.Current.Dispatcher.Invoke(delegate
             {
@@ -90,20 +78,19 @@
                 {
                     if (item.NameClient == container.NameClient)
                     {
-                        item.ActivityClientChanged = "Online";
-                        break;
+                        item.ActivityClient = true;
                     }
                 }
             });
         }
-        public void OnAnotherNewClientConnected(object sender, AnotherClientConnectedEventArgs container)
+        public void OnConnectAnotherNewClient(object sender, AnotherClientConnectedEventArgs container)
         {
             App.Current.Dispatcher.Invoke(delegate
             {
-                ClientsCollection.Add(new InfoAboutClient(container.NameClient, "Online"));
+                ClientsCollection.Add(new InfoAboutClient(container.NameClient, true));
             });
         }
-        public void OnAnotherClientDisconnected(object sender, AnotherClientDisconnectedEventArgs container)
+        public void OnDisconnectAnotherClient(object sender, AnotherClientDisconnectedEventArgs container)
         {
             App.Current.Dispatcher.Invoke(delegate
             {
@@ -111,13 +98,10 @@
                 {
                     if (item.NameClient == container.NameClient)
                     {
-                        item.ActivityClientChanged = "Offline";
-                        break;
+                        item.ActivityClient = false;
                     }
                 }
             });
         }
-
-        #endregion Methods
     }
 }

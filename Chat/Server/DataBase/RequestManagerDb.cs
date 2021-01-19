@@ -7,24 +7,10 @@
     using System.Collections.Concurrent;
     using Common.Network;
     using Network;
+    using System.Data.Entity.Validation;
 
     public class RequestManagerDb : IHandlerRequestToData
     {
-        public RequestManagerDb(GeneralChatInfo generalChatInfo)
-        {
-            using (var db = new DBChat())
-            {
-                var count = db.PoolChat.Where(Chat => Chat.ChatID == generalChatInfo.NumberGeneralChat).Count();
-                if (count == 0)
-                {
-                    db.PoolChat.Add(new Chats() { ChatID = generalChatInfo.NumberGeneralChat, 
-                                                  Type = generalChatInfo.TypeGeneralChat, 
-                                                  OwnerChat = generalChatInfo.OwnerGeneralChat });
-                    db.SaveChanges();
-                }
-                
-            }
-        }
         #region Methods
         public ConcurrentDictionary<string, Guid> GetInfoAboutAllClient()
         {
@@ -104,19 +90,13 @@
             {
                 PoolClients client = new PoolClients
                 {
-                    ClientID = container.NameClient,
+                    ClientID = container.NameOfClient,
                     Clients = new List<ClientsInChats>(),
                 };
                 db.PoolClients.Add(client);
-                try
-                {
-                    int taskDb = await db.SaveChangesAsync();
-                    if (taskDb == 0)
-                    {
-                        return false;
-                    }
-                }
-                catch(Exception e)
+
+                int taskDb = await db.SaveChangesAsync();
+                if (taskDb == 0)
                 {
                     return false;
                 }
@@ -164,20 +144,14 @@
                     OwnerChat = container.NameOfClientSender,
                 };
                 db.PoolChat.Add(chat);
-                try
-                {
-                    Task<int> taskDb = db.SaveChangesAsync();
 
-                    if (taskDb.Result == 0)
-                    {
-                        return numberChat;
-                    }
-                    numberChat = chat.ChatID;
-                }
-                catch (Exception e)
+                Task<int> taskDb = db.SaveChangesAsync();
+
+                if(taskDb.Result == 0)
                 {
                     return numberChat;
                 }
+                numberChat = chat.ChatID;
             }
             return numberChat;
         }
@@ -192,15 +166,8 @@
                 db.PoolChat.Attach(chat);
                 db.PoolChat.Remove(chat);
 
-                try
-                {
-                    int taskDb = await db.SaveChangesAsync();
-                    if (taskDb == 0)
-                    {
-                        return false;
-                    }
-                }
-                catch (Exception e)
+                int taskDb = await db.SaveChangesAsync();
+                if (taskDb == 0)
                 {
                     return false;
                 }
@@ -220,15 +187,8 @@
                     };
                     db.ClientsInChats.Add(clientInChat);
                 }
-                try
-                {
-                    int taskDb = await db.SaveChangesAsync();
-                    if (taskDb == 0)
-                    {
-                        return false;
-                    }
-                }
-                catch (Exception e)
+                int taskDb = await db.SaveChangesAsync();
+                if (taskDb == 0)
                 {
                     return false;
                 }
@@ -250,15 +210,9 @@
                     db.ClientsInChats.Attach(clientInChat);
                     db.ClientsInChats.Remove(clientInChat);
                 }
-                try
-                {
-                    int taskDb = await db.SaveChangesAsync();
-                    if (taskDb == 0)
-                    {
-                        return false;
-                    }
-                }
-                catch (Exception e)
+
+                int taskDb = await db.SaveChangesAsync();
+                if (taskDb == 0)
                 {
                     return false;
                 }

@@ -1,33 +1,23 @@
-﻿namespace Client.Model
-{
-    using Common.Network;
-    using Common.Network.Packets;
-    using System;
-    using System.Collections.Generic;
+﻿using Common.Network;
+using Common.Network.Packets;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
+namespace Client.Model
+{
     public class HandlerChats : IHandlerChats
     {
-        #region Fields
-
-        private List<InfoAboutChat> _infoAboutAllChat;
         private ITransportClient _transportClient;
         private IHandlerConnection _handlerConnection;
         private IClientInfo _clientInfo;
-
-        #endregion Fields
-
-        #region Event
-
         public event EventHandler<AddedChatEventArgs> AddedChat;
-        public event EventHandler<RemovedChatEventArgs> RemovedChat;
         public event EventHandler<AddedClientsToChatClientEvenArgs> AddedClientsToChat;
         public event EventHandler<RemovedClientsFromChatForVMEventArgs> RemovedClientsFromChat;
+        public event EventHandler<NumbersOfChatsReceivedEventArgs> ResponseNumbersChats;
+        public event EventHandler<RemovedChatEventArgs> RemovedChat;
 
-        #endregion Event
-
-        #region Constructors
-
-        public HandlerChats(ITransportClient transportClient, IHandlerConnection handlerConnection, IHandlerResponseFromServer handlerResponseFromServer, IClientInfo clientInfo)
+        public HandlerChats(ITransportClient transportClient,IHandlerConnection handlerConnection, IHandlerResponseFromServer handlerResponseFromServer, IClientInfo clientInfo)
         {
             _handlerConnection = handlerConnection;
             _clientInfo = clientInfo;
@@ -39,15 +29,10 @@
             handlerResponseFromServer.ReceivedInfoAboutAllClients += OnReceivedInfoAboutAllClients;
             handlerResponseFromServer.RemovedChat += OnRemovedChat;
         }
-
-        #endregion Constructors
-
-        #region Methods
-
         public void AddChat(List<string> namesOfClients)
         {
             namesOfClients.Insert(0, _clientInfo.Login);
-            _transportClient.Send(Container.GetContainer(nameof(AddNewChatRequest), new AddNewChatRequest(_clientInfo.Login, namesOfClients)));
+            _transportClient.Send(Container.GetContainer(nameof(AddNewChatRequest),new AddNewChatRequest(_clientInfo.Login, namesOfClients)));
         }
 
         public void AddClientToChat(int numberChat, List<string> namesOfClients)
@@ -63,16 +48,26 @@
         }
         private void OnReceivedInfoAboutAllClients(object sender, ReceivedInfoAboutAllClientsEventArgs container)
         {
-            _transportClient.Send(Container.GetContainer(nameof(NumbersAccessibleChatsRequest),
-                                                        new NumbersAccessibleChatsRequest(_clientInfo.Login)));
+            _transportClient.Send(Container.GetContainer(nameof(GetNumbersAccessibleChatsRequest),
+                                                        new GetNumbersAccessibleChatsRequest(_clientInfo.Login)));
         }
         private void OnAddedChat(object sender, AddedNewChatModelEventArgs container)
         {
-            CreateChat(container.ClientCreator, container.NumberChat, container.Clients);
+            Dictionary<string, bool> infoClientsForAdd = new Dictionary<string, bool>(_handlerConnection.InfoClientsAtChat);
+            Dictionary<string, bool> infoClientsAtChat = new Dictionary<string, bool>();
+            foreach(var item in container.Clients)
+            {
+                if(_handlerConnection.InfoClientsAtChat.TryGetValue(item,out bool activityClient))
+                {
+                    infoClientsAtChat.Add(item, activityClient);
+                    infoClientsForAdd.Remove(item);
+                }
+            }
+            AddedChat?.Invoke(this, new AddedChatEventArgs(container.ClientCreator, infoClientsAtChat, infoClientsForAdd, container.NumberChat));
         }
         private void OnRemovedChat(object sender, RemovedChatEventArgs container)
         {
-            RemovedChat?.Invoke(this, new RemovedChatEventArgs(container.NameClient, container.NumberChat));
+            RemovedChat?.Invoke(this, new RemovedChatEventArgs(container.NameOfClient, container.NumberChat));
         }
         private void OnAddedClientsToChat(object sender, AddedClientsToChatEventArgs container)
         {
@@ -100,34 +95,18 @@
         }
         private void OnResponseNumbersChats(object sender, NumbersOfChatsReceivedEventArgs container)
         {
-            if (container.InfoAboutAllChat.Count != 0)
+            if(container.AllInfoAboutChat.Count != 0)
             {
-                _infoAboutAllChat = new List<InfoAboutChat>(container.InfoAboutAllChat);
-                foreach (var item in _infoAboutAllChat)
+                foreach (var item in container.AllInfoAboutChat)
                 {
-                    CreateChat(item.NameCreator, item.NumberChat, item.NamesOfClients);
+                    OnAddedChat(this, new AddedNewChatModelEventArgs(item.NameCreator, item.NumberChat, item.NamesOfClients));
                 }
             }
             else
             {
-                _transportClient.Send(Container.GetContainer(nameof(NumbersAccessibleChatsRequest),
-                                                        new NumbersAccessibleChatsRequest(_clientInfo.Login)));
+                _transportClient.Send(Container.GetContainer(nameof(GetNumbersAccessibleChatsRequest),
+                                                        new GetNumbersAccessibleChatsRequest(_clientInfo.Login)));
             }
         }
-        private void CreateChat(string clientCreator, int numberChat, List<string> clients)
-        {
-            Dictionary<string, bool> infoClientsForAdd = new Dictionary<string, bool>(_handlerConnection.InfoClientsAtChat);
-            Dictionary<string, bool> infoClientsAtChat = new Dictionary<string, bool>();
-            foreach (var item in clients)
-            {
-                if (_handlerConnection.InfoClientsAtChat.TryGetValue(item, out bool activityClient))
-                {
-                    infoClientsAtChat.Add(item, activityClient);
-                    infoClientsForAdd.Remove(item);
-                }
-            }
-            AddedChat?.Invoke(this, new AddedChatEventArgs(clientCreator, infoClientsAtChat, infoClientsForAdd, numberChat));
-        }
-        #endregion Methods
     }
 }

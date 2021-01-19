@@ -8,16 +8,16 @@ namespace Common.Network.Packets
     {
         #region Properties
 
-        public string NameClient { get; }
+        public string NameOfClient { get; }
 
 
         #endregion Properties
 
         #region Constructors
 
-        public DisconnectNotice(string nameClient)
+        public DisconnectNotice(string nameOfClient)
         {
-            NameClient = nameClient;
+            NameOfClient = nameOfClient;
         }
 
         #endregion Constructors

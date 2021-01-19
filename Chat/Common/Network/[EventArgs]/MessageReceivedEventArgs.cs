@@ -4,7 +4,7 @@
     {
         #region Properties
 
-        public string NameClient { get; }
+        public string NameOfClient { get; }
 
         public string Message { get; }
 
@@ -14,9 +14,9 @@
 
         #region Constructors
 
-        public MessageReceivedEventArgs(string nameClient, string message, int numberChat)
+        public MessageReceivedEventArgs(string nameOfClient, string message, int numberChat)
         {
-            NameClient = nameClient;
+            NameOfClient = nameOfClient;
             Message = message;
             NumberChat = numberChat;
         }

@@ -1,11 +1,16 @@
-﻿namespace Client.ViewModels
-{
-    using Prism.Mvvm;
-    using System.Windows;
+﻿using Client.Model;
+using Prism.Mvvm;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
 
+namespace Client.ViewModels
+{
     public class ControlVisibilityViewClientsViewModel : BindableBase
     {
-        #region Properties
         public AccessableClientForAddViewModel AccessClientForAddViewModel
         {
             get;
@@ -17,10 +22,6 @@
             private set;
         }
 
-        #endregion Properties
-
-        #region Constructors
-
         public ControlVisibilityViewClientsViewModel(AccessableClientForAddViewModel accessClientForAdd, ClientsAtChatViewModel clientsAtChatViewModel)
         {
             AccessClientForAddViewModel = accessClientForAdd;
@@ -28,7 +29,5 @@
             ClientsAtChatViewModel.VisibilityClientsAtChat = Visibility.Visible;
             AccessClientForAddViewModel.VisibilityOfControlAllClient = Visibility.Hidden;
         }
-
-        #endregion Constructors
     }
 }

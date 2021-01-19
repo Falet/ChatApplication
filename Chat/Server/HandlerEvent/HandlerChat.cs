@@ -1,13 +1,16 @@
-﻿namespace Server.Network
-{
-    using Common.Network;
-    using Common.Network.Packets;
-    using Server.DataBase;
-    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
+﻿using Common.Network;
+using Common.Network.Packets;
+using Server.DataBase;
+using Server.Network;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
+namespace Server.Network
+{
     public class HandlerChat
     {
         #region Const
@@ -15,6 +18,7 @@
         const int NumberGeneralChat = 1;
 
         #endregion Const
+
 
         #region Fields
 
@@ -24,33 +28,25 @@
         private HandlerConnection _connection;
 
         #endregion Fields
-
-        #region Properties
-
+         
         public ConcurrentDictionary<int, InfoChat> InfoChats { get; }//Ключ - номер комнаты
 
-        #endregion Properties
-
-        #region Constructors
-
-        public HandlerChat(ITransportServer server, IHandlerRequestFromClient handlerRequestFromClient, IHandlerRequestToData data, HandlerConnection connection)
+        public HandlerChat(ITransportServer server, IHandlerRequestToData data, HandlerConnection connection)
         {
             _server = server;
 
-            handlerRequestFromClient.AddedChat += OnAddedChat;
-            handlerRequestFromClient.RemovedChat += OnRemovedChat;
-            handlerRequestFromClient.AddedClientsToChat += OnAddedClientsToChat;
-            handlerRequestFromClient.RemovedClientsFromChat += OnRemovedClientsFromChat;
-            handlerRequestFromClient.RequestNumbersChats += OnRequestNumbersChats;
+            _server.AddedChat += OnAddedChat;
+            _server.RemovedChat += OnRemovedChat;
+            _server.AddedClientsToChat += OnAddedClientsToChat;
+            _server.RemovedClientsFromChat += OnRemovedClientsFromChat;
+            _server.RequestNumbersChats += OnRequestNumbersChats;
 
             _data = data;
             _cachedClientProperies = _data.GetInfoAboutLinkClientToChat();
             InfoChats = _data.GetInfoAboutAllChat();
             _connection = connection;
+
         }
-
-        #endregion Constructors
-
 
         #region Methods
         public async void OnAddedChat(object sender, AddedNewChatEventArgs container)
@@ -82,19 +78,23 @@
                     //Ошибка добавления чата
                 }
             }
+            else
+            {
+                //Ошибка, не существует клиента
+            }
         }
         public async void OnRemovedChat(object sender, RemovedChatEventArgs container)
         {
-            if (_cachedClientProperies.TryGetValue(container.NameClient, out ClientProperties clientProperties)
+            if (_cachedClientProperies.TryGetValue(container.NameOfClient, out ClientProperties clientProperties)
                 && InfoChats.TryGetValue(container.NumberChat, out InfoChat infoChat))
             {
-                if (container.NameClient == infoChat.OwnerChat)
+                if (container.NameOfClient == infoChat.OwnerChat)
                 {
                     List<Guid> idClientsForSendMessage = new List<Guid>();//Создание списка id для рассылки им сообщений
                     List<string> NameForChange = infoChat.NameOfClients;
                     await Task.Run(() => CreateUserListForChangeInfoChat(ref NameForChange, container.NumberChat, ref idClientsForSendMessage));
 
-                    var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage,Container.GetContainer(nameof(RemoveChatResponse), new RemoveChatResponse(container.NameClient, container.NumberChat))));
+                    var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage,Container.GetContainer(nameof(RemoveChatResponse), new RemoveChatResponse(container.NameOfClient, container.NumberChat))));
 
                     if (!InfoChats.TryRemove(container.NumberChat, out InfoChat infoRemovedChat))
                     {
@@ -106,6 +106,10 @@
                         //Ошибка на удаление в БД
                     }
                 }
+            }
+            else
+            {
+                //Ошибка
             }
         }
 
@@ -153,6 +157,10 @@
                     }
                 }
             }
+            else
+            {
+                //Ошибка
+            }
         }
         public async void OnRemovedClientsFromChat(object sender, RemovedClientsFromChatEventArgs container)
         {
@@ -189,6 +197,10 @@
                     }
                 }
             }
+            else
+            {
+                //Ошибка
+            }
         }
         public async void OnRequestNumbersChats(object sender, ClientRequestedNumbersChatEventArgs container)
         {
@@ -198,7 +210,7 @@
 
                 if (_cachedClientProperies.TryGetValue(container.NameOfClientSender, out ClientProperties clientProperties))
                 {
-                    foreach (var numberChat in clientProperties.NumbersChat)
+                    foreach(var numberChat in clientProperties.NumbersChat)
                     {
                         if (InfoChats.TryGetValue(numberChat, out InfoChat infoChat))
                         {
@@ -216,25 +228,28 @@
                         infoChat.NameOfClients.Add(container.NameOfClientSender);
                         InfoChats.TryUpdate(NumberGeneralChat, infoChat, lastValue);
                     }
-                    AllInfoAboutChat.Add(new InfoAboutChat(NumberGeneralChat, infoChat.OwnerChat, infoChat.NameOfClients));
+                    if (InfoChats.TryGetValue(NumberGeneralChat, out InfoChat infoChat1))
+                    {
+                        AllInfoAboutChat.Add(new InfoAboutChat(NumberGeneralChat, infoChat1.OwnerChat, infoChat1.NameOfClients));
+                    }
 
-                    var SendMessageAboutConnectNewClient = Task.Run
-                    (
-                    () => _server.SendAll(clientGuid,
-                                 Container.GetContainer(nameof(AddNewClientToChatResponse),
-                                 new AddNewClientToChatResponse("Server", new List<string> { container.NameOfClientSender }, NumberGeneralChat)))
-                    );
                     if (!await Task.Run(() => _data.AddClientToChat(new AddClientToChat { NumberChat = NumberGeneralChat, 
                                                                       NameOfClients = new List<string> { container.NameOfClientSender } })))
                     {
 
                     }
                 }
+                var SendMessageAboutConnectNewClient = Task.Run
+                    (
+                    () => _server.SendAll(clientGuid ,
+                                 Container.GetContainer(nameof(AddNewClientToChatResponse),
+                                 new AddNewClientToChatResponse("Server",new List<string> { container.NameOfClientSender }, NumberGeneralChat)))
+                    );
                 var SendMessageToServer = Task.Run
                     (
                     () => _server.Send(new List<Guid> { clientGuid },
-                                 Container.GetContainer(nameof(NumbersAccessibleChatsResponse),
-                                 new NumbersAccessibleChatsResponse(AllInfoAboutChat)))
+                                 Container.GetContainer(nameof(GetNumbersAccessibleChatsResponse),
+                                 new GetNumbersAccessibleChatsResponse(AllInfoAboutChat)))
                     );
             }
         }

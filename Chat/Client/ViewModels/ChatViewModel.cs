@@ -1,29 +1,32 @@
-﻿namespace Client.ViewModels
-{
-    using Client.Model;
-    using Prism.Commands;
-    using Prism.Mvvm;
-    using System.Collections.ObjectModel;
-    using System.Windows;
+﻿using Client.Model;
+using Common.Network;
+using Prism.Commands;
+using Prism.Mvvm;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Threading;
 
+namespace Client.ViewModels
+{
     public class ChatViewModel : BindableBase
     {
-        #region Fields
-
-        private Visibility _visibilityView;
-        private ControlVisibilityViewClientsViewModel _controlVisibilityViewClients;
-        private string _textButtonChangeViewClients;
         private string _textMessages;
-        private string _textToolTip;
+        private ControlVisibilityViewClientsViewModel _controlVisibilityViewClients;
+        private AccessableClientForAddViewModel _allClientsViewModel;
+        private ClientsAtChatViewModel _clientsAtChatViewModel;
+        private string _textButtonChangeViewClients;
         private bool IsViewClientsChanged;
         private ObservableCollection<string> _messagesCollection;
+        private string _textToolTip;
         private IHandlerMessages _handlerMessages;
-
-        #endregion Fields
-
-        #region Properties
-
-        public bool ChatIsLoad { get; private set; }
+        private Visibility _visibilityView;
+        public bool _chatIsLoad { get; private set; }
         public Visibility VisibilityChat
         {
             get => _visibilityView;
@@ -58,21 +61,18 @@
         public DelegateCommand SendMessage { get; }
         public DelegateCommand ChangeVisibilityViewClients { get; }
 
-        #endregion Properties
-
-        #region Constructors
-
         public ChatViewModel(AccessableClientForAddViewModel allClientsViewModel, ClientsAtChatViewModel clientsAtChatViewModel, IHandlerMessages handlerMessages, int numberChat)
         {
-            _visibilityView = Visibility.Hidden;
-
-            _controlVisibilityViewClients = new ControlVisibilityViewClientsViewModel(allClientsViewModel, clientsAtChatViewModel);
+            _clientsAtChatViewModel = clientsAtChatViewModel;
+            _allClientsViewModel = allClientsViewModel;
+            _controlVisibilityViewClients = new ControlVisibilityViewClientsViewModel(_allClientsViewModel, clientsAtChatViewModel);
             _textButtonChangeViewClients = "Добавить";
             _messagesCollection = new ObservableCollection<string>();
             _textToolTip = "Добавить клиентов в чат из общего списка";
             IsViewClientsChanged = true;
 
-            ChatIsLoad = false;
+            _chatIsLoad = false;
+
 
             _handlerMessages = handlerMessages;
             _handlerMessages.MessageReceived += OnMessageReceived;
@@ -84,11 +84,6 @@
             ChangeVisibilityViewClients = new DelegateCommand(ChangeViewClients).ObservesProperty(() => TextButtonChangeViewClients);
             ChangeVisibilityViewClients.ObservesProperty(() => TextToolTip);
         }
-
-        #endregion Constructors
-
-        #region Methods
-
         private void ExecuteSendMessage()
         {
             _handlerMessages.SendMessage(CurrentTextMessage, NumberChat);
@@ -128,7 +123,7 @@
         }
         private void OnConnectedToChat(object sender, ClientConnectedToChatEventArgs container)
         {
-            if (container.NumberChat == NumberChat)
+            if (container.AllMessageFromChat != null && container.NumberChat == NumberChat)
             {
                 App.Current.Dispatcher.Invoke(delegate
                 {
@@ -136,11 +131,9 @@
                     {
                         MessagesCollection.Add(string.Format("Sender: {0}\nMessage: {1}\nTime: {2}", item.FromMessage, item.Text, item.Time));
                     }
-                    ChatIsLoad = true;
+                    _chatIsLoad = true;
                 });
             }
         }
-
-        #endregion Methods
     }
 }
