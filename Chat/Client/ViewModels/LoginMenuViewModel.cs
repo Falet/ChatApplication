@@ -7,6 +7,8 @@
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Windows;
+    using System.Net;
+
     public class LoginMenuViewModel : BindableBase
     {
         #region Fields
@@ -66,8 +68,8 @@
         {
             _visibilityView = Visibility.Visible;
 
-            IP = "192.168.0.104";
-            Port = "35";
+            IP = "192.168.37.106";
+            Port = "80";
 
             _textError = null;
             regexIP = new Regex(@"^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");

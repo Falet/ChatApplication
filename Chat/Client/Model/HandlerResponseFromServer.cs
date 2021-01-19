@@ -39,13 +39,13 @@
                 case nameof(ConnectionNoticeForClients):
                     {
                         var connectionNoticeForClients = ((JObject)container.Payload).ToObject(typeof(ConnectionNoticeForClients)) as ConnectionNoticeForClients;
-                        AnotherClientConnected?.Invoke(this, new AnotherClientConnectedEventArgs(connectionNoticeForClients.NameOfClient));
+                        AnotherClientConnected?.Invoke(this, new AnotherClientConnectedEventArgs(connectionNoticeForClients.NameClient));
                         break;
                     }
                 case nameof(DisconnectNotice):
                     {
                         var disconnectionResponse = ((JObject)container.Payload).ToObject(typeof(DisconnectNotice)) as DisconnectNotice;
-                        AnotherClientDisconnected?.Invoke(this, new AnotherClientDisconnectedEventArgs(disconnectionResponse.NameOfClient));
+                        AnotherClientDisconnected?.Invoke(this, new AnotherClientDisconnectedEventArgs(disconnectionResponse.NameClient));
                         break;
                     }
                 case nameof(MessageResponse):
@@ -69,7 +69,7 @@
                 case nameof(RemoveChatResponse):
                     {
                         var removeChatResponse = ((JObject)container.Payload).ToObject(typeof(RemoveChatResponse)) as RemoveChatResponse;
-                        RemovedChat?.Invoke(this, new RemovedChatEventArgs(removeChatResponse.NameOfClient, removeChatResponse.NumberChat));
+                        RemovedChat?.Invoke(this, new RemovedChatEventArgs(removeChatResponse.NameClient, removeChatResponse.NumberChat));
                         break;
                     }
                 case nameof(AddNewClientToChatResponse):

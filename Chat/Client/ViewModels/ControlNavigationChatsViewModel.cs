@@ -100,6 +100,8 @@
                 ChatViewModel newChat = new ChatViewModel(allClientViewModel, clientsAtChat, _handlerMessages, container.NumberChat);
 
                 ChatCollection.Add(newChat);
+
+                CurrentViewModelChat = newChat;
             });
         }
         private void OnRemovedChat(object sender, RemovedChatEventArgs container)

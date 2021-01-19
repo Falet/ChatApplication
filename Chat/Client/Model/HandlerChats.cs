@@ -72,7 +72,7 @@
         }
         private void OnRemovedChat(object sender, RemovedChatEventArgs container)
         {
-            RemovedChat?.Invoke(this, new RemovedChatEventArgs(container.NameOfClient, container.NumberChat));
+            RemovedChat?.Invoke(this, new RemovedChatEventArgs(container.NameClient, container.NumberChat));
         }
         private void OnAddedClientsToChat(object sender, AddedClientsToChatEventArgs container)
         {

@@ -8,45 +8,55 @@
              xmlns:local="clr-namespace:Client"
 		     xmlns:view="clr-namespace:Client.Views"
 		     xmlns:viewModel="clr-namespace:Client.ViewModels"
-			 mc:Ignorable="d" Visibility="{Binding VisibilityLoginMenu}">
-	
-	<Grid Height="356" Width="561">
-		<Canvas>
-			<TextBlock Height="29" Width="58" Canvas.Left="10" Canvas.Top="54" 
-					   Text="IP" TextAlignment="Center" FontSize="16"
-					   />
+             d:DesignHeight="450" d:DesignWidth="800"
+			 mc:Ignorable="d" Visibility="{Binding VisibilityLoginMenu}"
+             Style="{StaticResource PrimaryControlStyle}">
 
-			<TextBox Width="198" Height="29" Canvas.Left="68" Canvas.Top="54"
-					 Text="{Binding IP,UpdateSourceTrigger=PropertyChanged}"/>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="44*"></RowDefinition>
+            <RowDefinition Height="44*"></RowDefinition>
+            <RowDefinition Height="47*"></RowDefinition>
+            <RowDefinition Height="183*"></RowDefinition>
+            <RowDefinition Height="49*"></RowDefinition>
+            <RowDefinition Height="83*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="123*"></ColumnDefinition>
+            <ColumnDefinition Width="61*"></ColumnDefinition>
+            <ColumnDefinition Width="247*"></ColumnDefinition>
+            <ColumnDefinition Width="62*"></ColumnDefinition>
+            <ColumnDefinition Width="165*"></ColumnDefinition>
+            <ColumnDefinition Width="142*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
 
-			<TextBlock Height="29" Width="58" Canvas.Left="10" Canvas.Top="116" 
-					   Text="Port" TextAlignment="Center" FontSize="16"/>
+        <TextBlock Grid.Column="1" Grid.Row="1" Text="IP" TextAlignment="Center" VerticalAlignment="Center" FontSize="16" Height="20" Margin="0,12"/>
 
-			<TextBox Width="198" Height="29" Canvas.Left="68" Canvas.Top="116"
-					 Text="{Binding Port,UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox   Grid.Column="2" Grid.Row="1" Margin="10"
+                    Style="{StaticResource TextBoxStyle}"
+					Text="{Binding IP,UpdateSourceTrigger=PropertyChanged}"/>
 
-			<TextBlock Height="29" Width="58" Canvas.Left="10" Canvas.Top="182" 
-					   Text="Login" TextAlignment="Center" FontSize="16"/>
+        <TextBlock  Grid.Column="3" Grid.Row="1"
+					Text="Port" TextAlignment="Center" VerticalAlignment="Center" FontSize="16" Height="20" Margin="0,12"/>
 
-			<TextBox Width="198" Height="29" Canvas.Left="68" Canvas.Top="182"
-					 Text="{Binding Login,UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox    Grid.Column="4" Grid.Row="1" Margin="10"
+                    Style="{StaticResource TextBoxStyle}"
+					Text="{Binding Port,UpdateSourceTrigger=PropertyChanged}"/>
 
-			<Button Height="60" Width="198" Canvas.Left="68" Canvas.Top="244" 
-					Content="Sign in"
-					Command="{Binding SignIn}"/>
+        <TextBlock  Grid.Column="1" Grid.Row="2"
+					Text="Login" TextAlignment="Center" VerticalAlignment="Center" FontSize="16" Height="21" Margin="0,13"/>
 
-			<ComboBox Canvas.Left="336" Canvas.Top="54" Width="209" Height="29"
-					  SelectedItem="{Binding Protocol}">
-				<ComboBoxItem IsSelected="True">
-					<TextBlock>WebSocket</TextBlock>
-				</ComboBoxItem>
-				<ComboBoxItem IsSelected="False">
-					<TextBlock>TCP</TextBlock>
-				</ComboBoxItem>
-			</ComboBox>
-			<TextBlock Width="209" Height="188" Canvas.Left="336" Canvas.Top="116" 
-					   Text="{Binding TextError}" TextAlignment="Center" TextWrapping="Wrap">
-			</TextBlock>
-		</Canvas>
-	</Grid>
+        <TextBox    Grid.Column="2" Grid.Row="2" Margin="10"
+                    Style="{StaticResource TextBoxStyle}"
+					Text="{Binding Login,UpdateSourceTrigger=PropertyChanged}"/>
+
+        <Button     Grid.Column="3" Grid.ColumnSpan="2" Grid.Row="4" Margin="10"
+				    Content="Sign in"
+                    Style="{StaticResource ButtonStyle}"
+				    Command="{Binding SignIn}"/>
+
+        <TextBlock  Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="3" Margin="7"
+					Text="{Binding TextError}" TextAlignment="Center" TextWrapping="Wrap">
+        </TextBlock>
+    </Grid>
 </UserControl>

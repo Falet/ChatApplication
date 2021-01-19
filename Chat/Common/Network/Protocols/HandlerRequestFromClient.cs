@@ -33,7 +33,7 @@ namespace Common.Network
                 case nameof(DisconnectNotice):
                     {
                         var disconnectionRequest = ((JObject)container.Payload).ToObject(typeof(DisconnectNotice)) as DisconnectNotice;
-                        ClientDisconnected?.Invoke(this, new ClientDisconnectedEventArgs(disconnectionRequest.NameOfClient,clientId));
+                        ClientDisconnected?.Invoke(this, new ClientDisconnectedEventArgs(disconnectionRequest.NameClient,clientId));
                         break;
                     }
                 case nameof(InfoAboutAllClientsRequest):

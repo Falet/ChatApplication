@@ -4,7 +4,7 @@
     {
         #region Properties
 
-        public string NameOfClient { get; set; }
+        public string NameClient { get; set; }
 
         #endregion Properties
         

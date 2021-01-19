@@ -10,7 +10,6 @@
 
 	public class HandlerConnection
     {
-
 		#region Const
 
 		const int NumberGeneralChat = 1;
@@ -50,6 +49,16 @@
 
 		public async void OnClientConnected(object sender, ClientConnectedEventArgs container)
 		{
+			if(container.ClientName == "Server")
+            {
+				var SendMessageToServer = Task.Run(() =>
+					_server.Send(new List<Guid>() { container.ClientId },
+								 Container.GetContainer(nameof(ConnectionResponse),
+														new ConnectionResponse(ResultRequest.Failure, "Запрещенное имя")))
+					);
+				return;
+			}
+
 			if (cachedClientName.TryGetValue(container.ClientName, out Guid clientGuid))
 			{
 				if (clientGuid == Guid.Empty)
@@ -87,7 +96,7 @@
 
 				_server.SetLoginConnection(container.ClientId, container.ClientName);
 
-				if (!await Task.Run(() => _data.AddNewClient(new ClientInfo { NameOfClient = container.ClientName })))
+				if (!await Task.Run(() => _data.AddNewClient(new ClientInfo { NameClient = container.ClientName })))
 				{
 					//Ошибка, не получилось записать
 				}
@@ -98,10 +107,12 @@
 			if (cachedClientName.TryGetValue(container.NameClient, out Guid clientGuid))
 			{
 				var SendMessageToServer = Task.Run(() =>
-					_server.SendAll(clientGuid, Container.GetContainer(nameof(DisconnectNotice), new DisconnectNotice(container.NameClient)))
+					_server.SendAll(Guid.Empty, Container.GetContainer(nameof(DisconnectNotice), new DisconnectNotice(container.NameClient)))
 				);
 
 				cachedClientName.TryUpdate(container.NameClient, Guid.Empty, clientGuid);
+
+				_server.FreeConnection(container.NameGuid);
 			}
 		}
 		public void OnRequestInfoAllClient(object sender, InfoAboutAllClientsEventArgs container)

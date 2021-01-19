@@ -8,15 +8,15 @@ namespace Common.Network.Packets
     {
         #region Properties
 
-        public string NameOfClient { get; }
+        public string NameClient { get; }
 
         #endregion Properties
 
         #region Constructors
 
-        public ConnectionNoticeForClients(string nameOfClient)
+        public ConnectionNoticeForClients(string nameClient)
         {
-            NameOfClient = nameOfClient;
+            NameClient = nameClient;
         }
 
         #endregion Constructors

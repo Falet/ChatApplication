@@ -85,16 +85,16 @@
         }
         public async void OnRemovedChat(object sender, RemovedChatEventArgs container)
         {
-            if (_cachedClientProperies.TryGetValue(container.NameOfClient, out ClientProperties clientProperties)
+            if (_cachedClientProperies.TryGetValue(container.NameClient, out ClientProperties clientProperties)
                 && InfoChats.TryGetValue(container.NumberChat, out InfoChat infoChat))
             {
-                if (container.NameOfClient == infoChat.OwnerChat)
+                if (container.NameClient == infoChat.OwnerChat)
                 {
                     List<Guid> idClientsForSendMessage = new List<Guid>();//Создание списка id для рассылки им сообщений
                     List<string> NameForChange = infoChat.NameOfClients;
                     await Task.Run(() => CreateUserListForChangeInfoChat(ref NameForChange, container.NumberChat, ref idClientsForSendMessage));
 
-                    var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage,Container.GetContainer(nameof(RemoveChatResponse), new RemoveChatResponse(container.NameOfClient, container.NumberChat))));
+                    var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage,Container.GetContainer(nameof(RemoveChatResponse), new RemoveChatResponse(container.NameClient, container.NumberChat))));
 
                     if (!InfoChats.TryRemove(container.NumberChat, out InfoChat infoRemovedChat))
                     {
@@ -198,7 +198,7 @@
 
                 if (_cachedClientProperies.TryGetValue(container.NameOfClientSender, out ClientProperties clientProperties))
                 {
-                    foreach(var numberChat in clientProperties.NumbersChat)
+                    foreach (var numberChat in clientProperties.NumbersChat)
                     {
                         if (InfoChats.TryGetValue(numberChat, out InfoChat infoChat))
                         {
@@ -216,10 +216,7 @@
                         infoChat.NameOfClients.Add(container.NameOfClientSender);
                         InfoChats.TryUpdate(NumberGeneralChat, infoChat, lastValue);
                     }
-                    if (InfoChats.TryGetValue(NumberGeneralChat, out InfoChat infoChat1))
-                    {
-                        AllInfoAboutChat.Add(new InfoAboutChat(NumberGeneralChat, infoChat1.OwnerChat, infoChat1.NameOfClients));
-                    }
+                    AllInfoAboutChat.Add(new InfoAboutChat(NumberGeneralChat, infoChat.OwnerChat, infoChat.NameOfClients));
 
                     var SendMessageAboutConnectNewClient = Task.Run
                     (

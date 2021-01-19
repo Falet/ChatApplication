@@ -19,6 +19,8 @@
 
                 ConfigServer _ConfigServer = ConfigurationServer.ReadConfigFromFile("user.json");
 
+                container.RegisterSingleton<GeneralChatInfo>(new InjectionConstructor(1,"General","Server"));
+                
                 container.RegisterSingleton<IHandlerRequestFromClient, HandlerRequestFromClient>();
 
                 container.RegisterSingleton<ITransportServer, WsServer>(new InjectionConstructor(new IPEndPoint(IPAddress.Any, _ConfigServer.Port), container.Resolve<IHandlerRequestFromClient>()));

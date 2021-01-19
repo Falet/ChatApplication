@@ -16,7 +16,7 @@
         private readonly ConcurrentQueue<MessageContainer> _sendQueue;
         private int _sending;
         private IHandlerRequestFromClient _handlerRequestFromClient;
-
+        private System.Timers.Timer _timer;
         #endregion Fields
 
         #region Properties
@@ -37,6 +37,10 @@
             _sending = 0;
 
             Id = Guid.NewGuid();
+
+            _timer = new System.Timers.Timer(60000);
+            _timer.Elapsed += OnTimeOut;
+            _timer.AutoReset = false;
         }
 
         #endregion Constructors
@@ -46,6 +50,12 @@
         public void AddServer(WsServer server)
         {
             _server = server;
+        }
+
+        private void OnTimeOut(object source, System.Timers.ElapsedEventArgs e)
+        {
+            CloseConnection();
+            Context.WebSocket.CloseAsync();
         }
         public void AddParserPacket(IHandlerRequestFromClient handlerRequestFromClient)
         {
@@ -65,16 +75,21 @@
         {
             Console.WriteLine("Connect");
             _server.AddConnection(this);
+            _timer.Enabled = true;
         }
 
         protected override void OnClose(CloseEventArgs e)
         {
             Console.WriteLine("Disconnect");
-            _server.FreeConnection(Id);
+            CloseConnection();
+        }
+
+        private void CloseConnection()
+        {
             if (Login != null)
             {
                 //Очень странная вещь, но напрямую MessageContainer не работает
-                string serializedMessages = JsonConvert.SerializeObject(Container.GetContainer(nameof(DisconnectNotice), 
+                string serializedMessages = JsonConvert.SerializeObject(Container.GetContainer(nameof(DisconnectNotice),
                                                                                                new DisconnectNotice(Login)));
                 var message = JsonConvert.DeserializeObject<MessageContainer>(serializedMessages);
                 _handlerRequestFromClient.ParsePacket(Id, message);
@@ -88,6 +103,7 @@
             {
                 var message = JsonConvert.DeserializeObject<MessageContainer>(e.Data);
                 _handlerRequestFromClient.ParsePacket(Id, message);
+                _timer.Interval = 60000;
             }
         }
         private void SendCompleted(bool completed)

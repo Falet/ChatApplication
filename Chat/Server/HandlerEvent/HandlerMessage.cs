@@ -47,12 +47,12 @@
 
         public void OnChatOpened(object sender, ConnectionToChatEventArgs container)
         {
-            if (_connection.cachedClientName.TryGetValue(container.NameOfClient, out Guid clientGuid)
+            if (_connection.cachedClientName.TryGetValue(container.NameClient, out Guid clientGuid)
                && _chats.InfoChats.TryGetValue(container.NumberChat, out InfoChat infoChat))
             {
                 foreach (var nameClientAtChat in infoChat.NameOfClients)
                 {
-                    if (nameClientAtChat == container.NameOfClient)
+                    if (nameClientAtChat == container.NameClient)
                     {
                         if (MessagesAtChat.TryGetValue(container.NumberChat, out List<MessageInfo> messages) && clientGuid != Guid.Empty)
                         {
@@ -79,7 +79,7 @@
 
         public async void OnMessage(object sender, MessageReceivedEventArgs container)
         {
-            if (_connection.cachedClientName.ContainsKey(container.NameOfClient)
+            if (_connection.cachedClientName.ContainsKey(container.NameClient)
                && _chats.InfoChats.TryGetValue(container.NumberChat, out InfoChat infoChat))
             {
                 List<Guid> idClientsForSendMessage = new List<Guid>();//Создание списка id для рассылки им сообщений
@@ -92,7 +92,7 @@
                 }
                 var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage,
                                                                       Container.GetContainer(nameof(MessageResponse),
-                                                                      new MessageResponse(new MessageInfo(container.NameOfClient, 
+                                                                      new MessageResponse(new MessageInfo(container.NameClient, 
                                                                                                           container.Message, 
                                                                                                           DateTime.Now), 
                                                                       container.NumberChat)))
@@ -102,14 +102,14 @@
                 if (MessagesAtChat.TryGetValue(container.NumberChat, out List<MessageInfo> allMessageAtChat))
                 {
                     var lastValueMessages = allMessageAtChat;
-                    allMessageAtChat.Add(new MessageInfo(container.NameOfClient, container.Message, time));
+                    allMessageAtChat.Add(new MessageInfo(container.NameClient, container.Message, time));
                     MessagesAtChat.TryUpdate(container.NumberChat, allMessageAtChat, lastValueMessages);
                 }
 
                 if (!await Task.Run(() => _data.AddNewMessage(new MessageInfoForDataBase
                 {
                     NumberChat = container.NumberChat,
-                    FromMessage = container.NameOfClient,
+                    FromMessage = container.NameClient,
                     Text = container.Message,
                     Time = time
                 })))

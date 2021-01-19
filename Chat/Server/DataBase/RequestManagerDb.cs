@@ -7,10 +7,24 @@
     using System.Collections.Concurrent;
     using Common.Network;
     using Network;
-    using System.Data.Entity.Validation;
 
     public class RequestManagerDb : IHandlerRequestToData
     {
+        public RequestManagerDb(GeneralChatInfo generalChatInfo)
+        {
+            using (var db = new DBChat())
+            {
+                var count = db.PoolChat.Where(Chat => Chat.ChatID == generalChatInfo.NumberGeneralChat).Count();
+                if (count == 0)
+                {
+                    db.PoolChat.Add(new Chats() { ChatID = generalChatInfo.NumberGeneralChat, 
+                                                  Type = generalChatInfo.TypeGeneralChat, 
+                                                  OwnerChat = generalChatInfo.OwnerGeneralChat });
+                    db.SaveChanges();
+                }
+                
+            }
+        }
         #region Methods
         public ConcurrentDictionary<string, Guid> GetInfoAboutAllClient()
         {
@@ -90,7 +104,7 @@
             {
                 PoolClients client = new PoolClients
                 {
-                    ClientID = container.NameOfClient,
+                    ClientID = container.NameClient,
                     Clients = new List<ClientsInChats>(),
                 };
                 db.PoolClients.Add(client);
