@@ -3,7 +3,6 @@
     using Common.Network;
     using Common.Network.Packets;
     using Server.DataBase;
-    using Server.Network;
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
@@ -11,8 +10,6 @@
 
     public class HandlerMessage
     {
-        public ConcurrentDictionary<int, List<MessageInfo>> MessagesAtChat { get; }//Ключ - номер комнаты
-
         #region Fields
 
         private IHandlerRequestToData _data;
@@ -21,11 +18,20 @@
         private HandlerChat _chats;
 
         #endregion Fields
-        public HandlerMessage(ITransportServer server, IHandlerRequestToData data, HandlerConnection connection, HandlerChat chats)
+
+        #region Properties
+
+        public ConcurrentDictionary<int, List<MessageInfo>> MessagesAtChat { get; }//Ключ - номер комнаты
+
+        #endregion Properties
+
+        #region Constructors
+
+        public HandlerMessage(ITransportServer server, IHandlerRequestFromClient handlerRequestFromClient, IHandlerRequestToData data, HandlerConnection connection, HandlerChat chats)
         {
             _server = server;
-            _server.MessageReceived += OnMessage;
-            _server.ConnectedToChat += OnChatOpened;
+            handlerRequestFromClient.MessageReceived += OnMessage;
+            handlerRequestFromClient.ConnectedToChat += OnChatOpened;
 
             _data = data;
             MessagesAtChat = _data.GetAllMessageFromChats();
@@ -33,6 +39,12 @@
             _connection = connection;
             _chats = chats;
         }
+
+        #endregion Constructors
+
+
+        #region Methods
+
         public void OnChatOpened(object sender, ConnectionToChatEventArgs container)
         {
             if (_connection.cachedClientName.TryGetValue(container.NameOfClient, out Guid clientGuid)
@@ -51,13 +63,17 @@
                                          new ConnectToChatResponse(container.NumberChat, messages)))
                             );
                         }
+                        else
+                        {
+                            var SendMessageToServer = Task.Run
+                            (
+                            () => _server.Send(new List<Guid> { clientGuid },
+                                         Container.GetContainer(nameof(ConnectToChatResponse),
+                                         new ConnectToChatResponse(container.NumberChat, new List<MessageInfo>())))
+                            );
+                        }
                     }
                 }
-            }
-            else
-            {
-                //Ошибка
-                return;
             }
         }
 
@@ -76,7 +92,10 @@
                 }
                 var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage,
                                                                       Container.GetContainer(nameof(MessageResponse),
-                                                                      new MessageResponse(new MessageInfo(container.NameOfClient, container.Message, DateTime.Now), container.NumberChat)))
+                                                                      new MessageResponse(new MessageInfo(container.NameOfClient, 
+                                                                                                          container.Message, 
+                                                                                                          DateTime.Now), 
+                                                                      container.NumberChat)))
                                                     );
 
                 DateTime time = DateTime.Now;
@@ -88,20 +107,18 @@
                 }
 
                 if (!await Task.Run(() => _data.AddNewMessage(new MessageInfoForDataBase
-                                                                {
-                                                                    NumberChat = container.NumberChat,
-                                                                    FromMessage = container.NameOfClient,
-                                                                    Text = container.Message,
-                                                                    Time = time
-                                                                })))
+                {
+                    NumberChat = container.NumberChat,
+                    FromMessage = container.NameOfClient,
+                    Text = container.Message,
+                    Time = time
+                })))
                 {
                     //Сообщение не удалось добавить, сигнал серверу на запрет приема сообщений до добавления сообщения
                 }
             }
-            else
-            {
-                //Ошибка, не существует либо пользователя, либо комнаты
-            }
         }
+
+        #endregion Methods
     }
 }

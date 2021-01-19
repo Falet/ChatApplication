@@ -1,10 +1,7 @@
-﻿using Common.Network;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Client.Model
+﻿namespace Client.Model
 {
+    using Common.Network;
+
     public class MessageReceivedForVMEventArgs
     {
         #region Properties

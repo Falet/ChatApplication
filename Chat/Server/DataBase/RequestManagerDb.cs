@@ -94,9 +94,15 @@
                     Clients = new List<ClientsInChats>(),
                 };
                 db.PoolClients.Add(client);
-
-                int taskDb = await db.SaveChangesAsync();
-                if (taskDb == 0)
+                try
+                {
+                    int taskDb = await db.SaveChangesAsync();
+                    if (taskDb == 0)
+                    {
+                        return false;
+                    }
+                }
+                catch(Exception e)
                 {
                     return false;
                 }
@@ -144,14 +150,20 @@
                     OwnerChat = container.NameOfClientSender,
                 };
                 db.PoolChat.Add(chat);
+                try
+                {
+                    Task<int> taskDb = db.SaveChangesAsync();
 
-                Task<int> taskDb = db.SaveChangesAsync();
-
-                if(taskDb.Result == 0)
+                    if (taskDb.Result == 0)
+                    {
+                        return numberChat;
+                    }
+                    numberChat = chat.ChatID;
+                }
+                catch (Exception e)
                 {
                     return numberChat;
                 }
-                numberChat = chat.ChatID;
             }
             return numberChat;
         }
@@ -166,8 +178,15 @@
                 db.PoolChat.Attach(chat);
                 db.PoolChat.Remove(chat);
 
-                int taskDb = await db.SaveChangesAsync();
-                if (taskDb == 0)
+                try
+                {
+                    int taskDb = await db.SaveChangesAsync();
+                    if (taskDb == 0)
+                    {
+                        return false;
+                    }
+                }
+                catch (Exception e)
                 {
                     return false;
                 }
@@ -187,8 +206,15 @@
                     };
                     db.ClientsInChats.Add(clientInChat);
                 }
-                int taskDb = await db.SaveChangesAsync();
-                if (taskDb == 0)
+                try
+                {
+                    int taskDb = await db.SaveChangesAsync();
+                    if (taskDb == 0)
+                    {
+                        return false;
+                    }
+                }
+                catch (Exception e)
                 {
                     return false;
                 }
@@ -210,9 +236,15 @@
                     db.ClientsInChats.Attach(clientInChat);
                     db.ClientsInChats.Remove(clientInChat);
                 }
-
-                int taskDb = await db.SaveChangesAsync();
-                if (taskDb == 0)
+                try
+                {
+                    int taskDb = await db.SaveChangesAsync();
+                    if (taskDb == 0)
+                    {
+                        return false;
+                    }
+                }
+                catch (Exception e)
                 {
                     return false;
                 }

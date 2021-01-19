@@ -13,10 +13,9 @@
         #region Fields
 
         private WsServer _server;
-
         private readonly ConcurrentQueue<MessageContainer> _sendQueue;
-
         private int _sending;
+        private IHandlerRequestFromClient _handlerRequestFromClient;
 
         #endregion Fields
 
@@ -48,6 +47,10 @@
         {
             _server = server;
         }
+        public void AddParserPacket(IHandlerRequestFromClient handlerRequestFromClient)
+        {
+            _handlerRequestFromClient = handlerRequestFromClient;
+        }
 
         public void Send(MessageContainer container)
         {
@@ -68,15 +71,23 @@
         {
             Console.WriteLine("Disconnect");
             _server.FreeConnection(Id);
+            if (Login != null)
+            {
+                //Очень странная вещь, но напрямую MessageContainer не работает
+                string serializedMessages = JsonConvert.SerializeObject(Container.GetContainer(nameof(DisconnectNotice), 
+                                                                                               new DisconnectNotice(Login)));
+                var message = JsonConvert.DeserializeObject<MessageContainer>(serializedMessages);
+                _handlerRequestFromClient.ParsePacket(Id, message);
+            }
         }
 
         protected override void OnMessage(MessageEventArgs e)
         {
-            Console.WriteLine("Message");
+            Console.WriteLine("Message: " + e.Data);
             if (e.IsText)
             {
                 var message = JsonConvert.DeserializeObject<MessageContainer>(e.Data);
-                _server.HandleMessage(Id, message);
+                _handlerRequestFromClient.ParsePacket(Id, message);
             }
         }
         private void SendCompleted(bool completed)

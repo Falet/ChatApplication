@@ -13,9 +13,9 @@
             switch (config.Protocol)
             {
                 case TypeTransport.WebSocket:
-                    return new WsServer(new IPEndPoint(IPAddress.Any, config.Port));
+                    return new WsServer(new IPEndPoint(IPAddress.Any, config.Port), new HandlerRequestFromClient());
                 case TypeTransport.Tcp:
-                    return new TcpServer(new IPEndPoint(IPAddress.Any, config.Port));
+                    return new TcpServer(new IPEndPoint(IPAddress.Any, config.Port), new HandlerRequestFromClient());
                 default:
                     throw new ArgumentOutOfRangeException(nameof(config), config, null);
             }

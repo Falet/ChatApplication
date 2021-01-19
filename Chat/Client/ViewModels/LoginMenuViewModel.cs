@@ -1,35 +1,30 @@
-﻿using Client.Model;
-using Prism.Commands;
-using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-
-
-namespace Client.ViewModels
+﻿namespace Client.ViewModels
 {
     using Common.Network;
-    using Common.Network.Packets;
-    using System.Net;
-    using System.Threading;
-
+    using Client.Model;
+    using Prism.Commands;
+    using Prism.Mvvm;
+    using System.Linq;
+    using System.Text.RegularExpressions;
+    using System.Windows;
     public class LoginMenuViewModel : BindableBase
     {
+        #region Fields
+
         private Visibility _visibilityView;
         private string _comboBoxItemSelected;
         private string _textIP;
         private string _textPort;
         private string _textLogin;
         private string _textError;
-        private IHandlerConnection _handlerConnection;
         private Regex regexIP;
         private Regex regexLogin;
-        IClientInfo _clientInfo;
+        private IHandlerConnection _handlerConnection;
+
+        #endregion Fields
+
+        #region Properties
+
         public Visibility VisibilityLoginMenu
         {
             get => _visibilityView;
@@ -62,13 +57,16 @@ namespace Client.ViewModels
             get => _comboBoxItemSelected;
             set => SetProperty(ref _comboBoxItemSelected, value);
         }
-        public LoginMenuViewModel(IHandlerConnection handlerConnection, IClientInfo clientInfo)
-        {
-            _clientInfo = clientInfo;
 
+        #endregion Properties
+
+        #region Constructors
+
+        public LoginMenuViewModel(IHandlerConnection handlerConnection)
+        {
             _visibilityView = Visibility.Visible;
 
-            IP = "192.168.37.106";
+            IP = "192.168.0.104";
             Port = "35";
 
             _textError = null;
@@ -83,14 +81,22 @@ namespace Client.ViewModels
             SignIn.ObservesProperty(() => Login);
             SignIn.ObservesProperty(() => Port);
         }
+
+        #endregion Constructors
+
+        #region Methods
+
         private void ConnectToServer()
         {
             _handlerConnection.Connect(IP, Port, Protocol);
-            Thread.Sleep(100);
             _handlerConnection.Send(Login);
         }
         private bool IsTrueDataForSignIn()
         {
+            if (Login == null)
+            {
+                return false;
+            }
             if (IP == null)
             {
                 return false;
@@ -115,10 +121,7 @@ namespace Client.ViewModels
                 error += "Port must be valid\n";
             }
 
-            if (Login == null)
-            {
-                return false;
-            }
+
             match = regexLogin.Match(Login);
             if (string.IsNullOrWhiteSpace(Login))
             {
@@ -129,19 +132,20 @@ namespace Client.ViewModels
                 error += "Login must be valid username format and contains only alphabetic symbols and numbers. For example 'Cyberprank2020'\n";
             }
 
-            if(error!= null)
+            if (error != null)
             {
                 TextError = error;
                 return false;
             }
             else
             {
+                TextError = null;
                 return true;
             }
         }
         private void OnClientConnected(object sender, ClientConnectedToServerEventArgs container)
         {
-            if(container.Result == ResultRequest.Ok)
+            if (container.Result == ResultRequest.Ok)
             {
                 VisibilityLoginMenu = Visibility.Collapsed;
             }
@@ -150,5 +154,7 @@ namespace Client.ViewModels
                 TextError = container.Reason;
             }
         }
+
+        #endregion Methods
     }
 }

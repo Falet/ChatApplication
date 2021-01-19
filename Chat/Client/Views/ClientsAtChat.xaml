@@ -25,7 +25,7 @@
 					<ListBoxItem>
 						<StackPanel Orientation="Horizontal">
 							<TextBlock Margin="3" Text="{Binding NameClient}"/>
-							<TextBlock Margin="3" Text="{Binding ActivityClient}"/>
+							<TextBlock Margin="3" Text="{Binding ActivityClientChanged}"/>
 						</StackPanel>
 					</ListBoxItem>
 				</DataTemplate>
@@ -43,8 +43,6 @@
 		</Button>
 		<TextBlock  Grid.Row="2"
 					TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center"
-					Visibility="Visible">
-			Пользователи не выделены
-		</TextBlock>
+					Text="{Binding TextError}"/>
 	</Grid>
 </UserControl>

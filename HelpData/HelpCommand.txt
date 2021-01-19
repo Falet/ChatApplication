@@ -1,2 +1,43 @@
 CreatDBForLocalDB:
 (localdb)\MSSQLLocalDB
+
+#region Const
+
+
+
+#endregion Const
+
+#region Fields
+
+
+
+#endregion Fields
+
+#region Properties
+
+
+
+#endregion Properties
+
+#region Event
+
+
+
+#endregion Event
+
+#region Constructors
+
+
+
+#endregion Constructors
+
+#region Methods
+
+
+
+#endregion Methods
+
+
+
+
+
