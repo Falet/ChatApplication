@@ -1,9 +1,9 @@
-﻿namespace Client.Model
+﻿namespace Client.Model.Event
 {
     using Common.Network;
     using System.Collections.Generic;
 
-    public class ClientConnectedToChatEventArgs
+    public class ClientConnectedToChatVmEventArgs
     {
         #region Properties
 
@@ -15,7 +15,7 @@
 
         #region Constructors
 
-        public ClientConnectedToChatEventArgs(List<MessageInfo> allMessageFromChat, int numberChat)
+        public ClientConnectedToChatVmEventArgs(List<MessageInfo> allMessageFromChat, int numberChat)
         {
             AllMessageFromChat = allMessageFromChat;
             NumberChat = numberChat;

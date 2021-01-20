@@ -7,7 +7,7 @@
 
         [Key]
         public int Id { get; set; }
-        public string Actor { get; set; }
+        public string Identificator { get; set; }
         public string Message { get; set;}
 
         #endregion Properties

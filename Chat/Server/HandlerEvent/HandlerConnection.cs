@@ -51,7 +51,7 @@
 		{
 			if(container.ClientName == "Server")
             {
-				var SendMessageToServer = Task.Run(() =>
+				var SendMessageToClient = Task.Run(() =>
 					_server.Send(new List<Guid>() { container.ClientId },
 								 Container.GetContainer(nameof(ConnectionResponse),
 														new ConnectionResponse(ResultRequest.Failure, "Запрещенное имя")))
@@ -69,14 +69,14 @@
 					_server.Send(new List<Guid> { container.ClientId }, Container.GetContainer(nameof(ConnectionResponse), new ConnectionResponse(ResultRequest.Ok, container.ClientName)))
 					);
 					var SendMessageAll = Task.Run(() =>
-					_server.SendAll(container.ClientId, Container.GetContainer(nameof(ConnectionNoticeForClients), new ConnectionNoticeForClients(container.ClientName)))
+					_server.SendAll(container.ClientId, Container.GetContainer(nameof(ConnectionNotice), new ConnectionNotice(container.ClientName)))
 					);
 
 					_server.SetLoginConnection(container.ClientId, container.ClientName);
 				}
 				else
 				{
-					var SendMessageToServer = Task.Run(() =>
+					var SendMessageToClient = Task.Run(() =>
 					_server.Send(new List<Guid>() { container.ClientId },
 								 Container.GetContainer(nameof(ConnectionResponse),
 														new ConnectionResponse(ResultRequest.Failure, "Такой пользователь уже есть")))
@@ -91,7 +91,7 @@
 					_server.Send(new List<Guid> { container.ClientId }, Container.GetContainer(nameof(ConnectionResponse), new ConnectionResponse(ResultRequest.Ok, container.ClientName)))
 					);
 				var SendMessageAll = Task.Run(() =>
-					_server.SendAll(container.ClientId, Container.GetContainer(nameof(ConnectionNoticeForClients), new ConnectionNoticeForClients(container.ClientName)))
+					_server.SendAll(container.ClientId, Container.GetContainer(nameof(ConnectionNotice), new ConnectionNotice(container.ClientName)))
 				);
 
 				_server.SetLoginConnection(container.ClientId, container.ClientName);
@@ -106,7 +106,7 @@
 		{
 			if (cachedClientName.TryGetValue(container.NameClient, out Guid clientGuid))
 			{
-				var SendMessageToServer = Task.Run(() =>
+				var SendMessageToClient = Task.Run(() =>
 					_server.SendAll(Guid.Empty, Container.GetContainer(nameof(DisconnectNotice), new DisconnectNotice(container.NameClient)))
 				);
 

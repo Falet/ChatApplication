@@ -1,5 +1,6 @@
 ﻿namespace Client.Model
 {
+    using Client.Model.Event;
     using System;
 
     public interface IHandlerMessages
@@ -7,8 +8,8 @@
 
         #region Event
 
-        event EventHandler<MessageReceivedForVMEventArgs> MessageReceived;
-        event EventHandler<ClientConnectedToChatEventArgs> ConnectedToChat;
+        event EventHandler<MessageReceivedVmEventArgs> MessageReceived;
+        event EventHandler<ClientConnectedToChatVmEventArgs> ConnectedToChat;
 
         #endregion Event
 

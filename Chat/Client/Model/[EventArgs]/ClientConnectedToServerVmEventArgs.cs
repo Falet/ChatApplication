@@ -1,8 +1,8 @@
-﻿namespace Client.Model
+﻿namespace Client.Model.Event
 {
     using Common.Network;
 
-    public class ClientConnectedToServerEventArgs
+    public class ClientConnectedToServerVmEventArgs
     {
         #region Properties
 
@@ -14,7 +14,7 @@
 
         #region Constructors
 
-        public ClientConnectedToServerEventArgs(ResultRequest result, string reason)
+        public ClientConnectedToServerVmEventArgs(ResultRequest result, string reason)
         {
             Result = result;
             Reason = reason;

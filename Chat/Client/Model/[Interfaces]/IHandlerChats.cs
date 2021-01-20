@@ -2,14 +2,15 @@
 {
     using System;
     using System.Collections.Generic;
+    using Client.Model.Event;
     using Common.Network;
     public interface IHandlerChats
     {
         #region Event
 
-        event EventHandler<AddedChatEventArgs> AddedChat;
-        event EventHandler<AddedClientsToChatClientEvenArgs> AddedClientsToChat;
-        event EventHandler<RemovedClientsFromChatForVMEventArgs> RemovedClientsFromChat;
+        event EventHandler<AddedChatVmEventArgs> AddedChat;
+        event EventHandler<AddedClientsToChatClientVmEvenArgs> AddedClientsToChat;
+        event EventHandler<RemovedClientsFromChatVmEventArgs> RemovedClientsFromChat;
         event EventHandler<RemovedChatEventArgs> RemovedChat;
 
         #endregion Event

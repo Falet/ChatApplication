@@ -1,8 +1,8 @@
-﻿namespace Client.Model
+﻿namespace Client.Model.Event
 {
     using System.Collections.Generic;
 
-    public class AddedClientsToChatClientEvenArgs
+    public class AddedClientsToChatClientVmEvenArgs
     {
         #region Properties
 
@@ -14,7 +14,7 @@
 
         #region Constructors
 
-        public AddedClientsToChatClientEvenArgs(int numberChat, Dictionary<string, bool> nameOfClients)
+        public AddedClientsToChatClientVmEvenArgs(int numberChat, Dictionary<string, bool> nameOfClients)
         {
             NameOfClients = nameOfClients;
             NumberChat = numberChat;

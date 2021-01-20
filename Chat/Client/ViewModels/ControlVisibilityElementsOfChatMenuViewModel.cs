@@ -25,8 +25,10 @@
         public ControlVisibilityElementsOfChatMenuViewModel(IHandlerConnection handlerConnection, IHandlerMessages handlerMessages, IHandlerChats handlerChats)
         {
             ControlNavigationChatsViewModel = new ControlNavigationChatsViewModel(handlerConnection, handlerMessages, handlerChats);
-            CreateChat = new CreateChatViewModel(handlerConnection, handlerChats);
-            CreateChat.VisibilityCreateChat = Visibility.Hidden;
+            CreateChat = new CreateChatViewModel(handlerConnection, handlerChats)
+            {
+                VisibilityCreateChat = Visibility.Hidden
+            };
             ControlNavigationChatsViewModel.VisibilityNavigationChat = Visibility.Visible;
         }
 

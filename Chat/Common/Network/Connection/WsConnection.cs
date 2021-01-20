@@ -17,6 +17,7 @@
         private int _sending;
         private IHandlerRequestFromClient _handlerRequestFromClient;
         private System.Timers.Timer _timer;
+
         #endregion Fields
 
         #region Properties

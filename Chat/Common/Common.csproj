@@ -54,11 +54,11 @@
   <ItemGroup>
     <Compile Include="Network\Connection\TcpConnection.cs" />
     <Compile Include="Network\Connection\WsConnection.cs" />
-    <Compile Include="Network\Packets\AddNewChatRequest.cs" />
-    <Compile Include="Network\Packets\AddNewChatResponse.cs" />
-    <Compile Include="Network\Packets\AddNewUserToCharResponse.cs" />
-    <Compile Include="Network\Packets\AddNewUserToChatRequest.cs" />
-    <Compile Include="Network\Packets\ConnectionNoticeForClients.cs" />
+    <Compile Include="Network\Packets\AddChatRequest.cs" />
+    <Compile Include="Network\Packets\AddChatResponse.cs" />
+    <Compile Include="Network\Packets\AddUserToCharResponse.cs" />
+    <Compile Include="Network\Packets\AddUserToChatRequest.cs" />
+    <Compile Include="Network\Packets\ConnectionNotice.cs" />
     <Compile Include="Network\Packets\ConnectionRequest.cs" />
     <Compile Include="Network\Packets\ConnectionResponse.cs" />
     <Compile Include="Network\Packets\ConnectToChatRequest.cs" />

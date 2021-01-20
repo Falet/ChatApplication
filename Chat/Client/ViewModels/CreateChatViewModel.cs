@@ -1,6 +1,7 @@
 ﻿namespace Client.ViewModels
 {
     using Client.Model;
+    using Client.Model.Event;
     using Prism.Commands;
     using Prism.Mvvm;
     using System.Collections.Generic;
@@ -13,7 +14,7 @@
         #region Fields
 
         private Visibility _visibilityView;
-        private ObservableCollection<InfoAboutClient> _clientsCollection;
+        private ObservableCollection<InfoAboutClientAtList> _clientsCollection;
         private IHandlerChats _handlerChats;
         private IHandlerConnection _handlerConnection;
 
@@ -26,7 +27,7 @@
             get => _visibilityView;
             set => SetProperty(ref _visibilityView, value);
         }
-        public ObservableCollection<InfoAboutClient> ClientsCollection
+        public ObservableCollection<InfoAboutClientAtList> ClientsCollection
         {
             get => _clientsCollection;
             set => SetProperty(ref _clientsCollection, value);
@@ -47,7 +48,7 @@
             _handlerConnection.AnotherClientConnected += OnAnotherClientConnected;
             _handlerConnection.AnotherNewClientConnected += OnAnotherNewClientConnected;
             _handlerConnection.AnotherClientDisconnected += OnAnotherClientDisconnected;
-            _clientsCollection = new ObservableCollection<InfoAboutClient>();
+            _clientsCollection = new ObservableCollection<InfoAboutClientAtList>();
             CreateChatButton = new DelegateCommand(CreateChat);
         }
 
@@ -68,21 +69,21 @@
             }
             _handlerChats.AddChat(ClientForAdd);
         }
-        private void OnAddedChat(object sender, AddedChatEventArgs container)
+        private void OnAddedChat(object sender, AddedChatVmEventArgs container)
         {
             VisibilityCreateChat = Visibility.Hidden;
         }
-        private void OnReceivedInfoAboutAllClients(object sender, ReceivedInfoAboutAllClientsEventArgs container)
+        private void OnReceivedInfoAboutAllClients(object sender, ReceivedInfoAboutAllClientsVmEventArgs container)
         {
             App.Current.Dispatcher.Invoke(delegate
             {
                 foreach (var KeyValue in container.InfoClientsAtChat)
                 {
-                    ClientsCollection.Add(new InfoAboutClient(KeyValue.Key, KeyValue.Value ? "Online" : "Offline"));
+                    ClientsCollection.Add(new InfoAboutClientAtList(KeyValue.Key, KeyValue.Value ? "Online" : "Offline"));
                 }
             });
         }
-        public void OnAnotherClientConnected(object sender, AnotherClientConnectedEventArgs container)
+        public void OnAnotherClientConnected(object sender, AnotherClientConnectedVmEventArgs container)
         {
             App.Current.Dispatcher.Invoke(delegate
             {
@@ -96,14 +97,14 @@
                 }
             });
         }
-        public void OnAnotherNewClientConnected(object sender, AnotherClientConnectedEventArgs container)
+        public void OnAnotherNewClientConnected(object sender, AnotherClientConnectedVmEventArgs container)
         {
             App.Current.Dispatcher.Invoke(delegate
             {
-                ClientsCollection.Add(new InfoAboutClient(container.NameClient, "Online"));
+                ClientsCollection.Add(new InfoAboutClientAtList(container.NameClient, "Online"));
             });
         }
-        public void OnAnotherClientDisconnected(object sender, AnotherClientDisconnectedEventArgs container)
+        public void OnAnotherClientDisconnected(object sender, AnotherClientDisconnectedVmEventArgs container)
         {
             App.Current.Dispatcher.Invoke(delegate
             {

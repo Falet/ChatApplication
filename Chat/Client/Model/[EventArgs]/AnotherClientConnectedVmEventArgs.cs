@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Common.Network.Packets
+﻿namespace Client.Model.Event
 {
-    public class ConnectionNoticeForClients
+    public class AnotherClientConnectedVmEventArgs
     {
         #region Properties
 
@@ -14,11 +10,12 @@ namespace Common.Network.Packets
 
         #region Constructors
 
-        public ConnectionNoticeForClients(string nameClient)
+        public AnotherClientConnectedVmEventArgs(string nameClient)
         {
             NameClient = nameClient;
         }
 
         #endregion Constructors
+
     }
 }

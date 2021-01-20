@@ -1,6 +1,10 @@
-﻿namespace Client.Model
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Common.Network.Packets
 {
-    public class AnotherClientDisconnectedEventArgs
+    public class ConnectionNotice
     {
         #region Properties
 
@@ -10,7 +14,7 @@
 
         #region Constructors
 
-        public AnotherClientDisconnectedEventArgs(string nameClient)
+        public ConnectionNotice(string nameClient)
         {
             NameClient = nameClient;
         }

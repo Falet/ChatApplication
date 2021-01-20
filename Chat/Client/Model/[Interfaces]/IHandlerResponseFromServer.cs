@@ -1,6 +1,7 @@
 ﻿namespace Client.Model
 {
     using System;
+    using Client.Model.Event;
     using Common.Network;
     using Common.Network.Packets;
 
@@ -8,17 +9,17 @@
     {
         #region Event
 
-        event EventHandler<ClientConnectedToServerEventArgs> ClientConnected;
-        event EventHandler<AnotherClientConnectedEventArgs> AnotherClientConnected;
-        event EventHandler<AnotherClientDisconnectedEventArgs> AnotherClientDisconnected;
+        event EventHandler<ClientConnectedToServerVmEventArgs> ClientConnected;
+        event EventHandler<AnotherClientConnectedVmEventArgs> AnotherClientConnected;
+        event EventHandler<AnotherClientDisconnectedVmEventArgs> AnotherClientDisconnected;
         event EventHandler<AddedNewChatModelEventArgs> AddedChat;
         event EventHandler<RemovedChatEventArgs> RemovedChat;
         event EventHandler<AddedClientsToChatEventArgs> AddedClientsToChat;
         event EventHandler<RemovedClientsFromChatEventArgs> RemovedClientsFromChat;
-        event EventHandler<ClientConnectedToChatEventArgs> ConnectedToChat;
-        event EventHandler<MessageReceivedForVMEventArgs> MessageReceived;
-        event EventHandler<NumbersOfChatsReceivedEventArgs> ResponseNumbersChats;
-        event EventHandler<ReceivedInfoAboutAllClientsEventArgs> ReceivedInfoAboutAllClients;
+        event EventHandler<ClientConnectedToChatVmEventArgs> ConnectedToChat;
+        event EventHandler<MessageReceivedVmEventArgs> MessageReceived;
+        event EventHandler<NumbersOfChatsReceivedModelEventArgs> ResponseNumbersChats;
+        event EventHandler<ReceivedInfoAboutAllClientsVmEventArgs> ReceivedInfoAboutAllClients;
 
         #endregion Event
 

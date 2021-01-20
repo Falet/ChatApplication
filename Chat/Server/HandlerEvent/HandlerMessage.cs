@@ -56,7 +56,7 @@
                     {
                         if (MessagesAtChat.TryGetValue(container.NumberChat, out List<MessageInfo> messages) && clientGuid != Guid.Empty)
                         {
-                            var SendMessageToServer = Task.Run
+                            var SendMessageToClient = Task.Run
                             (
                             () => _server.Send(new List<Guid> { clientGuid },
                                          Container.GetContainer(nameof(ConnectToChatResponse),
@@ -65,7 +65,7 @@
                         }
                         else
                         {
-                            var SendMessageToServer = Task.Run
+                            var SendMessageToClient = Task.Run
                             (
                             () => _server.Send(new List<Guid> { clientGuid },
                                          Container.GetContainer(nameof(ConnectToChatResponse),
@@ -90,7 +90,7 @@
                         idClientsForSendMessage.Add(clientGuid);
                     }
                 }
-                var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage,
+                var SendMessageToClient = Task.Run(() => _server.Send(idClientsForSendMessage,
                                                                       Container.GetContainer(nameof(MessageResponse),
                                                                       new MessageResponse(new MessageInfo(container.NameClient, 
                                                                                                           container.Message, 

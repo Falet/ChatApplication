@@ -1,7 +1,7 @@
 ﻿namespace Client.Model
 {
     using System.Collections.Generic;
-    public class AddedChatEventArgs
+    public class AddedChatVmEventArgs
     {
         #region Properties
 
@@ -17,7 +17,7 @@
 
         #region Constructors
 
-        public AddedChatEventArgs(string nameofClientCreator, Dictionary<string, bool> nameOfClients, Dictionary<string, bool> accessNameClientForAdd, int numberChat)
+        public AddedChatVmEventArgs(string nameofClientCreator, Dictionary<string, bool> nameOfClients, Dictionary<string, bool> accessNameClientForAdd, int numberChat)
         {
             NameOfClientCreator = nameofClientCreator;
             NameOfClientsForAdd = nameOfClients;

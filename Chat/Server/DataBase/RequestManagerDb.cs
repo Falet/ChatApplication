@@ -10,6 +10,8 @@
 
     public class RequestManagerDb : IHandlerRequestToData
     {
+        #region Constructors
+
         public RequestManagerDb(GeneralChatInfo generalChatInfo)
         {
             using (var db = new DBChat())
@@ -17,15 +19,22 @@
                 var count = db.PoolChat.Where(Chat => Chat.ChatID == generalChatInfo.NumberGeneralChat).Count();
                 if (count == 0)
                 {
-                    db.PoolChat.Add(new Chats() { ChatID = generalChatInfo.NumberGeneralChat, 
-                                                  Type = generalChatInfo.TypeGeneralChat, 
-                                                  OwnerChat = generalChatInfo.OwnerGeneralChat });
+                    db.PoolChat.Add(new Chats()
+                    {
+                        ChatID = generalChatInfo.NumberGeneralChat,
+                        Type = generalChatInfo.TypeGeneralChat,
+                        OwnerChat = generalChatInfo.OwnerGeneralChat
+                    });
                     db.SaveChanges();
                 }
-                
+
             }
         }
+
+        #endregion Constructors
+
         #region Methods
+
         public ConcurrentDictionary<string, Guid> GetInfoAboutAllClient()
         {
             ConcurrentDictionary<string, Guid> allClientInfo = new ConcurrentDictionary<string, Guid>();

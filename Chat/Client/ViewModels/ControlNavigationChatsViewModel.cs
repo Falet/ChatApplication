@@ -89,7 +89,7 @@
                 }
             }
         }
-        private void OnAddedChat(object sender, AddedChatEventArgs container)
+        private void OnAddedChat(object sender, AddedChatVmEventArgs container)
         {
             App.Current.Dispatcher.Invoke(delegate
             {

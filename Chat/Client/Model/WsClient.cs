@@ -24,7 +24,6 @@
 
         public WsClient(IHandlerResponseFromServer handlerResponseFromServer)
         {
-            _socket = new WebSocket($"ws://192.168.37.106:35");
             _handlerResponseFromServer = handlerResponseFromServer;
         }
 
@@ -38,7 +37,8 @@
             _socket.OnOpen += OnOpen;
             _socket.OnClose += OnClose;
             _socket.OnMessage += OnMessage;
-            _socket.Connect();
+            _socket.ConnectAsync();
+
         }
         public void Send(MessageContainer container)
         {

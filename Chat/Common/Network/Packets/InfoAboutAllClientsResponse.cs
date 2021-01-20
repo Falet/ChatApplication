@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Common.Network.Packets
+﻿namespace Common.Network.Packets
 {
+    using System.Collections.Generic;
+
     public class InfoAboutAllClientsResponse
     {
         #region Properties

@@ -1,6 +1,7 @@
 ﻿namespace Client.ViewModels
 {
     using Client.Model;
+    using Client.Model.Event;
     using Prism.Commands;
     using Prism.Mvvm;
     using System.Collections.Generic;
@@ -13,7 +14,7 @@
         #region Fields
 
         private Visibility _visibilityViewAllClient;
-        private ObservableCollection<InfoAboutClient> _clientsCollection;
+        private ObservableCollection<InfoAboutClientAtList> _clientsCollection;
         private IHandlerChats _handlerChats;
         private int _numberChat;
         private string _textError;
@@ -27,7 +28,7 @@
             get => _visibilityViewAllClient;
             set => SetProperty(ref _visibilityViewAllClient, value);
         }
-        public ObservableCollection<InfoAboutClient> ClientsAccessableCollection
+        public ObservableCollection<InfoAboutClientAtList> ClientsAccessableCollection
         {
             get => _clientsCollection;
             set => SetProperty(ref _clientsCollection, value);
@@ -48,7 +49,7 @@
         {
             _numberChat = numberChat;
 
-            _clientsCollection = new ObservableCollection<InfoAboutClient>();
+            _clientsCollection = new ObservableCollection<InfoAboutClientAtList>();
             _handlerChats = handlerChats;
             _handlerChats.AddedClientsToChat += OnAddedClientsToChat;
             _handlerChats.RemovedClientsFromChat += OnRemovedClientFormChat;
@@ -71,11 +72,11 @@
             {
                 foreach (var KeyValue in accessNameClientForAdd)
                 {
-                    ClientsAccessableCollection.Add(new InfoAboutClient(KeyValue.Key, KeyValue.Value ? "Online" : "Offline"));
+                    ClientsAccessableCollection.Add(new InfoAboutClientAtList(KeyValue.Key, KeyValue.Value ? "Online" : "Offline"));
                 }
             });
         }
-        private void OnAnotherClientConnected(object sender, AnotherClientConnectedEventArgs container)
+        private void OnAnotherClientConnected(object sender, AnotherClientConnectedVmEventArgs container)
         {
             App.Current.Dispatcher.Invoke(delegate
             {
@@ -88,14 +89,14 @@
                 }
             });
         }
-        private void OnAnotherNewClientConnected(object sender, AnotherClientConnectedEventArgs container)
+        private void OnAnotherNewClientConnected(object sender, AnotherClientConnectedVmEventArgs container)
         {
             App.Current.Dispatcher.Invoke(delegate
             {
-                ClientsAccessableCollection.Add(new InfoAboutClient(container.NameClient, "Online"));
+                ClientsAccessableCollection.Add(new InfoAboutClientAtList(container.NameClient, "Online"));
             });
         }
-        private void OnAnotherClientDisconnected(object sender, AnotherClientDisconnectedEventArgs container)
+        private void OnAnotherClientDisconnected(object sender, AnotherClientDisconnectedVmEventArgs container)
         {
             App.Current.Dispatcher.Invoke(delegate
             {
@@ -108,7 +109,7 @@
                 }
             });
         }
-        private void OnRemovedClientFormChat(object sender, RemovedClientsFromChatForVMEventArgs container)
+        private void OnRemovedClientFormChat(object sender, RemovedClientsFromChatVmEventArgs container)
         {
             if (container.NumberChat == _numberChat)
             {
@@ -118,7 +119,7 @@
                 });
             }
         }
-        private void OnAddedClientsToChat(object sender, AddedClientsToChatClientEvenArgs container)
+        private void OnAddedClientsToChat(object sender, AddedClientsToChatClientVmEvenArgs container)
         {
             if (container.NumberChat == _numberChat)
             {

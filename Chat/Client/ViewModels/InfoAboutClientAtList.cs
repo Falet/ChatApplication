@@ -2,7 +2,7 @@
 {
     using Prism.Mvvm;
 
-    public class InfoAboutClient : BindableBase
+    public class InfoAboutClientAtList : BindableBase
     {
         #region Fields
 
@@ -30,7 +30,7 @@
 
         #region Constructors
 
-        public InfoAboutClient(string nameClient, string activityClient)
+        public InfoAboutClientAtList(string nameClient, string activityClient)
         {
             IsSelectedClient = false;
 

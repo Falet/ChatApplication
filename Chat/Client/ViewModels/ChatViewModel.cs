@@ -1,6 +1,7 @@
 ﻿namespace Client.ViewModels
 {
     using Client.Model;
+    using Client.Model.Event;
     using Prism.Commands;
     using Prism.Mvvm;
     using System.Collections.ObjectModel;
@@ -116,7 +117,7 @@
                 TextToolTip = "Назад к списку клиентов в чате";
             }
         }
-        private void OnMessageReceived(object sender, MessageReceivedForVMEventArgs container)
+        private void OnMessageReceived(object sender, MessageReceivedVmEventArgs container)
         {
             if (container.NumberChat == NumberChat)
             {
@@ -126,7 +127,7 @@
                 });
             }
         }
-        private void OnConnectedToChat(object sender, ClientConnectedToChatEventArgs container)
+        private void OnConnectedToChat(object sender, ClientConnectedToChatVmEventArgs container)
         {
             if (container.NumberChat == NumberChat)
             {

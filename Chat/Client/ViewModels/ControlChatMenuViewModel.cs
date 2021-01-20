@@ -1,6 +1,7 @@
 ﻿namespace Client.ViewModels
 {
     using Client.Model;
+    using Client.Model.Event;
     using Common.Network;
     using Prism.Commands;
     using Prism.Mvvm;
@@ -70,7 +71,7 @@
 
         #region Methods
 
-        private void OnAddedChat(object sender, AddedChatEventArgs container)
+        private void OnAddedChat(object sender, AddedChatVmEventArgs container)
         {
             TextButtonChangeViewChatMenu = "Создать";
             ControlVisibilityElements.ControlNavigationChatsViewModel.VisibilityNavigationChat = Visibility.Visible;
@@ -95,7 +96,7 @@
                 TextToolTip = "Создать чат";
             }
         }
-        private void OnClientConnected(object sender, ClientConnectedToServerEventArgs container)
+        private void OnClientConnected(object sender, ClientConnectedToServerVmEventArgs container)
         {
             if (container.Result == ResultRequest.Ok)
             {

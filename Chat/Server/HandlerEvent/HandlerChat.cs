@@ -62,9 +62,9 @@
                 {
                     List<Guid> idClientsForSendMessage = new List<Guid>();//Создание списка id для рассылки им сообщений
                     List<string> NameForChange = container.NameOfClientsForAdd;
-                    await Task.Run(() => CreateUserListForChangeInfoChat(ref NameForChange, numberChat, ref idClientsForSendMessage));
+                    await Task.Run(() => CreateClientListForChangeInfoChat(ref NameForChange, numberChat, ref idClientsForSendMessage));
 
-                    var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage, Container.GetContainer(nameof(AddNewChatResponse),new AddNewChatResponse(container.NameOfClientSender,numberChat, container.NameOfClientsForAdd))));
+                    var SendMessageToClient = Task.Run(() => _server.Send(idClientsForSendMessage, Container.GetContainer(nameof(AddChatResponse),new AddChatResponse(container.NameOfClientSender,numberChat, container.NameOfClientsForAdd))));
                     if(_cachedClientProperies.TryGetValue(container.NameOfClientSender, out ClientProperties value))
                     {
                         var bufferForAddChat = value;
@@ -92,14 +92,11 @@
                 {
                     List<Guid> idClientsForSendMessage = new List<Guid>();//Создание списка id для рассылки им сообщений
                     List<string> NameForChange = infoChat.NameOfClients;
-                    await Task.Run(() => CreateUserListForChangeInfoChat(ref NameForChange, container.NumberChat, ref idClientsForSendMessage));
+                    await Task.Run(() => CreateClientListForChangeInfoChat(ref NameForChange, container.NumberChat, ref idClientsForSendMessage));
 
-                    var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessage,Container.GetContainer(nameof(RemoveChatResponse), new RemoveChatResponse(container.NameClient, container.NumberChat))));
+                    var SendMessageToClient = Task.Run(() => _server.Send(idClientsForSendMessage,Container.GetContainer(nameof(RemoveChatResponse), new RemoveChatResponse(container.NameClient, container.NumberChat))));
 
-                    if (!InfoChats.TryRemove(container.NumberChat, out InfoChat infoRemovedChat))
-                    {
-                        //Не нашел такую комнату
-                    }
+                    InfoChats.TryRemove(container.NumberChat, out InfoChat infoRemovedChat);
 
                     if (!await Task.Run(() => _data.RemoveChat(container.NumberChat)))
                     {
@@ -118,12 +115,12 @@
                 {
                     List<Guid> idClientsForSendMessage = new List<Guid>();//Создание списка id для рассылки им сообщений
                     List<string> NameForChange = container.Clients;
-                    await Task.Run(() => CreateUserListForChangeInfoChat(ref NameForChange, container.NumberChat, ref idClientsForSendMessage));
+                    await Task.Run(() => CreateClientListForChangeInfoChat(ref NameForChange, container.NumberChat, ref idClientsForSendMessage));
                     var SendMessageForCreateChat = Task.Run
                     (
                     () => _server.Send(idClientsForSendMessage, 
-                                        Container.GetContainer(nameof(AddNewChatResponse), 
-                                        new AddNewChatResponse(container.NameOfClientSender, container.NumberChat, infoChat.NameOfClients)))
+                                        Container.GetContainer(nameof(AddChatResponse), 
+                                        new AddChatResponse(container.NameOfClientSender, container.NumberChat, infoChat.NameOfClients)))
                     );
 
                     InfoChat buffer = infoChat;
@@ -140,12 +137,9 @@
                     List<Guid> idClientsForSendMessageAddClient = new List<Guid>();
                     await Task.Run(() => AddNamesForMail(infoChat.NameOfClients, ref idClientsForSendMessageAddClient));
 
-                    var SendMessageToServer = Task.Run(() => _server.Send(idClientsForSendMessageAddClient, Container.GetContainer(nameof(AddNewClientToChatResponse),new AddNewClientToChatResponse(container.NameOfClientSender, NameForChange, container.NumberChat))));
+                    var SendMessageToClient = Task.Run(() => _server.Send(idClientsForSendMessageAddClient, Container.GetContainer(nameof(AddClientToChatResponse),new AddClientToChatResponse(container.NameOfClientSender, NameForChange, container.NumberChat))));
 
-                    if(InfoChats.TryUpdate(container.NumberChat, infoChat, buffer))
-                    {
-                        Console.WriteLine("Обновил");
-                    }
+                    InfoChats.TryUpdate(container.NumberChat, infoChat, buffer);
 
                     if (!await Task.Run(() => _data.AddClientToChat(new AddClientToChat { NumberChat = container.NumberChat, NameOfClients = NameForChange })))
                     {
@@ -164,7 +158,7 @@
                     List<Guid> idClientsForRemoveChat = new List<Guid>();//Создание списка id для рассылки им сообщений
                     List<string> NamesForChange = container.Clients;
 
-                    await Task.Run(() => CreateUserListForChangeInfoChat(ref NamesForChange, container.NumberChat, ref idClientsForRemoveChat));
+                    await Task.Run(() => CreateClientListForChangeInfoChat(ref NamesForChange, container.NumberChat, ref idClientsForRemoveChat));
                     var SendMessageForRemoveChat = Task.Run(() => _server.Send(idClientsForRemoveChat, Container.GetContainer(nameof(RemoveChatResponse), 
                                                                                new RemoveChatResponse(container.NameOfRemover, container.NumberChat))));
 
@@ -221,8 +215,8 @@
                     var SendMessageAboutConnectNewClient = Task.Run
                     (
                     () => _server.SendAll(clientGuid,
-                                 Container.GetContainer(nameof(AddNewClientToChatResponse),
-                                 new AddNewClientToChatResponse("Server", new List<string> { container.NameOfClientSender }, NumberGeneralChat)))
+                                 Container.GetContainer(nameof(AddClientToChatResponse),
+                                 new AddClientToChatResponse("Server", new List<string> { container.NameOfClientSender }, NumberGeneralChat)))
                     );
                     if (!await Task.Run(() => _data.AddClientToChat(new AddClientToChat { NumberChat = NumberGeneralChat, 
                                                                       NameOfClients = new List<string> { container.NameOfClientSender } })))
@@ -230,7 +224,7 @@
 
                     }
                 }
-                var SendMessageToServer = Task.Run
+                var SendMessageToClient = Task.Run
                     (
                     () => _server.Send(new List<Guid> { clientGuid },
                                  Container.GetContainer(nameof(NumbersAccessibleChatsResponse),
@@ -239,7 +233,7 @@
             }
         }
 
-        private void CreateUserListForChangeInfoChat(ref List<string> namesClientForCreat,int numberChat,ref List<Guid> namesForMail)
+        private void CreateClientListForChangeInfoChat(ref List<string> namesClientForCreat,int numberChat,ref List<Guid> namesForMail)
         {
             foreach (var nameClient in namesClientForCreat)
             {

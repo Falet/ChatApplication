@@ -1,5 +1,6 @@
 ﻿namespace Client.Model
 {
+    using Client.Model.Event;
     using System;
     using System.Collections.Generic;
 
@@ -13,11 +14,11 @@
 
         #region Event
 
-        event EventHandler<ClientConnectedToServerEventArgs> ClientConnected;
-        event EventHandler<AnotherClientConnectedEventArgs> AnotherClientConnected;
-        event EventHandler<AnotherClientDisconnectedEventArgs> AnotherClientDisconnected;
-        event EventHandler<ReceivedInfoAboutAllClientsEventArgs> ReceivedInfoAboutAllClients;
-        event EventHandler<AnotherClientConnectedEventArgs> AnotherNewClientConnected;
+        event EventHandler<ClientConnectedToServerVmEventArgs> ClientConnected;
+        event EventHandler<AnotherClientConnectedVmEventArgs> AnotherClientConnected;
+        event EventHandler<AnotherClientDisconnectedVmEventArgs> AnotherClientDisconnected;
+        event EventHandler<ReceivedInfoAboutAllClientsVmEventArgs> ReceivedInfoAboutAllClients;
+        event EventHandler<AnotherClientConnectedVmEventArgs> AnotherNewClientConnected;
 
         #endregion Event
 

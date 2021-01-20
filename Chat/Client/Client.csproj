@@ -86,7 +86,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Model\[EventArgs]\AnotherClientDisconnectedEventArgs.cs" />
+    <Compile Include="Model\[EventArgs]\AnotherClientDisconnectedVmEventArgs.cs" />
     <Compile Include="ViewModels\AccessableClientForAddViewModel.cs" />
     <Compile Include="ViewModels\ChatViewModel.cs" />
     <Compile Include="ViewModels\ClientsAtChatViewModel.cs" />
@@ -96,7 +96,7 @@
     <Compile Include="ViewModels\ControlVisibilityViewClientsViewModel.cs" />
     <Compile Include="ViewModels\CreateChatViewModel.cs" />
     <Compile Include="ViewModels\EventLogViewModel.cs" />
-    <Compile Include="ViewModels\InfoAboutClient.cs" />
+    <Compile Include="ViewModels\InfoAboutClientAtList.cs" />
     <Compile Include="ViewModels\LoginMenuViewModel.cs" />
     <Compile Include="Views\AccessClientForAdd.xaml.cs">
       <DependentUpon>AccessClientForAdd.xaml</DependentUpon>
@@ -183,16 +183,16 @@
     <Compile Include="Model\HandlerMessages.cs" />
     <Compile Include="Model\HandlerResponseFromServer.cs" />
     <Compile Include="Model\WsClient.cs" />
-    <Compile Include="Model\[EventArgs]\AddedChatEventArgs.cs" />
-    <Compile Include="Model\[EventArgs]\AddedClientsToChatClientEvenArgs.cs" />
+    <Compile Include="Model\[EventArgs]\AddedChatVmEventArgs.cs" />
+    <Compile Include="Model\[EventArgs]\AddedClientsToChatClientVmEvenArgs.cs" />
     <Compile Include="Model\[EventArgs]\AddedNewChatModelEventArgs.cs" />
-    <Compile Include="Model\[EventArgs]\AnotherClientConnectedEventArgs.cs" />
-    <Compile Include="Model\[EventArgs]\ClientConnectedToChatEventArgs.cs" />
-    <Compile Include="Model\[EventArgs]\ClientConnectedToServerEventArgs.cs" />
-    <Compile Include="Model\[EventArgs]\MessageReceivedForVMEventArgs.cs" />
-    <Compile Include="Model\[EventArgs]\NumbersOfChatsReceivedEventArgs.cs" />
-    <Compile Include="Model\[EventArgs]\ReceivedInfoAboutAllClientsEventArgs.cs" />
-    <Compile Include="Model\[EventArgs]\RemovedClientsFromChatForVmEventArgs.cs" />
+    <Compile Include="Model\[EventArgs]\AnotherClientConnectedVmEventArgs.cs" />
+    <Compile Include="Model\[EventArgs]\ClientConnectedToChatVmEventArgs.cs" />
+    <Compile Include="Model\[EventArgs]\ClientConnectedToServerVmEventArgs.cs" />
+    <Compile Include="Model\[EventArgs]\MessageReceivedVmEventArgs.cs" />
+    <Compile Include="Model\[EventArgs]\NumbersOfChatsReceivedModelEventArgs.cs" />
+    <Compile Include="Model\[EventArgs]\ReceivedInfoAboutAllClientsVmEventArgs.cs" />
+    <Compile Include="Model\[EventArgs]\RemovedClientsFromChatVmEventArgs.cs" />
     <Compile Include="Model\[Interfaces]\IClientInfo.cs" />
     <Compile Include="Model\[Interfaces]\IHandlerChats.cs" />
     <Compile Include="Model\[Interfaces]\IHandlerConnection.cs" />

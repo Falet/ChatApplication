@@ -7,7 +7,7 @@
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Windows;
-    using System.Net;
+    using Client.Model.Event;
 
     public class LoginMenuViewModel : BindableBase
     {
@@ -145,7 +145,7 @@
                 return true;
             }
         }
-        private void OnClientConnected(object sender, ClientConnectedToServerEventArgs container)
+        private void OnClientConnected(object sender, ClientConnectedToServerVmEventArgs container)
         {
             if (container.Result == ResultRequest.Ok)
             {

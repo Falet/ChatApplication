@@ -1,9 +1,9 @@
-﻿namespace Client.Model
+﻿namespace Client.Model.Event
 {
     using Common.Network;
     using System.Collections.Generic;
 
-    public class NumbersOfChatsReceivedEventArgs
+    public class NumbersOfChatsReceivedModelEventArgs
     {
         #region Properties
 
@@ -14,7 +14,7 @@
 
         #region Constructors
 
-        public NumbersOfChatsReceivedEventArgs(List<InfoAboutChat> infoAboutAllChat)
+        public NumbersOfChatsReceivedModelEventArgs(List<InfoAboutChat> infoAboutAllChat)
         {
             InfoAboutAllChat = infoAboutAllChat;
         }

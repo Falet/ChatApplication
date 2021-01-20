@@ -1,25 +1,23 @@
 ﻿namespace Common.Network.Packets
 {
     using System.Collections.Generic;
-    public class AddNewClientToChatResponse
+    public class AddChatResponse
     {
         #region Properties
-
-        public string ClientName { get; }
-
-        public List<string> Clients { get; }
-
+        public string ClientCreator { get; }
         public int NumberChat { get; }
+        public List<string> Clients { get; }
 
         #endregion Properties
 
+
         #region Constructors
 
-        public AddNewClientToChatResponse(string clientName, List<string> clients, int numberChat)
+        public AddChatResponse(string clientCreator,int numberChat, List<string> clients)
         {
-            ClientName = clientName;
-            Clients = clients;
+            ClientCreator = clientCreator;
             NumberChat = numberChat;
+            Clients = clients;
         }
 
         #endregion Constructors

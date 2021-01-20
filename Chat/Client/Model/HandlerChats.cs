@@ -1,5 +1,6 @@
 ﻿namespace Client.Model
 {
+    using Client.Model.Event;
     using Common.Network;
     using Common.Network.Packets;
     using System;
@@ -18,10 +19,10 @@
 
         #region Event
 
-        public event EventHandler<AddedChatEventArgs> AddedChat;
+        public event EventHandler<AddedChatVmEventArgs> AddedChat;
         public event EventHandler<RemovedChatEventArgs> RemovedChat;
-        public event EventHandler<AddedClientsToChatClientEvenArgs> AddedClientsToChat;
-        public event EventHandler<RemovedClientsFromChatForVMEventArgs> RemovedClientsFromChat;
+        public event EventHandler<AddedClientsToChatClientVmEvenArgs> AddedClientsToChat;
+        public event EventHandler<RemovedClientsFromChatVmEventArgs> RemovedClientsFromChat;
 
         #endregion Event
 
@@ -47,13 +48,13 @@
         public void AddChat(List<string> namesOfClients)
         {
             namesOfClients.Insert(0, _clientInfo.Login);
-            _transportClient.Send(Container.GetContainer(nameof(AddNewChatRequest), new AddNewChatRequest(_clientInfo.Login, namesOfClients)));
+            _transportClient.Send(Container.GetContainer(nameof(AddChatRequest), new AddChatRequest(_clientInfo.Login, namesOfClients)));
         }
 
         public void AddClientToChat(int numberChat, List<string> namesOfClients)
         {
-            _transportClient.Send(Container.GetContainer(nameof(AddNewClientToChatRequest),
-                                                         new AddNewClientToChatRequest(_clientInfo.Login, namesOfClients, numberChat)));
+            _transportClient.Send(Container.GetContainer(nameof(AddClientToChatRequest),
+                                                         new AddClientToChatRequest(_clientInfo.Login, namesOfClients, numberChat)));
         }
 
         public void RemoveClientFromChat(int numberChat, List<string> namesOfClients)
@@ -61,7 +62,7 @@
             _transportClient.Send(Container.GetContainer(nameof(RemoveClientFromChatRequest),
                                                          new RemoveClientFromChatRequest(_clientInfo.Login, namesOfClients, numberChat)));
         }
-        private void OnReceivedInfoAboutAllClients(object sender, ReceivedInfoAboutAllClientsEventArgs container)
+        private void OnReceivedInfoAboutAllClients(object sender, ReceivedInfoAboutAllClientsVmEventArgs container)
         {
             _transportClient.Send(Container.GetContainer(nameof(NumbersAccessibleChatsRequest),
                                                         new NumbersAccessibleChatsRequest(_clientInfo.Login)));
@@ -84,7 +85,7 @@
                     infoClientsAtChatForVM.Add(item, activityClient);
                 }
             }
-            AddedClientsToChat?.Invoke(this, new AddedClientsToChatClientEvenArgs(container.NumberChat, infoClientsAtChatForVM));
+            AddedClientsToChat?.Invoke(this, new AddedClientsToChatClientVmEvenArgs(container.NumberChat, infoClientsAtChatForVM));
         }
         private void OnRemovedClientsFromChat(object sender, RemovedClientsFromChatEventArgs container)
         {
@@ -96,9 +97,9 @@
                     infoClientsAtChatForVM.Add(item, activityClient);
                 }
             }
-            RemovedClientsFromChat?.Invoke(this, new RemovedClientsFromChatForVMEventArgs(container.NameOfRemover, container.NumberChat, infoClientsAtChatForVM));
+            RemovedClientsFromChat?.Invoke(this, new RemovedClientsFromChatVmEventArgs(container.NameOfRemover, container.NumberChat, infoClientsAtChatForVM));
         }
-        private void OnResponseNumbersChats(object sender, NumbersOfChatsReceivedEventArgs container)
+        private void OnResponseNumbersChats(object sender, NumbersOfChatsReceivedModelEventArgs container)
         {
             if (container.InfoAboutAllChat.Count != 0)
             {
@@ -126,7 +127,7 @@
                     infoClientsForAdd.Remove(item);
                 }
             }
-            AddedChat?.Invoke(this, new AddedChatEventArgs(clientCreator, infoClientsAtChat, infoClientsForAdd, numberChat));
+            AddedChat?.Invoke(this, new AddedChatVmEventArgs(clientCreator, infoClientsAtChat, infoClientsForAdd, numberChat));
         }
         #endregion Methods
     }

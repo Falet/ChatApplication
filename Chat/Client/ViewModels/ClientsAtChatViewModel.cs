@@ -1,6 +1,7 @@
 ﻿using Client.Model;
 namespace Client.ViewModels
 {
+    using Client.Model.Event;
     using Prism.Commands;
     using Prism.Mvvm;
     using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace Client.ViewModels
         #region Fields
 
         private Visibility _visibilityViewClientsAtChat;
-        private ObservableCollection<InfoAboutClient> _collectionClientsAtChat;
+        private ObservableCollection<InfoAboutClientAtList> _collectionClientsAtChat;
         private IHandlerChats _handlerChats;
         private string _textError;
         private int _numberChat;
@@ -23,7 +24,7 @@ namespace Client.ViewModels
 
         #region Properties
 
-        public ObservableCollection<InfoAboutClient> CollectionClientsAtChat
+        public ObservableCollection<InfoAboutClientAtList> CollectionClientsAtChat
         {
             get => _collectionClientsAtChat;
             set => SetProperty(ref _collectionClientsAtChat, value);
@@ -47,7 +48,7 @@ namespace Client.ViewModels
         public ClientsAtChatViewModel(IHandlerConnection handlerConnection, IHandlerChats handlerChats, int numberChat, Dictionary<string, bool> clientForAdd)
         {
             _numberChat = numberChat;
-            _collectionClientsAtChat = new ObservableCollection<InfoAboutClient>();
+            _collectionClientsAtChat = new ObservableCollection<InfoAboutClientAtList>();
             _handlerChats = handlerChats;
             _handlerChats.AddedClientsToChat += OnAddedClientsToChat;
             _handlerChats.RemovedClientsFromChat += OnRemovedClientsFromChat;
@@ -75,7 +76,7 @@ namespace Client.ViewModels
             }
             _handlerChats.RemoveClientFromChat(_numberChat, ClientForRemove);
         }
-        public void OnAddedClientsToChat(object sender, AddedClientsToChatClientEvenArgs container)
+        public void OnAddedClientsToChat(object sender, AddedClientsToChatClientVmEvenArgs container)
         {
             if (container.NumberChat == _numberChat)
             {
@@ -88,11 +89,11 @@ namespace Client.ViewModels
             {
                 foreach (var KeyValue in clientForAdd)
                 {
-                    CollectionClientsAtChat.Add(new InfoAboutClient(KeyValue.Key, KeyValue.Value ? "Online" : "Offline"));
+                    CollectionClientsAtChat.Add(new InfoAboutClientAtList(KeyValue.Key, KeyValue.Value ? "Online" : "Offline"));
                 }
             });
         }
-        private void OnRemovedClientsFromChat(object sender, RemovedClientsFromChatForVMEventArgs container)
+        private void OnRemovedClientsFromChat(object sender, RemovedClientsFromChatVmEventArgs container)
         {
             if (_numberChat == container.NumberChat)
             {
@@ -111,7 +112,7 @@ namespace Client.ViewModels
                 });
             }
         }
-        public void OnAnotherClientConnected(object sender, AnotherClientConnectedEventArgs container)
+        public void OnAnotherClientConnected(object sender, AnotherClientConnectedVmEventArgs container)
         {
             App.Current.Dispatcher.Invoke(delegate
             {
@@ -124,7 +125,7 @@ namespace Client.ViewModels
                 }
             });
         }
-        public void OnAnotherClientDisconnected(object sender, AnotherClientDisconnectedEventArgs container)
+        public void OnAnotherClientDisconnected(object sender, AnotherClientDisconnectedVmEventArgs container)
         {
             App.Current.Dispatcher.Invoke(delegate
             {

@@ -1,6 +1,6 @@
-﻿namespace Client.Model
+﻿namespace Client.Model.Event
 {
-    public class AnotherClientConnectedEventArgs
+    public class AnotherClientDisconnectedVmEventArgs
     {
         #region Properties
 
@@ -10,12 +10,11 @@
 
         #region Constructors
 
-        public AnotherClientConnectedEventArgs(string nameClient)
+        public AnotherClientDisconnectedVmEventArgs(string nameClient)
         {
             NameClient = nameClient;
         }
 
         #endregion Constructors
-
     }
 }

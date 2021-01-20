@@ -54,9 +54,9 @@ namespace Common.Network
                         ConnectedToChat?.Invoke(this, new ConnectionToChatEventArgs(connectionToChat.ClientName, connectionToChat.NumberChat));
                         break;
                     }
-                case nameof(AddNewChatRequest):
+                case nameof(AddChatRequest):
                     {
-                        var addNewChatRequest = ((JObject)container.Payload).ToObject(typeof(AddNewChatRequest)) as AddNewChatRequest;
+                        var addNewChatRequest = ((JObject)container.Payload).ToObject(typeof(AddChatRequest)) as AddChatRequest;
                         AddedChat?.Invoke(this, new AddedNewChatEventArgs(addNewChatRequest.NameClientSender, addNewChatRequest.Clients));
                         break;
                     }
@@ -66,10 +66,10 @@ namespace Common.Network
                         RemovedChat?.Invoke(this, new RemovedChatEventArgs(removeChatRequest.NameOfRemover, removeChatRequest.NumberChat));
                         break;
                     }
-                case nameof(AddNewClientToChatRequest):
+                case nameof(AddClientToChatRequest):
                     {
                         var addNewClientToChatRequest = ((JObject)container.Payload)
-                                                    .ToObject(typeof(AddNewClientToChatRequest)) as AddNewClientToChatRequest;
+                                                    .ToObject(typeof(AddClientToChatRequest)) as AddClientToChatRequest;
                         AddedClientsToChat?.Invoke(this, new AddedClientsToChatEventArgs(addNewClientToChatRequest.ClientName,
                                                                                      addNewClientToChatRequest.NumberChat,
                                                                                      addNewClientToChatRequest.Clients));

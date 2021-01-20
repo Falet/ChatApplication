@@ -1,4 +1,4 @@
-﻿namespace Client.Model
+﻿namespace Client.Model.Event
 {
     using System.Collections.Generic;
     public class AddedNewChatModelEventArgs
