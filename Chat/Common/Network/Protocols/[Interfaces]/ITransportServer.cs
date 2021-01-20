@@ -8,7 +8,7 @@
     {
         #region Events
 
-        event EventHandler<ClientConnectedEventArgs> ClientConnected;
+        /*event EventHandler<ClientConnectedEventArgs> ClientConnected;
         event EventHandler<ClientDisconnectedEventArgs> ClientDisconnected;
         event EventHandler<MessageReceivedEventArgs> MessageReceived;
         event EventHandler<ConnectionToChatEventArgs> ConnectedToChat;
@@ -17,7 +17,7 @@
         event EventHandler<AddedClientsToChatEventArgs> AddedClientsToChat;
         event EventHandler<RemovedClientsFromChatEventArgs> RemovedClientsFromChat; 
         event EventHandler<ClientRequestedNumbersChatEventArgs> RequestNumbersChats;
-        event EventHandler<InfoAboutAllClientsEventArgs> RequestInfoAllClient;
+        event EventHandler<InfoAboutAllClientsEventArgs> RequestInfoAllClient;*/
         #endregion Events
 
         #region Methods

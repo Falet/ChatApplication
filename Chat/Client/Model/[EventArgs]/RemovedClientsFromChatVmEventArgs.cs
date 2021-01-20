@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Client.Model
+﻿namespace Client.Model.Event
 {
-    public class RemovedClientsFromChatForVMEventArgs
+    using System.Collections.Generic;
+
+    public class RemovedClientsFromChatVmEventArgs
     {
         #region Properties
 
@@ -18,7 +16,7 @@ namespace Client.Model
 
         #region Constructors
 
-        public RemovedClientsFromChatForVMEventArgs(string clientName, int numberChat, Dictionary<string, bool> clients)
+        public RemovedClientsFromChatVmEventArgs(string clientName, int numberChat, Dictionary<string, bool> clients)
         {
             NameOfRemover = clientName;
             Clients = clients;

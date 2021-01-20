@@ -1,11 +1,8 @@
-﻿using Common.Network;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Client.Model
+﻿namespace Client.Model.Event
 {
-    public class MessageReceivedForVMEventArgs
+    using Common.Network;
+
+    public class MessageReceivedVmEventArgs
     {
         #region Properties
 
@@ -17,7 +14,7 @@ namespace Client.Model
 
         #region Constructors
 
-        public MessageReceivedForVMEventArgs(MessageInfo message, int numberChat)
+        public MessageReceivedVmEventArgs(MessageInfo message, int numberChat)
         {
             Message = message;
             NumberChat = numberChat;

@@ -1,24 +1,26 @@
-﻿using Client.Model;
-using Common.Network;
-using Prism.Commands;
-using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-
-namespace Client.ViewModels
+﻿namespace Client.ViewModels
 {
+    using Client.Model;
+    using Client.Model.Event;
+    using Common.Network;
+    using Prism.Commands;
+    using Prism.Mvvm;
+    using System.Windows;
+
     public class ControlChatMenuViewModel : BindableBase
     {
+        #region Fields
+
+        private Visibility _visibilityView;
         private ControlVisibilityElementsOfChatMenuViewModel _controlVisibilityElements;
         private IHandlerConnection _handlerConnection;
         private string _textButtonChangeViewClients;
         private string _textToolTip;
         private bool IsViewClientsChanged;
-        private Visibility _visibilityView;
+
+        #endregion Fields
+
+        #region Properties
 
         public Visibility VisibilityChatMenu
         {
@@ -42,12 +44,16 @@ namespace Client.ViewModels
         }
         public DelegateCommand CreateChat { get; }
 
+        #endregion Properties
+
+        #region Constructors
+
         public ControlChatMenuViewModel(IHandlerConnection handlerConnection, IHandlerMessages handlerMessages, IHandlerChats handlerChats)
         {
             _visibilityView = Visibility.Hidden;
 
             _handlerConnection = handlerConnection;
-            _handlerConnection.ClientConnected += OnConnectToServer;
+            _handlerConnection.ClientConnected += OnClientConnected;
 
             handlerChats.AddedChat += OnAddedChat;
 
@@ -60,7 +66,12 @@ namespace Client.ViewModels
             CreateChat = new DelegateCommand(ChangeViewClients).ObservesProperty(() => TextButtonChangeViewChatMenu);
             CreateChat.ObservesProperty(() => TextToolTip);
         }
-        private void OnAddedChat(object sender, AddedChatEventArgs container)
+
+        #endregion Constructors
+
+        #region Methods
+
+        private void OnAddedChat(object sender, AddedChatVmEventArgs container)
         {
             TextButtonChangeViewChatMenu = "Создать";
             ControlVisibilityElements.ControlNavigationChatsViewModel.VisibilityNavigationChat = Visibility.Visible;
@@ -85,12 +96,15 @@ namespace Client.ViewModels
                 TextToolTip = "Создать чат";
             }
         }
-        private void OnConnectToServer(object sender, ClientConnectedToServerEventArgs container)
+        private void OnClientConnected(object sender, ClientConnectedToServerVmEventArgs container)
         {
             if (container.Result == ResultRequest.Ok)
             {
                 VisibilityChatMenu = Visibility.Visible;
             }
         }
+
+
+        #endregion Methods
     }
 }

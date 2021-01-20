@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Common.Network.Packets
+﻿namespace Common.Network.Packets
 {
     public class InfoAboutAllClientsRequest
     {

@@ -1,25 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Common.Network.Packets
+﻿namespace Client.Model.Event
 {
-    public class DisconnectNotice
+    public class AnotherClientConnectedVmEventArgs
     {
         #region Properties
 
         public string NameClient { get; }
 
-
         #endregion Properties
 
         #region Constructors
 
-        public DisconnectNotice(string nameClient)
+        public AnotherClientConnectedVmEventArgs(string nameClient)
         {
             NameClient = nameClient;
         }
 
         #endregion Constructors
+
     }
 }

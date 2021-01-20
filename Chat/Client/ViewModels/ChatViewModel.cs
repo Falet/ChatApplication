@@ -1,32 +1,30 @@
-﻿using Client.Model;
-using Common.Network;
-using Prism.Commands;
-using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Threading;
-
-namespace Client.ViewModels
+﻿namespace Client.ViewModels
 {
+    using Client.Model;
+    using Client.Model.Event;
+    using Prism.Commands;
+    using Prism.Mvvm;
+    using System.Collections.ObjectModel;
+    using System.Windows;
+
     public class ChatViewModel : BindableBase
     {
-        private string _textMessages;
+        #region Fields
+
+        private Visibility _visibilityView;
         private ControlVisibilityViewClientsViewModel _controlVisibilityViewClients;
-        private AccessableClientForAddViewModel _allClientsViewModel;
-        private ClientsAtChatViewModel _clientsAtChatViewModel;
         private string _textButtonChangeViewClients;
+        private string _textMessages;
+        private string _textToolTip;
         private bool IsViewClientsChanged;
         private ObservableCollection<string> _messagesCollection;
-        private string _textToolTip;
         private IHandlerMessages _handlerMessages;
-        private Visibility _visibilityView;
-        public bool _chatIsLoad { get; private set; }
+
+        #endregion Fields
+
+        #region Properties
+
+        public bool ChatIsLoad { get; private set; }
         public Visibility VisibilityChat
         {
             get => _visibilityView;
@@ -61,18 +59,21 @@ namespace Client.ViewModels
         public DelegateCommand SendMessage { get; }
         public DelegateCommand ChangeVisibilityViewClients { get; }
 
+        #endregion Properties
+
+        #region Constructors
+
         public ChatViewModel(AccessableClientForAddViewModel allClientsViewModel, ClientsAtChatViewModel clientsAtChatViewModel, IHandlerMessages handlerMessages, int numberChat)
         {
-            _clientsAtChatViewModel = clientsAtChatViewModel;
-            _allClientsViewModel = allClientsViewModel;
-            _controlVisibilityViewClients = new ControlVisibilityViewClientsViewModel(_allClientsViewModel, clientsAtChatViewModel);
+            _visibilityView = Visibility.Hidden;
+
+            _controlVisibilityViewClients = new ControlVisibilityViewClientsViewModel(allClientsViewModel, clientsAtChatViewModel);
             _textButtonChangeViewClients = "Добавить";
             _messagesCollection = new ObservableCollection<string>();
             _textToolTip = "Добавить клиентов в чат из общего списка";
             IsViewClientsChanged = true;
 
-            _chatIsLoad = false;
-
+            ChatIsLoad = false;
 
             _handlerMessages = handlerMessages;
             _handlerMessages.MessageReceived += OnMessageReceived;
@@ -84,6 +85,11 @@ namespace Client.ViewModels
             ChangeVisibilityViewClients = new DelegateCommand(ChangeViewClients).ObservesProperty(() => TextButtonChangeViewClients);
             ChangeVisibilityViewClients.ObservesProperty(() => TextToolTip);
         }
+
+        #endregion Constructors
+
+        #region Methods
+
         private void ExecuteSendMessage()
         {
             _handlerMessages.SendMessage(CurrentTextMessage, NumberChat);
@@ -111,7 +117,7 @@ namespace Client.ViewModels
                 TextToolTip = "Назад к списку клиентов в чате";
             }
         }
-        private void OnMessageReceived(object sender, MessageReceivedForVMEventArgs container)
+        private void OnMessageReceived(object sender, MessageReceivedVmEventArgs container)
         {
             if (container.NumberChat == NumberChat)
             {
@@ -121,9 +127,9 @@ namespace Client.ViewModels
                 });
             }
         }
-        private void OnConnectedToChat(object sender, ClientConnectedToChatEventArgs container)
+        private void OnConnectedToChat(object sender, ClientConnectedToChatVmEventArgs container)
         {
-            if (container.AllMessageFromChat != null && container.NumberChat == NumberChat)
+            if (container.NumberChat == NumberChat)
             {
                 App.Current.Dispatcher.Invoke(delegate
                 {
@@ -131,9 +137,11 @@ namespace Client.ViewModels
                     {
                         MessagesCollection.Add(string.Format("Sender: {0}\nMessage: {1}\nTime: {2}", item.FromMessage, item.Text, item.Time));
                     }
-                    _chatIsLoad = true;
+                    ChatIsLoad = true;
                 });
             }
         }
+
+        #endregion Methods
     }
 }

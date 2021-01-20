@@ -11,11 +11,17 @@
 
         #endregion Properties
 
+
+        #region Constructors
+
         public MessageInfo(string fromMessage, string text, DateTime time)
         {
             FromMessage = fromMessage;
             Text = text;
             Time = time;
         }
+
+        #endregion Constructors
+
     }
 }

@@ -1,22 +1,17 @@
-﻿using Common.Network;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Client.Model
+﻿namespace Common.Network.Packets
 {
-    public class NumbersOfChatsReceivedEventArgs
+    using System.Collections.Generic;
+    public class NumbersAccessibleChatsResponse
     {
         #region Properties
 
         public List<InfoAboutChat> AllInfoAboutChat { get; }
- 
 
         #endregion Properties
 
         #region Constructors
 
-        public NumbersOfChatsReceivedEventArgs(List<InfoAboutChat> allInfoAboutChat)
+        public NumbersAccessibleChatsResponse(List<InfoAboutChat> allInfoAboutChat)
         {
             AllInfoAboutChat = allInfoAboutChat;
         }

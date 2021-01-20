@@ -1,9 +1,7 @@
 ﻿namespace Common.Network
 {
     using System.Collections.Concurrent;
-    using System.Linq;
     using System.Net;
-    using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
     using Packets;
@@ -15,29 +13,13 @@
 
         private readonly IPEndPoint _listenAddress;
         private readonly ConcurrentDictionary<Guid, WsConnection> _connections;
-
         private WebSocketServer _server;
 
         #endregion Fields
 
-        #region Event
-
-        public event EventHandler<ClientConnectedEventArgs> ClientConnected;
-        public event EventHandler<MessageReceivedEventArgs> MessageReceived;
-        public event EventHandler<ConnectionToChatEventArgs> ConnectedToChat;
-        public event EventHandler<AddedNewChatEventArgs> AddedChat;
-        public event EventHandler<RemovedChatEventArgs> RemovedChat;
-        public event EventHandler<AddedClientsToChatEventArgs> AddedClientsToChat;
-        public event EventHandler<RemovedClientsFromChatEventArgs> RemovedClientsFromChat;
-        public event EventHandler<ClientDisconnectedEventArgs> ClientDisconnected;
-        public event EventHandler<ClientRequestedNumbersChatEventArgs> RequestNumbersChats;
-        public event EventHandler<InfoAboutAllClientsEventArgs> RequestInfoAllClient;
-
-        #endregion Event
-
         #region Constructors
 
-        public WsServer(IPEndPoint IPendPoint)
+        public WsServer(IPEndPoint IPendPoint, IHandlerRequestFromClient handlerRequestFromClient)
         {
             _listenAddress = IPendPoint;
             _connections = new ConcurrentDictionary<Guid, WsConnection>();
@@ -46,6 +28,7 @@
                 client =>
                 {
                     client.AddServer(this);
+                    client.AddParserPacket(handlerRequestFromClient);
                 });
             _server.Start();
             Console.WriteLine("Start");
@@ -60,84 +43,9 @@
             _connections.TryAdd(connection.Id, connection);
         }
 
-        public void HandleMessage(Guid clientId, MessageContainer container)
-        {
-            if (!_connections.TryGetValue(clientId, out WsConnection connection))
-                return;
-
-            switch (container.Identifier)
-            {
-                case nameof(ConnectionRequest):
-                {
-                    var connectionRequest = ((JObject)container.Payload).ToObject(typeof(ConnectionRequest)) as ConnectionRequest;
-                    ClientConnected?.Invoke(this, new ClientConnectedEventArgs(connectionRequest.ClientName, clientId));
-                    break;
-                }
-                case nameof(InfoAboutAllClientsRequest):
-                {
-                    var infoClientRequest = ((JObject)container.Payload).ToObject(typeof(InfoAboutAllClientsRequest)) as InfoAboutAllClientsRequest;
-                    RequestInfoAllClient?.Invoke(this, new InfoAboutAllClientsEventArgs(infoClientRequest.NameClient));
-                    break;
-                }
-                case nameof(MessageRequest):
-                {
-                    var messageRequest = ((JObject)container.Payload).ToObject(typeof(MessageRequest)) as MessageRequest;
-                    MessageReceived?.Invoke(this, new MessageReceivedEventArgs(messageRequest.ClientName, messageRequest.Message, messageRequest.NumberChat));
-                    break;
-                }
-                case nameof(ConnectToChatRequest):
-                {
-                    var connectionToChat = ((JObject)container.Payload).ToObject(typeof(ConnectToChatRequest)) as ConnectToChatRequest;
-                    ConnectedToChat?.Invoke(this, new ConnectionToChatEventArgs(connectionToChat.ClientName, connectionToChat.NumberChat));
-                    break;
-                }
-                case nameof(AddNewChatRequest):
-                {
-                    var addNewChatRequest = ((JObject)container.Payload).ToObject(typeof(AddNewChatRequest)) as AddNewChatRequest;
-                    AddedChat?.Invoke(this, new AddedNewChatEventArgs(addNewChatRequest.NameClientSender, addNewChatRequest.Clients));
-                    break;
-                }
-                case nameof(RemoveChatRequest):
-                {
-                    var removeChatRequest = ((JObject)container.Payload).ToObject(typeof(RemoveChatRequest)) as RemoveChatRequest;
-                    RemovedChat?.Invoke(this, new RemovedChatEventArgs(removeChatRequest.NameOfRemover, removeChatRequest.NumberChat));
-                    break;
-                }
-                case nameof(AddNewClientToChatRequest):
-                {
-                    var addNewClientToChatRequest = ((JObject)container.Payload)
-                                                .ToObject(typeof(AddNewClientToChatRequest)) as AddNewClientToChatRequest;
-                    AddedClientsToChat?.Invoke(this, new AddedClientsToChatEventArgs(addNewClientToChatRequest.ClientName,
-                                                                                 addNewClientToChatRequest.NumberChat,
-                                                                                 addNewClientToChatRequest.Clients));
-                    break;
-                }
-                case nameof(RemoveClientFromChatRequest):
-                {
-                    var removeClientFromChatRequest = ((JObject)container.Payload)
-                                                    .ToObject(typeof(RemoveClientFromChatRequest)) as RemoveClientFromChatRequest;
-                    RemovedClientsFromChat?.Invoke(this, new RemovedClientsFromChatEventArgs(removeClientFromChatRequest.ClientName,
-                                                                                         removeClientFromChatRequest.NumberChat,
-                                                                                         removeClientFromChatRequest.Clients));
-                    break;
-                }
-                case nameof(GetNumbersAccessibleChatsRequest):
-                {
-                    var requestNumbersChats = ((JObject)container.Payload)
-                                                    .ToObject(typeof(GetNumbersAccessibleChatsRequest)) as GetNumbersAccessibleChatsRequest;
-                    RequestNumbersChats?.Invoke(this, new ClientRequestedNumbersChatEventArgs(requestNumbersChats.NameClient));
-                    break;
-                }
-            }
-        }
-
         public void FreeConnection(Guid ClientId)
         {
             _connections.TryRemove(ClientId, out WsConnection connection);
-            if(connection.Login != null)
-            {
-                ClientDisconnected.Invoke(this, new ClientDisconnectedEventArgs(ClientId, connection.Login));
-            }
         }
 
         public void Send(List<Guid> ListClientId, MessageContainer message)

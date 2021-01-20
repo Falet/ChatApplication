@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Common.Network.Packets
+﻿namespace Client.Model.Event
 {
-    public class GetNumbersAccessibleChatsRequest
+    public class AnotherClientDisconnectedVmEventArgs
     {
         #region Properties
 
@@ -14,7 +10,7 @@ namespace Common.Network.Packets
 
         #region Constructors
 
-        public GetNumbersAccessibleChatsRequest(string nameClient)
+        public AnotherClientDisconnectedVmEventArgs(string nameClient)
         {
             NameClient = nameClient;
         }

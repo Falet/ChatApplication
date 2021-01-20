@@ -8,39 +8,43 @@
 		     xmlns:viewModel="clr-namespace:Client.ViewModels"
 			 mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
+             Style="{StaticResource PrimaryControlStyle}"
 			 Visibility="{Binding VisibilityChat}">
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="303*"/>
-			<RowDefinition Height="23*"/>
-			<RowDefinition Height="124*"/>
-		</Grid.RowDefinitions>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="615*"/>
-			<ColumnDefinition Width="180*"/>
-		</Grid.ColumnDefinitions>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="341*"/>
+            <RowDefinition Height="67*"/>
+            <RowDefinition Height="42*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="533*"/>
+            <ColumnDefinition Width="71*"/>
+            <ColumnDefinition Width="196*"/>
+        </Grid.ColumnDefinitions>
 
-		<ListBox Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" ItemsSource="{Binding MessagesCollection}"/>
-		<TextBox Grid.Row="2" Grid.Column="0" Text="{Binding CurrentTextMessage, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap"/>
-		<Button Grid.Row="2" Grid.Column="1" Content="Send"
+        <ListBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding MessagesCollection}" Style="{StaticResource PrimaryListBoxStyle}"/>
+        <TextBox Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Text="{Binding CurrentTextMessage, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxMessageStyle}"/>
+        <Button Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Content="Send" Margin="7"
+				Style="{StaticResource ButtonStyle}"
                 Command="{Binding SendMessage}"/>
 
-		<Button Grid.Row="1" Grid.Column="1" Content="{Binding TextButtonChangeViewClients}"
+        <Button Grid.Row="2" Grid.Column="2" Content="{Binding TextButtonChangeViewClients}" Margin="5"
                 Command="{Binding ChangeVisibilityViewClients}"
+                Style="{StaticResource ButtonStyle}"
 				ToolTipService.InitialShowDelay="0">
-			<Button.ToolTip>
-				<ToolTip>
-					<TextBlock Text="{Binding TextToolTip}"/>
-				</ToolTip>
-			</Button.ToolTip>
-		</Button>
-		
+            <Button.ToolTip>
+                <ToolTip>
+                    <TextBlock Text="{Binding TextToolTip}"/>
+                </ToolTip>
+            </Button.ToolTip>
+        </Button>
 
-		<view:ClientsAtChat Grid.Row="0"  Grid.Column="1"
+
+        <view:ClientsAtChat Grid.Row="0"  Grid.RowSpan="2" Grid.Column="2"
 							   DataContext="{Binding ControlVisibilityViewClients.ClientsAtChatViewModel}"
 							   />
-		<view:AccessClientForAdd Grid.Row="0" Grid.Column="1"
+        <view:AccessClientForAdd Grid.Row="0" Grid.RowSpan="2" Grid.Column="2"
 							   DataContext="{Binding ControlVisibilityViewClients.AccessClientForAddViewModel}"
 							   />
-	</Grid>
+    </Grid>
 </UserControl>

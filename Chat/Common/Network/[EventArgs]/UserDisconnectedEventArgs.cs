@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Common.Network
+﻿namespace Common.Network
 {
+    using System;
+
     public class ClientDisconnectedEventArgs
     {
         #region Properties
@@ -14,7 +14,7 @@ namespace Common.Network
 
         #region Constructors
 
-        public ClientDisconnectedEventArgs(Guid nameGuid, string nameClient)
+        public ClientDisconnectedEventArgs(string nameClient,Guid nameGuid)
         {
             NameGuid = nameGuid;
             NameClient = nameClient;

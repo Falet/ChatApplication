@@ -1,24 +1,30 @@
 ﻿using Client.Model;
-using Common.Network;
-using Prism.Commands;
-using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-
 namespace Client.ViewModels
 {
+    using Client.Model.Event;
+    using Prism.Commands;
+    using Prism.Mvvm;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+    using System.Windows;
+
     public class ClientsAtChatViewModel : BindableBase
     {
+
+        #region Fields
+
         private Visibility _visibilityViewClientsAtChat;
-        private ObservableCollection<InfoAboutClient> _collectionClientsAtChat;
-        private int _numberChat;
+        private ObservableCollection<InfoAboutClientAtList> _collectionClientsAtChat;
         private IHandlerChats _handlerChats;
-        public ObservableCollection<InfoAboutClient> CollectionClientsAtChat
+        private string _textError;
+        private int _numberChat;
+
+        #endregion Fields
+
+        #region Properties
+
+        public ObservableCollection<InfoAboutClientAtList> CollectionClientsAtChat
         {
             get => _collectionClientsAtChat;
             set => SetProperty(ref _collectionClientsAtChat, value);
@@ -28,19 +34,36 @@ namespace Client.ViewModels
             get => _visibilityViewClientsAtChat;
             set => SetProperty(ref _visibilityViewClientsAtChat, value);
         }
+        public string TextError
+        {
+            get => _textError;
+            set => SetProperty(ref _textError, value);
+        }
         public DelegateCommand RemoveButton { get; }
+
+        #endregion Properties
+
+        #region Constructors
+
         public ClientsAtChatViewModel(IHandlerConnection handlerConnection, IHandlerChats handlerChats, int numberChat, Dictionary<string, bool> clientForAdd)
         {
             _numberChat = numberChat;
-            _collectionClientsAtChat = new ObservableCollection<InfoAboutClient>();
+            _collectionClientsAtChat = new ObservableCollection<InfoAboutClientAtList>();
             _handlerChats = handlerChats;
-            _handlerChats.AddedClientsToChat += OnClientAddedToChat;
-            _handlerChats.RemovedClientsFromChat += OnClientRemovedFromChat;
-            handlerConnection.AnotherClientConnected += OnConnectedAnotherClient;
-            handlerConnection.AnotherClientDisconnected += OnDisconnectedClient;
+            _handlerChats.AddedClientsToChat += OnAddedClientsToChat;
+            _handlerChats.RemovedClientsFromChat += OnRemovedClientsFromChat;
+            handlerConnection.AnotherClientConnected += OnAnotherClientConnected;
+            handlerConnection.AnotherClientDisconnected += OnAnotherClientDisconnected;
+
             AddClientsToCollection(clientForAdd);
+
             RemoveButton = new DelegateCommand(RemoveClientFromChat);
         }
+
+        #endregion Constructors
+
+        #region Methods
+
         private void RemoveClientFromChat()
         {
             List<string> ClientForRemove = new List<string>();
@@ -53,7 +76,7 @@ namespace Client.ViewModels
             }
             _handlerChats.RemoveClientFromChat(_numberChat, ClientForRemove);
         }
-        public void OnClientAddedToChat(object sender, AddedClientsToChatClientEvenArgs container)
+        public void OnAddedClientsToChat(object sender, AddedClientsToChatClientVmEvenArgs container)
         {
             if (container.NumberChat == _numberChat)
             {
@@ -64,27 +87,32 @@ namespace Client.ViewModels
         {
             App.Current.Dispatcher.Invoke(delegate
             {
-                foreach(var KeyValue in clientForAdd)
+                foreach (var KeyValue in clientForAdd)
                 {
-                    CollectionClientsAtChat.Add(new InfoAboutClient(KeyValue.Key, KeyValue.Value));
+                    CollectionClientsAtChat.Add(new InfoAboutClientAtList(KeyValue.Key, KeyValue.Value ? "Online" : "Offline"));
                 }
             });
         }
-        private void OnClientRemovedFromChat(object sender, RemovedClientsFromChatForVMEventArgs container)
+        private void OnRemovedClientsFromChat(object sender, RemovedClientsFromChatVmEventArgs container)
         {
-            if(_numberChat == container.NumberChat)
+            if (_numberChat == container.NumberChat)
             {
                 App.Current.Dispatcher.Invoke(delegate
                 {
                     foreach (var KeyValue in container.Clients)
                     {
-                        //Исправить, ненаходить нужный элемент хотя он есть
-                        CollectionClientsAtChat.Remove(new InfoAboutClient(KeyValue.Key, KeyValue.Value));
+                        foreach (var item in CollectionClientsAtChat.ToList())
+                        {
+                            if (item.NameClient == KeyValue.Key)
+                            {
+                                CollectionClientsAtChat.Remove(item);
+                            }
+                        }
                     }
                 });
             }
         }
-        public void OnConnectedAnotherClient(object sender, AnotherClientConnectedEventArgs container)
+        public void OnAnotherClientConnected(object sender, AnotherClientConnectedVmEventArgs container)
         {
             App.Current.Dispatcher.Invoke(delegate
             {
@@ -92,23 +120,26 @@ namespace Client.ViewModels
                 {
                     if (item.NameClient == container.NameClient)
                     {
-                        item.ActivityClient = true;
+                        item.ActivityClientChanged = "Online";
                     }
                 }
             });
         }
-        public void OnDisconnectedClient(object sender, AnotherClientDisconnectedEventArgs container)
+        public void OnAnotherClientDisconnected(object sender, AnotherClientDisconnectedVmEventArgs container)
         {
             App.Current.Dispatcher.Invoke(delegate
             {
-                foreach (var item in CollectionClientsAtChat)
+                foreach (var item in CollectionClientsAtChat.ToList())
                 {
                     if (item.NameClient == container.NameClient)
                     {
-                        item.ActivityClient = false;
+                        item.ActivityClientChanged = "Offline";
                     }
                 }
             });
         }
+
+        #endregion Methods
+
     }
 }

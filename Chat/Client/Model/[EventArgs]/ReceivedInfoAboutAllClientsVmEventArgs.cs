@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Client.Model
+﻿namespace Client.Model.Event
 {
-    public class ReceivedInfoAboutAllClientsEventArgs
+    using System.Collections.Generic;
+
+    public class ReceivedInfoAboutAllClientsVmEventArgs
     {
         #region Properties
 
@@ -14,7 +12,7 @@ namespace Client.Model
 
         #region Constructors
 
-        public ReceivedInfoAboutAllClientsEventArgs(Dictionary<string, bool> infoClientsAtChat)
+        public ReceivedInfoAboutAllClientsVmEventArgs(Dictionary<string, bool> infoClientsAtChat)
         {
             InfoClientsAtChat = infoClientsAtChat;
         }
