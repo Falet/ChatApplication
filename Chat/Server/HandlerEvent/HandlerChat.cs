@@ -132,13 +132,14 @@
                                         new AddChatResponse(container.NameOfClientSender, container.NumberChat, infoChat.NameOfClients)))
                     );
 
+                    ClientProperties bufferClientProp;
                     InfoChat buffer = infoChat;
                     foreach(var item in NameForChange)
                     {
                         infoChat.NameOfClients.Add(item);
                         if(_cachedClientProperies.TryGetValue(item, out ClientProperties value))
                         {
-                            var bufferClientProp = value;
+                            bufferClientProp = value;
                             value.NumbersChat.Add(container.NumberChat);
                             _cachedClientProperies.TryUpdate(item, value, bufferClientProp);
                         }
@@ -177,10 +178,10 @@
 
                     ClientProperties lastValueChatsClient;
                     InfoChat bufferForUpdate = infoChat;
-                    foreach (var item in container.Clients)
+                    foreach (var item in NamesForChange)
                     {
                         infoChat.NameOfClients.Remove(item);
-                        if(_cachedClientProperies.TryGetValue(container.NameOfRemover, out ClientProperties clientPropertiesForRemoveChat))
+                        if(_cachedClientProperies.TryGetValue(item, out ClientProperties clientPropertiesForRemoveChat))
                         {
                             lastValueChatsClient = clientPropertiesForRemoveChat;
                             clientPropertiesForRemoveChat.NumbersChat.Remove(container.NumberChat);

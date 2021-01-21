@@ -104,6 +104,10 @@
                     allMessageAtChat.Add(new MessageInfo(container.NameClient, container.Message, time));
                     MessagesAtChat.TryUpdate(container.NumberChat, allMessageAtChat, lastValueMessages);
                 }
+                else
+                {
+                    MessagesAtChat.TryAdd(container.NumberChat, new List<MessageInfo>() { new MessageInfo(container.NameClient, container.Message, time)});
+                }
 
                 if (!await Task.Run(() => _data.AddNewMessage(new MessageInfoForDataBase
                 {
