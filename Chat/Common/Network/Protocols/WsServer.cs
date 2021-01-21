@@ -46,6 +46,7 @@
         public void FreeConnection(Guid ClientId)
         {
             _connections.TryRemove(ClientId, out WsConnection connection);
+            connection.Context.WebSocket.CloseAsync();
         }
 
         public void Send(List<Guid> ListClientId, MessageContainer message)

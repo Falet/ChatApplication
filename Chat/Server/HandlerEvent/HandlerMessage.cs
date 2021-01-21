@@ -42,7 +42,6 @@
 
         #endregion Constructors
 
-
         #region Methods
 
         public void OnChatOpened(object sender, ConnectionToChatEventArgs container)

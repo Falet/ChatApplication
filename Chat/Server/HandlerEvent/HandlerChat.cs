@@ -51,7 +51,6 @@
 
         #endregion Constructors
 
-
         #region Methods
         public async void OnAddedChat(object sender, AddedNewChatEventArgs container)
         {
@@ -64,15 +63,24 @@
                     List<string> NameForChange = container.NameOfClientsForAdd;
                     await Task.Run(() => CreateClientListForChangeInfoChat(ref NameForChange, numberChat, ref idClientsForSendMessage));
 
-                    var SendMessageToClient = Task.Run(() => _server.Send(idClientsForSendMessage, Container.GetContainer(nameof(AddChatResponse),new AddChatResponse(container.NameOfClientSender,numberChat, container.NameOfClientsForAdd))));
-                    if(_cachedClientProperies.TryGetValue(container.NameOfClientSender, out ClientProperties value))
+                    InfoChats.TryAdd(numberChat, new InfoChat { OwnerChat = container.NameOfClientSender, NameOfClients = NameForChange });
+                    
+                    foreach(var item in NameForChange)
                     {
-                        var bufferForAddChat = value;
-                        value.NumbersChat.Add(numberChat);
-                        _cachedClientProperies.TryUpdate(container.NameOfClientSender, value, bufferForAddChat);
+                        if (_cachedClientProperies.TryGetValue(item, out ClientProperties clientItem))
+                        {
+                            var bufferForAddChat = clientItem;
+                            clientItem.NumbersChat.Add(numberChat);
+                            _cachedClientProperies.TryUpdate(item, clientItem, bufferForAddChat);
+                        }
                     }
-                    InfoChats.TryAdd(numberChat, new InfoChat { OwnerChat = container.NameOfClientSender, NameOfClients = container.NameOfClientsForAdd });
-                    if(!await _data.AddClientToChat(new AddClientToChat { NumberChat = numberChat, NameOfClients = NameForChange }))
+                    var SendMessageToClient = Task.Run(
+                    () => _server.Send(idClientsForSendMessage, Container.GetContainer(nameof(AddChatResponse), 
+                                                                                       new AddChatResponse(container.NameOfClientSender, 
+                                                                                                           numberChat, 
+                                                                                                           container.NameOfClientsForAdd)))
+                    );
+                    if (!await _data.AddClientToChat(new AddClientToChat { NumberChat = numberChat, NameOfClients = NameForChange }))
                     {
                         //Ошибка добавления клиентов
                     }
@@ -116,6 +124,7 @@
                     List<Guid> idClientsForSendMessage = new List<Guid>();//Создание списка id для рассылки им сообщений
                     List<string> NameForChange = container.Clients;
                     await Task.Run(() => CreateClientListForChangeInfoChat(ref NameForChange, container.NumberChat, ref idClientsForSendMessage));
+                    
                     var SendMessageForCreateChat = Task.Run
                     (
                     () => _server.Send(idClientsForSendMessage, 
@@ -159,23 +168,35 @@
                     List<string> NamesForChange = container.Clients;
 
                     await Task.Run(() => CreateClientListForChangeInfoChat(ref NamesForChange, container.NumberChat, ref idClientsForRemoveChat));
-                    var SendMessageForRemoveChat = Task.Run(() => _server.Send(idClientsForRemoveChat, Container.GetContainer(nameof(RemoveChatResponse), 
-                                                                               new RemoveChatResponse(container.NameOfRemover, container.NumberChat))));
 
+                    var SendMessageForRemoveChat = Task.Run(
+                    () => _server.Send(idClientsForRemoveChat, Container.GetContainer(nameof(RemoveChatResponse),
+                                                                                      new RemoveChatResponse(container.NameOfRemover,
+                                                                                                             container.NumberChat)))
+                    );
+
+                    ClientProperties lastValueChatsClient;
                     InfoChat bufferForUpdate = infoChat;
                     foreach (var item in container.Clients)
                     {
                         infoChat.NameOfClients.Remove(item);
+                        if(_cachedClientProperies.TryGetValue(container.NameOfRemover, out ClientProperties clientPropertiesForRemoveChat))
+                        {
+                            lastValueChatsClient = clientPropertiesForRemoveChat;
+                            clientPropertiesForRemoveChat.NumbersChat.Remove(container.NumberChat);
+                            _cachedClientProperies.TryUpdate(item, clientPropertiesForRemoveChat, lastValueChatsClient);
+                        }
                     }
+
+                    InfoChats.TryUpdate(container.NumberChat, infoChat, bufferForUpdate);
 
                     List<Guid> idClientsForRemovedClient = new List<Guid>();
                     await Task.Run(() => AddNamesForMail(infoChat.NameOfClients, ref idClientsForRemovedClient));
+
                     var SendMessageChangeClientList = Task.Run(() => 
                     _server.Send(idClientsForRemovedClient, Container.GetContainer(nameof(RemoveClientFromChatResponse),
                                                          new RemoveClientFromChatResponse(container.NameOfRemover, container.Clients, container.NumberChat)))
                     );
-
-                    InfoChats.TryUpdate(container.NumberChat, infoChat, bufferForUpdate);
 
                     if (!await Task.Run(() => _data.RemoveClientFromChat(new RemoveClientFromChat { NumberChat = container.NumberChat, NameOfClients = container.Clients })))
                     {
@@ -243,9 +264,6 @@
                     {
                         namesForMail.Add(clientGuid);
                     }
-                    var lastValueChatsClient = clientOfChat;
-                    clientOfChat.NumbersChat.Remove(numberChat);
-                    _cachedClientProperies.TryUpdate(nameClient, clientOfChat, lastValueChatsClient);
                 }
                 else
                 {

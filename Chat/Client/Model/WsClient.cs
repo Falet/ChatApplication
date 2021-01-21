@@ -13,7 +13,6 @@
 
         #endregion Fields
 
-
         #region Properties
 
         public bool IsConnected => _socket?.ReadyState == WebSocketState.Open;
@@ -37,8 +36,7 @@
             _socket.OnOpen += OnOpen;
             _socket.OnClose += OnClose;
             _socket.OnMessage += OnMessage;
-            _socket.ConnectAsync();
-
+            _socket.Connect();
         }
         public void Send(MessageContainer container)
         {

@@ -75,18 +75,15 @@
 
         private void ChangeViewModelOfViewChat()
         {
-            if (SelectedChat != null)
+            if (CurrentViewModelChat != null)
             {
-                if (CurrentViewModelChat != null)
-                {
-                    CurrentViewModelChat.VisibilityChat = Visibility.Hidden;
-                }
-                CurrentViewModelChat = SelectedChat;
-                CurrentViewModelChat.VisibilityChat = Visibility.Visible;
-                if (!CurrentViewModelChat.ChatIsLoad)
-                {
-                    _handlerMessages.ConnectToChat(CurrentViewModelChat.NumberChat);
-                }
+                CurrentViewModelChat.VisibilityChat = Visibility.Hidden;
+            }
+            CurrentViewModelChat = SelectedChat;
+            CurrentViewModelChat.VisibilityChat = Visibility.Visible;
+            if (!CurrentViewModelChat.ChatIsLoad)
+            {
+                _handlerMessages.ConnectToChat(CurrentViewModelChat.NumberChat);
             }
         }
         private void OnAddedChat(object sender, AddedChatVmEventArgs container)
@@ -113,6 +110,7 @@
                     if (item.NumberChat == container.NumberChat)
                     {
                         ChatCollection.Remove(item);
+                        SelectedChat = ChatCollection.Last();
                     }
                 }
             });

@@ -39,7 +39,7 @@
 
             Id = Guid.NewGuid();
 
-            _timer = new System.Timers.Timer(60000);
+            _timer = new System.Timers.Timer(1800000);
             _timer.Elapsed += OnTimeOut;
             _timer.AutoReset = false;
         }
@@ -104,7 +104,7 @@
             {
                 var message = JsonConvert.DeserializeObject<MessageContainer>(e.Data);
                 _handlerRequestFromClient.ParsePacket(Id, message);
-                _timer.Interval = 60000;
+                _timer.Interval = 1800000;
             }
         }
         private void SendCompleted(bool completed)

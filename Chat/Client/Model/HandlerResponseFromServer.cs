@@ -24,7 +24,6 @@
 
         #endregion Event
 
-
         #region Methods
 
         public void ParsePacket(MessageContainer container)

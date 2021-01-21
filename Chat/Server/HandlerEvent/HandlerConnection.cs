@@ -76,11 +76,13 @@
 				}
 				else
 				{
-					var SendMessageToClient = Task.Run(() =>
+					await Task.Run(() =>
 					_server.Send(new List<Guid>() { container.ClientId },
 								 Container.GetContainer(nameof(ConnectionResponse),
 														new ConnectionResponse(ResultRequest.Failure, "Такой пользователь уже есть")))
 					);
+
+					_server.FreeConnection(container.ClientId);
 				}
 			}
 			else
